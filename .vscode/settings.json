@@ -1,0 +1,22 @@
+{
+  "nodejs.terminal.path": "C:\\Users\\devyn\\AppData\\Roaming\\fnm\\node-versions\\v22.17.0\\installation\\node.exe",
+  "npm.packageManager": "npm",
+  "terminal.integrated.env.windows": {
+    "FNM_DIR": "C:\\Users\\devyn\\AppData\\Roaming\\fnm",
+    "FNM_VERSION_FILE_STRATEGY": "local",
+    "FNM_NODE_DIST_MIRROR": "https://nodejs.org/dist",
+    "FNM_ARCH": "x64"
+  },
+  "terminal.integrated.shellArgs.windows": ["-l"],
+  "terminal.integrated.automationShell.windows": "bash.exe",
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.nodejs": "C:\\Users\\devyn\\AppData\\Roaming\\fnm\\node-versions\\v22.17.0\\installation\\node.exe",
+  "terminal.integrated.profiles.windows": {
+    "Bash (fnm)": {
+      "path": "bash.exe",
+      "args": ["-l", "-c", "eval \"$(fnm env --use-on-cd --shell bash)\" && fnm use 22.17.0 && exec bash"],
+      "icon": "terminal-bash"
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "Git Bash"
+}
