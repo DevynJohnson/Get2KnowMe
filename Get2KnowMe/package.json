@@ -7,12 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server:dev": "node --env-file=.env --watch server/server.js",
+    "server:start": "node --env-file=.env server/server.js",
+    "server:prod": "NODE_ENV=production node --env-file=.env server/server.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
