@@ -1,0 +1,99 @@
+/* Error.css - Custom styling for error page */
+
+.error-container {
+  animation: fadeIn 0.6s ease-in;
+}
+
+.error-emoji {
+  animation: bounce 2s infinite;
+  display: inline-block;
+}
+
+.error-title {
+  animation: slideInFromTop 0.8s ease-out;
+}
+
+.error-details {
+  animation: slideInFromBottom 0.8s ease-out;
+  transition: all 0.3s ease;
+}
+
+.error-details:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.error-buttons {
+  animation: slideInFromBottom 1s ease-out;
+}
+
+.error-button {
+  transition: all 0.3s ease;
+  margin: 0 8px;
+}
+
+.error-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .error-title {
+    font-size: 2rem !important;
+  }
+  
+  .error-emoji {
+    font-size: 3rem !important;
+  }
+  
+  .error-button {
+    display: block;
+    width: 100%;
+    margin: 8px 0 !important;
+  }
+}
