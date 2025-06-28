@@ -7,7 +7,7 @@ const router = express.Router();
 // Sign Token method returns a signed token to the user after login
 const signToken = (user) => {
   return jwt.sign(
-    { id: user._id, email: user.email },
+    { id: user._id, email: user.email, username: user.username },
     process.env.JWT_SECRET_KEY,
     { expiresIn: '1h' }
   );
@@ -16,12 +16,22 @@ const signToken = (user) => {
 // POST Login route - login existing user
 router.post('/login', async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const { emailOrUsername, password } = req.body;
+    
+    // Check if emailOrUsername is an email (contains @) or username
+    const isEmail = emailOrUsername.includes('@');
+    const query = isEmail 
+      ? { email: emailOrUsername }
+      : { username: emailOrUsername };
+    
+    const user = await User.findOne(query);
     if (!user) {
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(400).json({ 
+        message: isEmail ? 'Email not found' : 'Username not found' 
+      });
     }
 
-    const correctPw = await user.isCorrectPassword(req.body.password);
+    const correctPw = await user.isCorrectPassword(password);
     if (!correctPw) {
       return res.status(400).json({ message: 'Incorrect password' });
     }
