@@ -1,0 +1,200 @@
+/* PasscodeLookup.css - Styling for passcode lookup page */
+
+.passcode-lookup-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.lookup-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.lookup-icon {
+  font-size: 3rem;
+  color: #667eea;
+  opacity: 0.8;
+}
+
+.lookup-title {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.passcode-input {
+  border-radius: 10px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.passcode-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  outline: none;
+}
+
+.passcode-input::placeholder {
+  font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.lookup-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 25px;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.lookup-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.lookup-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.emergency-notice {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 10px;
+}
+
+/* Alert styling */
+.alert {
+  border-radius: 10px;
+  border: none;
+  font-weight: 500;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .passcode-lookup-container {
+    padding: 1rem;
+  }
+  
+  .lookup-card {
+    margin: 0;
+  }
+  
+  .lookup-title {
+    font-size: 1.5rem;
+  }
+  
+  .lookup-icon {
+    font-size: 2.5rem;
+  }
+  
+  .passcode-input {
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility improvements */
+.lookup-btn:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.passcode-input:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .lookup-card {
+    background: white !important;
+    border: 2px solid #000 !important;
+  }
+  
+  .lookup-icon {
+    color: #000 !important;
+  }
+  
+  .lookup-title {
+    color: #000 !important;
+  }
+  
+  .passcode-input {
+    border: 2px solid #000 !important;
+    background: white !important;
+    color: #000 !important;
+  }
+  
+  .lookup-btn {
+    background: #000 !important;
+    color: white !important;
+    border: 2px solid #000 !important;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .lookup-card {
+    animation: none;
+  }
+  
+  .lookup-btn:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Loading spinner customization */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.125em;
+}
+
+/* Form validation states */
+.passcode-input.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.passcode-input.is-valid {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}

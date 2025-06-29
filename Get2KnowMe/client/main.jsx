@@ -13,6 +13,9 @@ import App from './App.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import CreatePassport from './pages/CreatePassport.jsx';
+import ViewPassport from './pages/ViewPassport.jsx';
+import PasscodeLookup from './pages/PasscodeLookup.jsx';
 import ErrorPage from './pages/Error.jsx';
 
 // Define routes for the application
@@ -25,6 +28,9 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },        // Default route: /
       { path: 'login', element: <Login /> },     // Route: /login
       { path: 'register', element: <Register /> }, // Route: /register
+      { path: 'create-passport', element: <CreatePassport /> }, // Route: /create-passport
+      { path: 'passport-lookup', element: <PasscodeLookup /> }, // Route: /passport-lookup
+      { path: 'passport/view/:passcode', element: <ViewPassport /> }, // Route: /passport/view/ABC123
     ],
   },
 ]);

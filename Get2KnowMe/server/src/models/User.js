@@ -1,6 +1,104 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 
+// Communication Passport subdocument schema
+const communicationPassportSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  preferredName: {
+    type: String,
+    trim: true
+  },
+  diagnosis: {
+    type: String,
+    required: true,
+    enum: [
+      'ASD (Autism Spectrum Disorder)',
+      'ADHD',
+      'OCD',
+      'Dyslexia',
+      'Tourette\'s Syndrome',
+      'Other'
+    ]
+  },
+  customDiagnosis: {
+    type: String,
+    trim: true,
+    // Required only if diagnosis is 'Other'
+    required: function() {
+      return this.diagnosis === 'Other';
+    }
+  },
+  communicationPreferences: [{
+    type: String,
+    enum: [
+      'Speak slowly',
+      'Allow extra time to process',
+      'Avoid complicated questions or confusing language',
+      'Avoid specific words/phrases/topics',
+      'Other'
+    ]
+  }],
+  avoidWords: {
+    type: String,
+    trim: true
+  },
+  customPreferences: {
+    type: String,
+    trim: true
+  },
+  trustedContact: {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    phone: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    email: {
+      type: String,
+      trim: true,
+      match: [/.+@.+\..+/, 'Please enter a valid e-mail address for trusted contact']
+    }
+  },
+  profilePasscode: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: 6,
+    maxlength: 20
+  },
+  otherInformation: {
+    type: String,
+    trim: true,
+    maxlength: 1000
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const userSchema = new Schema({
   email: {
     type: String,
@@ -36,6 +134,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
+  communicationPassport: communicationPassportSchema,
   createdAt: {
     type: Date,
     default: Date.now, // Automatically set the creation date

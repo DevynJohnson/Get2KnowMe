@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectToDatabase from './src/config/connection.js'; // Import the connection function
 import userRoutes from './src/routes/user-routes.js';
+import passportRoutes from './src/routes/passport-routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,6 +26,7 @@ app.use(cors({
 
 // Define API routes
 app.use('/api/users', userRoutes);
+app.use('/api/passport', passportRoutes);
 
 // Serve static frontend files for production
 if (process.env.NODE_ENV === 'production') {

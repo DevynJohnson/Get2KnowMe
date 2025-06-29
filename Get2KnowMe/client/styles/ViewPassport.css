@@ -1,0 +1,289 @@
+/* ViewPassport.css - Styling for Communication Passport display page */
+
+.view-passport-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+}
+
+.passport-display-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.passport-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 1rem;
+  border-bottom: none;
+}
+
+.passport-icon {
+  font-size: 3rem;
+  opacity: 0.9;
+}
+
+.passport-name {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.passport-badge {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+}
+
+/* Section Styling */
+.passport-section {
+  border-left: 4px solid #667eea;
+  padding-left: 1rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-icon {
+  font-size: 1.2rem;
+  margin-right: 0.75rem;
+  color: #667eea;
+  width: 20px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.section-content {
+  margin-left: 2rem;
+}
+
+/* Diagnosis Badge */
+.diagnosis-badge {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+}
+
+/* Preferences List */
+.preferences-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.preference-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.preference-icon {
+  color: #28a745;
+  margin-right: 0.75rem;
+  font-size: 0.9rem;
+}
+
+/* Content Boxes */
+.avoid-words-box,
+.custom-preferences-box,
+.other-info-box {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #856404;
+}
+
+.avoid-words-box {
+  background: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.other-info-box {
+  background: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+/* Trusted Contact Card */
+.trusted-contact-card {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contact-name,
+.contact-phone,
+.contact-email {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.contact-icon {
+  color: #28a745;
+  margin-right: 0.75rem;
+  width: 20px;
+  text-align: center;
+}
+
+.contact-phone a,
+.contact-email a {
+  color: #28a745;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-phone a:hover,
+.contact-email a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.passport-footer {
+  background: #f8f9fa;
+  margin: 1rem -1.5rem -1.5rem -1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0 0 15px 15px;
+}
+
+/* Print Styles */
+@media print {
+  .view-passport-container {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .passport-display-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+  
+  .passport-header {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .passport-footer .btn {
+    display: none !important;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .view-passport-container {
+    padding: 1rem;
+  }
+  
+  .passport-header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .passport-name {
+    font-size: 1.5rem;
+  }
+  
+  .passport-icon {
+    font-size: 2rem;
+  }
+  
+  .section-content {
+    margin-left: 1rem;
+  }
+  
+  .contact-info {
+    gap: 0.5rem;
+  }
+  
+  .passport-footer {
+    margin: 1rem -1rem -1rem -1rem;
+    padding: 1rem;
+  }
+  
+  .passport-footer .d-flex {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+/* Accessibility Improvements */
+.passport-display-card:focus-within {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Loading Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .passport-header {
+    background: #000 !important;
+    color: #fff !important;
+  }
+  
+  .section-icon,
+  .preference-icon,
+  .contact-icon {
+    color: #000 !important;
+  }
+  
+  .avoid-words-box,
+  .custom-preferences-box,
+  .other-info-box,
+  .trusted-contact-card {
+    border: 2px solid #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .passport-display-card {
+    animation: none;
+  }
+}
+
+/* Focus Management */
+.section-header:focus,
+.contact-phone a:focus,
+.contact-email a:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 4px;
+}

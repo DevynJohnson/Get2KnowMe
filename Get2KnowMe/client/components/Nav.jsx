@@ -36,13 +36,21 @@ const NavTabs = () => {
             Home
           </BsNav.Link>
           
-          {/* Show login if no user, otherwise show logout */}
+          {/* Public access to Communication Passports */}
+          <BsNav.Link as={Link} to="/passport-lookup" active={currentPage === '/passport-lookup'}>
+            View Passport
+          </BsNav.Link>
+          
+          {/* Show login if no user, otherwise show authenticated user options */}
           {!user ? (
             <BsNav.Link as={Link} to="/login" active={currentPage === '/login'}>
               Login
             </BsNav.Link>
           ) : (
             <>
+              <BsNav.Link as={Link} to="/create-passport" active={currentPage === '/create-passport'}>
+                My Passport
+              </BsNav.Link>
               <BsNav.Link disabled className="welcome-text">
                 Welcome, {user.username || user.email}!
               </BsNav.Link>
