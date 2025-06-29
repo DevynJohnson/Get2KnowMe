@@ -346,8 +346,7 @@ const ViewPassport = () => {
             </Alert.Heading>
             <p className="mb-0 small">
               If additional support is needed, please contact the trusted person
-              listed above. In case of an emergency contact the proper
-              authorities.
+              listed above. In case of an emergency contact your local emergency services.
             </p>
           </Alert>
 

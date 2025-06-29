@@ -1,5 +1,5 @@
 // client/components/QRCodeScanner.jsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Modal, Button, Alert, Spinner } from 'react-bootstrap';
 import { BrowserMultiFormatReader } from '@zxing/library';
 
@@ -11,20 +11,23 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
   const [scanning, setScanning] = useState(false);
   const readerRef = useRef(null);
 
-  useEffect(() => {
-    if (show) {
-      startScanning();
-    } else {
-      stopScanning();
+  const stopScanning = useCallback(() => {
+    if (readerRef.current) {
+      readerRef.current.reset();
     }
+    
+    // Stop video stream
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject;
+      stream.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+    
+    setScanning(false);
+  }, []);
 
-    return () => {
-      stopScanning();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [show]);
-
-  const startScanning = async () => {
+  const startScanning = useCallback(async () => {
+    console.log('startScanning called, videoRef.current:', videoRef.current);
     setIsLoading(true);
     setError('');
     setScanning(false);
@@ -35,24 +38,29 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
         throw new Error('Camera access is not supported in this browser');
       }
 
-      // Request camera permission
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
-          facingMode: 'environment' // Use back camera if available
-        } 
-      });
-      
-      setHasPermission(true);
-      
-      // Stop the stream temporarily - ZXing will handle it
-      stream.getTracks().forEach(track => track.stop());
+      // Check if video element exists (with retry logic)
+      if (!videoRef.current) {
+        console.log('Video element not found, waiting...');
+        // Try waiting a bit for the element to render
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        if (!videoRef.current) {
+          setError('Video element not found');
+          setIsLoading(false);
+          return;
+        }
+      }
 
+      console.log('Video element found, initializing scanner...');
+      
       // Initialize the QR code reader
       const reader = new BrowserMultiFormatReader();
       readerRef.current = reader;
 
-      // Start scanning
+      // Let ZXing handle the entire camera setup
       setScanning(true);
+      setHasPermission(true);
+      setIsLoading(false);
       
       reader.decodeFromVideoDevice(undefined, videoRef.current, (result, error) => {
         if (result) {
@@ -90,17 +98,27 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
       } else {
         setError(`Failed to access camera: ${err.message}`);
       }
-    } finally {
       setIsLoading(false);
     }
-  };
+  }, [onScanSuccess, onHide, stopScanning]);
 
-  const stopScanning = () => {
-    if (readerRef.current) {
-      readerRef.current.reset();
+  useEffect(() => {
+    // Cleanup when modal closes
+    if (!show) {
+      stopScanning();
+    } else {
+      // Start scanning when modal opens (with delay for rendering)
+      const timer = setTimeout(() => {
+        startScanning();
+      }, 300);
+      
+      return () => clearTimeout(timer);
     }
-    setScanning(false);
-  };
+
+    return () => {
+      stopScanning();
+    };
+  }, [show, startScanning, stopScanning]);
 
   const handleRetry = () => {
     startScanning();
@@ -140,7 +158,8 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
           </div>
         )}
 
-        {scanning && !error && (
+        {/* Always render video element when modal is open - even when loading */}
+        {show && !error && (
           <div>
             <div className="camera-container mb-3" style={{ position: 'relative' }}>
               <video
@@ -149,40 +168,50 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
                   width: '100%',
                   maxWidth: '400px',
                   height: 'auto',
+                  minHeight: '300px',
                   border: '2px solid #007bff',
-                  borderRadius: '8px'
+                  borderRadius: '8px',
+                  backgroundColor: '#000',
+                  display: 'block',
+                  opacity: isLoading ? 0.5 : 1
                 }}
+                autoPlay
                 playsInline
                 muted
+                controls={false}
               />
-              <div 
-                className="scan-overlay"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: '60%',
-                  height: '60%',
-                  border: '2px solid #28a745',
-                  borderRadius: '8px',
-                  pointerEvents: 'none'
-                }}
-              />
+              {scanning && (
+                <div 
+                  className="scan-overlay"
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '60%',
+                    height: '60%',
+                    border: '2px solid #28a745',
+                    borderRadius: '8px',
+                    pointerEvents: 'none'
+                  }}
+                />
+              )}
             </div>
             
-            <Alert variant="info" className="text-start">
-              <Alert.Heading className="h6">
-                <i className="fas fa-info-circle me-2"></i>
-                Scanning Instructions
-              </Alert.Heading>
-              <ul className="mb-0 small">
-                <li>Point your camera at a Communication Passport QR code</li>
-                <li>Keep the QR code within the green square</li>
-                <li>Hold steady until the code is detected</li>
-                <li>Make sure there's good lighting</li>
-              </ul>
-            </Alert>
+            {scanning && (
+              <Alert variant="info" className="text-start">
+                <Alert.Heading className="h6">
+                  <i className="fas fa-info-circle me-2"></i>
+                  Scanning Instructions
+                </Alert.Heading>
+                <ul className="mb-0 small">
+                  <li>Point your camera at a Communication Passport QR code</li>
+                  <li>Keep the QR code within the green square</li>
+                  <li>Hold steady until the code is detected</li>
+                  <li>Make sure there's good lighting</li>
+                </ul>
+              </Alert>
+            )}
           </div>
         )}
       </Modal.Body>
