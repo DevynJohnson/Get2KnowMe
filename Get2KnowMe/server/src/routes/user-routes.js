@@ -47,16 +47,27 @@ router.post('/login', async (req, res) => {
 // Post Signup route - creates a new user
 router.post('/signup', async (req, res) => {
   try {
-    const user = await User.create(req.body); // Make sure req.body contains { email, password, childName }
+    const user = await User.create(req.body);
     const token = signToken(user);
     res.json({ token, user });
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
-      // Handle duplicate email error (MongoDB error code for unique constraint violation)
-      return res.status(400).json({ message: 'Email already in use' });
+      // Handle duplicate key error (MongoDB error code for unique constraint violation)
+      const field = Object.keys(error.keyPattern)[0];
+      const message = field === 'email' 
+        ? 'This email address is already registered' 
+        : field === 'username' 
+        ? 'This username is already taken' 
+        : 'This account information is already in use';
+      return res.status(400).json({ message });
     }
-    res.status(400).json(error);
+    if (error.name === 'ValidationError') {
+      // Handle validation errors (like password requirements)
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ message: messages.join('. ') });
+    }
+    res.status(500).json({ message: 'An error occurred while creating your account' });
   }
 });
 
