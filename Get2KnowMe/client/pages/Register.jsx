@@ -40,14 +40,31 @@ const Register = () => {
     setError("");
     setIsLoading(true);
 
-    if (!email || !username || !password) {
+    // Get the actual values from the form elements (handles autofill)
+    const formData = new FormData(e.target);
+    const emailValue = formData.get('email') || email;
+    const usernameValue = formData.get('username') || username;
+    const passwordValue = formData.get('password') || password;
+
+    // Update state with actual values if they were autofilled
+    if (emailValue !== email) {
+      setEmail(emailValue);
+    }
+    if (usernameValue !== username) {
+      setUsername(usernameValue);
+    }
+    if (passwordValue !== password) {
+      setPassword(passwordValue);
+    }
+
+    if (!emailValue || !usernameValue || !passwordValue) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
 
     // Validate password strength
-    const passwordError = validatePassword(password);
+    const passwordError = validatePassword(passwordValue);
     if (passwordError) {
       setError(passwordError);
       setIsLoading(false);
@@ -58,7 +75,11 @@ const Register = () => {
       const response = await fetch("/api/users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ 
+          email: emailValue, 
+          username: usernameValue, 
+          password: passwordValue 
+        }),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -94,9 +115,11 @@ const Register = () => {
                   <Form.Label>Email Address</Form.Label>
                   <Form.Control
                     type="email"
+                    name="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
                     required
                   />
                 </Form.Group>
@@ -105,9 +128,11 @@ const Register = () => {
                   <Form.Label>Username</Form.Label>
                   <Form.Control
                     type="text"
+                    name="username"
                     placeholder="Create Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    autoComplete="username"
                     required
                   />
                 </Form.Group>
@@ -116,9 +141,11 @@ const Register = () => {
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"
+                    name="password"
                     placeholder="Create your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="new-password"
                     required
                   />
                   <div className="helper-text">

@@ -26,7 +26,20 @@ const Login = () => {
     setError("");
     setIsLoading(true);
 
-    if (!emailOrUsername || !password) {
+    // Get the actual values from the form elements (handles autofill)
+    const formData = new FormData(e.target);
+    const emailOrUsernameValue = formData.get('emailOrUsername') || emailOrUsername;
+    const passwordValue = formData.get('password') || password;
+
+    // Update state with actual values if they were autofilled
+    if (emailOrUsernameValue !== emailOrUsername) {
+      setEmailOrUsername(emailOrUsernameValue);
+    }
+    if (passwordValue !== password) {
+      setPassword(passwordValue);
+    }
+
+    if (!emailOrUsernameValue || !passwordValue) {
       setError("Please fill in both fields");
       setIsLoading(false);
       return;
@@ -36,7 +49,10 @@ const Login = () => {
       const response = await fetch("/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailOrUsername, password }),
+        body: JSON.stringify({ 
+          emailOrUsername: emailOrUsernameValue, 
+          password: passwordValue 
+        }),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -72,9 +88,11 @@ const Login = () => {
                   <Form.Label>Email or Username</Form.Label>
                   <Form.Control
                     type="text"
+                    name="emailOrUsername"
                     placeholder="Enter your email or username"
                     value={emailOrUsername}
                     onChange={(e) => setEmailOrUsername(e.target.value)}
+                    autoComplete="username"
                     required
                   />
                   <div className="helper-text">
@@ -85,9 +103,11 @@ const Login = () => {
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"
+                    name="password"
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
                     required
                   />
                 </Form.Group>
