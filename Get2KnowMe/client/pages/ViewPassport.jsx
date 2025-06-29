@@ -11,6 +11,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
+import { formatPhoneForDisplay, createPhoneLink } from "../utils/phoneUtils.js";
 import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
 import "../styles/ViewPassport.css";
 
@@ -22,6 +23,7 @@ const ViewPassport = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showQRModal, setShowQRModal] = useState(false);
+  const [showTrustedContact, setShowTrustedContact] = useState(false);
 
   useEffect(() => {
     if (passcode) {
@@ -70,6 +72,11 @@ const ViewPassport = () => {
       return passport.customDiagnosis;
     }
     return passport.diagnosis;
+  };
+
+  // Format phone number for display
+  const formatPhoneNumber = (phone) => {
+    return formatPhoneForDisplay(phone);
   };
 
   if (loading) {
@@ -214,28 +221,74 @@ const ViewPassport = () => {
                     <h4 className="section-title">Trusted Contact</h4>
                   </div>
                   <div className="section-content">
-                    <div className="trusted-contact-card">
-                      <div className="contact-info">
-                        <div className="contact-name">
-                          <i className="fas fa-user contact-icon"></i>
-                          <strong>{passport.trustedContact.name}</strong>
+                    {!showTrustedContact ? (
+                      <div className="privacy-protection">
+                        <div className="privacy-message mb-3">
+                          <i className="fas fa-lock me-2 text-muted"></i>
+                          <span className="text-muted">
+                            Contact information is hidden for privacy protection
+                          </span>
                         </div>
-                        <div className="contact-phone">
-                          <i className="fas fa-phone contact-icon"></i>
-                          <a href={`tel:${passport.trustedContact.phone}`}>
-                            {passport.trustedContact.phone}
-                          </a>
-                        </div>
-                        {passport.trustedContact.email && (
-                          <div className="contact-email">
-                            <i className="fas fa-envelope contact-icon"></i>
-                            <a href={`mailto:${passport.trustedContact.email}`}>
-                              {passport.trustedContact.email}
-                            </a>
-                          </div>
-                        )}
+                        <Button
+                          variant="outline-primary"
+                          onClick={() => setShowTrustedContact(true)}
+                          className="show-contact-btn"
+                        >
+                          <i className="fas fa-eye me-2"></i>
+                          Show Trusted Person Contact Information
+                        </Button>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="trusted-contact-revealed">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <div className="privacy-note">
+                            <i className="fas fa-shield-alt me-2 text-success"></i>
+                            <small className="text-success">
+                              Contact information visible
+                            </small>
+                          </div>
+                          <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() => setShowTrustedContact(false)}
+                            className="hide-contact-btn"
+                          >
+                            <i className="fas fa-eye-slash me-1"></i>
+                            Hide
+                          </Button>
+                        </div>
+                        <div className="trusted-contact-card">
+                          <div className="contact-info">
+                            <div className="contact-name">
+                              <i className="fas fa-user contact-icon"></i>
+                              <strong>{passport.trustedContact.name}</strong>
+                            </div>
+                            <div className="contact-phone">
+                              <i className="fas fa-phone contact-icon"></i>
+                              <a
+                                href={createPhoneLink(
+                                  passport.trustedContact.phone
+                                )}
+                              >
+                                {formatPhoneNumber(
+                                  passport.trustedContact.phone
+                                )}
+                              </a>
+                            </div>
+                            {passport.trustedContact.email && (
+                              <div className="contact-email">
+                                <i className="fas fa-envelope contact-icon"></i>
+                                <a
+                                  href={`mailto:${passport.trustedContact.email}`}
+                                >
+                                  {passport.trustedContact.email}
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -292,8 +345,9 @@ const ViewPassport = () => {
               <i className="fas fa-info-circle"></i> Important Notice
             </Alert.Heading>
             <p className="mb-0 small">
-              In case of emergency or if additional support is needed, please
-              contact the trusted person listed above.
+              If additional support is needed, please contact the trusted person
+              listed above. In case of an emergency contact the proper
+              authorities.
             </p>
           </Alert>
 

@@ -66,6 +66,12 @@ const communicationPassportSchema = new Schema({
       required: true,
       trim: true
     },
+    countryCode: {
+      type: String,
+      required: true,
+      trim: true,
+      default: 'US'
+    },
     email: {
       type: String,
       trim: true,

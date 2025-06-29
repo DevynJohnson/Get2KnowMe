@@ -1,69 +1,175 @@
 /* Nav.css - Custom styling for navigation */
 
-.navbar-brand {
+/* Custom navbar styling */
+.custom-navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 0;
+}
+
+/* Brand styling */
+.navbar-brand,
+.brand-link {
   font-weight: bold;
   font-size: 1.5rem;
   color: #007bff !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-.nav-link {
+.brand-link:hover {
+  color: #0056b3 !important;
+}
+
+/* Centered navigation items */
+.navbar-nav-centered {
+  gap: 0.5rem;
+}
+
+/* Individual nav item styling */
+.nav-item-custom {
   font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.25rem;
+  border-radius: 6px;
   transition: all 0.3s ease;
+  color: #495057 !important;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.nav-link:hover {
-  transform: translateY(-2px);
+.nav-item-custom:hover {
   color: #007bff !important;
+  background-color: rgba(0, 123, 255, 0.1);
+  transform: translateY(-1px);
 }
 
-.nav-link.active {
+.nav-item-custom.active {
   color: #007bff !important;
-  border-bottom: 2px solid #007bff;
+  background-color: rgba(0, 123, 255, 0.15);
+  font-weight: 600;
 }
 
-.welcome-text {
+/* User info section */
+.user-info {
   color: #6c757d !important;
   font-style: italic;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  padding: 0.5rem 0;
 }
 
+/* Logout button specific styling */
 .logout-btn {
   color: #dc3545 !important;
   cursor: pointer;
 }
 
 .logout-btn:hover {
-  color: #c82333 !important;
-  background-color: #f8f9fa;
-  border-radius: 4px;
+  color: #fff !important;
+  background-color: #dc3545 !important;
+  transform: translateY(-1px);
+}
+
+/* Navbar toggler button */
+.navbar-toggler {
+  border: none;
+  padding: 0.25rem 0.5rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .navbar-nav {
+@media (max-width: 991.98px) {
+  .navbar-nav-centered {
+    text-align: center;
+    margin-top: 1rem;
+    gap: 0.25rem;
+  }
+  
+  .nav-item-custom {
+    margin: 0.25rem 0;
+    display: block;
+    width: 100%;
     text-align: center;
   }
   
-  .nav-link {
-    padding: 0.75rem 1rem;
+  .user-info {
+    text-align: center;
+    margin: 1rem 0 0.5rem 0;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-navbar {
+    padding: 0.5rem 0;
   }
   
-  .navbar-brand {
+  .navbar-brand,
+  .brand-link {
     font-size: 1.25rem;
+  }
+  
+  .nav-item-custom {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.95rem;
   }
 }
 
 /* Extra small devices */
 @media (max-width: 480px) {
-  .navbar-brand {
+  .navbar-brand,
+  .brand-link {
     font-size: 1.1rem;
   }
   
-  .nav-link {
-    padding: 0.5rem 0.75rem;
+  .nav-item-custom {
+    padding: 0.6rem 0.75rem !important;
     font-size: 0.9rem;
   }
   
-  .welcome-text {
-    font-size: 0.85rem;
+  .user-info {
+    font-size: 0.8rem;
   }
+}
+
+/* Future-proofing for additional nav items */
+@media (min-width: 992px) {
+  .navbar-nav-centered {
+    max-width: 800px;
+  }
+  
+  /* Ensure nav items wrap gracefully if too many are added */
+  .navbar-nav-centered .nav-item-custom {
+    flex: 0 0 auto;
+    min-width: fit-content;
+  }
+}
+
+/* Animation utilities */
+.nav-item-custom {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item-custom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #007bff;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-item-custom.active::after {
+  width: 80%;
+}
+
+.nav-item-custom:hover::after {
+  width: 60%;
 }

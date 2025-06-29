@@ -13,6 +13,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import auth from "../utils/auth.js";
 import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
+import PhoneNumberInput from "../components/PhoneNumberInput.jsx";
+import { validatePhoneNumber } from '../utils/phoneUtils.js';
 import "../styles/CreatePassport.css";
 
 const CreatePassport = () => {
@@ -31,6 +33,7 @@ const CreatePassport = () => {
     trustedContact: {
       name: "",
       phone: "",
+      countryCode: "US",
       email: "",
     },
     profilePasscode: "",
@@ -141,6 +144,26 @@ const CreatePassport = () => {
     }));
   };
 
+  // Handle phone number changes
+  const handlePhoneChange = (phoneValue) => {
+    setFormData((prev) => ({
+      ...prev,
+      trustedContact: {
+        ...prev.trustedContact,
+        phone: phoneValue || "",
+      },
+    }));
+  };
+
+  // Validate phone number
+  const validatePhoneNumberField = (phone) => {
+    if (!phone) return "Phone number is required";
+    if (!validatePhoneNumber(phone)) {
+      return "Please enter a valid phone number";
+    }
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -172,11 +195,9 @@ const CreatePassport = () => {
       return;
     }
 
-    if (
-      !formData.trustedContact.name.trim() ||
-      !formData.trustedContact.phone.trim()
-    ) {
-      setError("Trusted contact name and phone number are required");
+    const phoneError = validatePhoneNumberField(formData.trustedContact.phone);
+    if (phoneError) {
+      setError(phoneError);
       setIsLoading(false);
       return;
     }
@@ -390,17 +411,13 @@ const CreatePassport = () => {
                       />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                      <Form.Label>Phone Number *</Form.Label>
-                      <Form.Control
-                        type="tel"
-                        name="trustedContact.phone"
-                        value={formData.trustedContact.phone}
-                        onChange={handleInputChange}
-                        placeholder="Enter phone number"
-                        required
-                      />
-                    </Form.Group>
+                    <PhoneNumberInput
+                      value={formData.trustedContact.phone}
+                      onChange={handlePhoneChange}
+                      label="Phone Number"
+                      placeholder="Enter phone number"
+                      required
+                    />
 
                     <Form.Group className="mb-0">
                       <Form.Label>Email Address (Optional)</Form.Label>

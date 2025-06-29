@@ -23,11 +23,13 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "libphonenumber-js": "^1.12.9",
     "mongoose": "^8.16.1",
     "qrcode": "^1.5.4",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
+    "react-phone-number-input": "^3.4.12",
     "react-router-dom": "^7.6.3",
     "vite": "^7.0.0"
   },

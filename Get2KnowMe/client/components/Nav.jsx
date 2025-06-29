@@ -28,13 +28,20 @@ const NavTabs = () => {
   };
 
   return (
-    <Navbar bg="light" data-bs-theme="light" expand="md" sticky="top">
-      <Container>
-        <Navbar.Brand>Get2KnowMe</Navbar.Brand>
+    <Navbar bg="light" data-bs-theme="light" expand="md" sticky="top" className="custom-navbar">
+      <Container fluid="lg">
+        <Navbar.Brand as={Link} to="/" className="brand-link">
+          Get2KnowMe
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <BsNav variant="tabs" className="me-auto mx-auto">
-            <BsNav.Link as={Link} to="/" active={currentPage === "/"}>
+          <BsNav className="mx-auto navbar-nav-centered">
+            <BsNav.Link 
+              as={Link} 
+              to="/" 
+              active={currentPage === "/"}
+              className="nav-item-custom"
+            >
               Home
             </BsNav.Link>
 
@@ -43,6 +50,7 @@ const NavTabs = () => {
               as={Link}
               to="/passport-lookup"
               active={currentPage === "/passport-lookup"}
+              className="nav-item-custom"
             >
               View Passport
             </BsNav.Link>
@@ -53,6 +61,7 @@ const NavTabs = () => {
                 as={Link}
                 to="/login"
                 active={currentPage === "/login"}
+                className="nav-item-custom"
               >
                 Login
               </BsNav.Link>
@@ -62,16 +71,27 @@ const NavTabs = () => {
                   as={Link}
                   to="/create-passport"
                   active={currentPage === "/create-passport"}
+                  className="nav-item-custom"
                 >
                   My Passport
                 </BsNav.Link>
 
-                <BsNav.Link onClick={handleLogout} className="logout-btn">
+                <BsNav.Link 
+                  onClick={handleLogout} 
+                  className="nav-item-custom logout-btn"
+                >
                   Logout
                 </BsNav.Link>
               </>
             )}
           </BsNav>
+          
+          {/* User info section - positioned to the right */}
+          {user && (
+            <div className="navbar-text user-info d-none d-md-block">
+              Welcome, {user.username || user.email || 'User'}!
+            </div>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
