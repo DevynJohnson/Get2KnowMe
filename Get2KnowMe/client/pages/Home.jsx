@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import AuthService from '../utils/auth.js';
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import AuthService from "../utils/auth.js";
+import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
 
 const Home = () => {
   const [hasPassport, setHasPassport] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [passportName, setPassportName] = useState('');
+  const [passportName, setPassportName] = useState("");
+  const [passportCode, setPassportCode] = useState("");
+  const [showQRModal, setShowQRModal] = useState(false);
 
   // Get user info if logged in
   let user = null;
@@ -27,26 +30,30 @@ const Home = () => {
 
       try {
         const token = AuthService.getToken();
-        const response = await fetch('/api/passport/my-passport', {
+        const response = await fetch("/api/passport/my-passport", {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (response.ok) {
           const data = await response.json();
           setHasPassport(true);
           // Use preferred name, fallback to first name
-          const displayName = data.passport.preferredName || data.passport.firstName;
-          setPassportName(displayName || '');
+          const displayName =
+            data.passport.preferredName || data.passport.firstName;
+          setPassportName(displayName || "");
+          setPassportCode(data.passport.profilePasscode || "");
         } else {
           setHasPassport(false);
-          setPassportName('');
+          setPassportName("");
+          setPassportCode("");
         }
       } catch (err) {
-        console.error('Error checking passport:', err);
+        console.error("Error checking passport:", err);
         setHasPassport(false);
-        setPassportName('');
+        setPassportName("");
+        setPassportCode("");
       } finally {
         setIsLoading(false);
       }
@@ -62,63 +69,90 @@ const Home = () => {
           {/* Main Welcome Card */}
           <Card className="text-center shadow-sm mb-4">
             <Card.Body className="p-5">
-              <h1 className="display-4 mb-4" style={{ color: '#007bff' }}>
+              <h1 className="display-4 mb-4" style={{ color: "#007bff" }}>
                 Welcome to Get2KnowMe
               </h1>
-              
+
               {user ? (
                 <div>
                   <p className="lead mb-4">
-                    Hello, <strong>{passportName || user.username || user.email}</strong>! 
-                    {isLoading ? ' Loading your passport status...' : 
-                     hasPassport ? ' Need to update your Communication Passport? Click below to edit your details or view another person\'s passport.' : 
-                     ' Ready to create your Communication Passport?'}
+                    Hello,{" "}
+                    <strong>
+                      {passportName || user.username || user.email}
+                    </strong>
+                    !
+                    {isLoading
+                      ? " Loading your passport status..."
+                      : hasPassport
+                      ? " Need to update your Communication Passport? Click below to edit your details or view another person's passport."
+                      : " Ready to create your Communication Passport?"}
                   </p>
                   <div className="d-flex gap-3 justify-content-center flex-wrap">
-                    <Button 
-                      as={Link} 
-                      to="/create-passport" 
-                      variant="primary" 
+                    <Button
+                      as={Link}
+                      to="/create-passport"
+                      variant="primary"
                       size="lg"
                       className="px-4"
                       disabled={isLoading}
                     >
-                      <i className={`fas ${hasPassport ? 'fa-edit' : 'fa-id-card'} me-2`}></i>
-                      {isLoading ? 'Loading...' : (hasPassport ? 'Edit My Passport' : 'Create My Passport')}
+                      <i
+                        className={`fas ${
+                          hasPassport ? "fa-edit" : "fa-id-card"
+                        } me-2`}
+                      ></i>
+                      {isLoading
+                        ? "Loading..."
+                        : hasPassport
+                        ? "Edit My Passport"
+                        : "Create My Passport"}
                     </Button>
-                    <Button 
-                      as={Link} 
-                      to="/passport-lookup" 
-                      variant="outline-primary" 
+                    <Button
+                      as={Link}
+                      to="/passport-lookup"
+                      variant="outline-primary"
                       size="lg"
                       className="px-4"
                     >
                       <i className="fas fa-search me-2"></i>
                       View Someone's Passport
                     </Button>
+                    {hasPassport && passportCode && (
+                      <Button
+                        variant="outline-success"
+                        size="lg"
+                        className="px-4"
+                        onClick={() => setShowQRModal(true)}
+                        title="Generate QR code to share your passport"
+                      >
+                        <i className="fas fa-qrcode me-2"></i>
+                        Share My QR Code
+                      </Button>
+                    )}
                   </div>
                 </div>
               ) : (
                 <div>
                   <p className="lead mb-4">
-                    A tool for neurodivergent individuals to create Communication Passports 
-                    that help others understand their communication needs and preferences.
+                    A tool for neurodivergent individuals to create
+                    Communication Passports that help others understand their
+                    communication needs and preferences.
                   </p>
                   <div className="d-flex gap-3 justify-content-center flex-wrap mb-4">
-                    <Button 
-                      as={Link} 
-                      to="/register" 
-                      variant="primary" 
+                    <Button
+                      as={Link}
+                      to="/register"
+                      variant="primary"
                       size="lg"
                       className="px-4"
                     >
                       <i className="fas fa-user-plus me-2"></i>
                       Get Started
                     </Button>
-                    <Button 
-                      as={Link} 
-                      to="/passport-lookup" 
-                      variant="outline-primary" 
+                    <Button
+                      as={Link}
+                      to="/passport-lookup"
+                      variant="outline-primary"
                       size="lg"
                       className="px-4"
                     >
@@ -127,7 +161,8 @@ const Home = () => {
                     </Button>
                   </div>
                   <p className="text-muted">
-                    Already have an account? <Link to="/login">Sign in here</Link>
+                    Already have an account?{" "}
+                    <Link to="/login">Sign in here</Link>
                   </p>
                 </div>
               )}
@@ -144,13 +179,13 @@ const Home = () => {
                   </div>
                   <h4 className="mb-3">Communication Preferences</h4>
                   <p className="text-muted">
-                    Share your preferred communication methods, accommodations needed, 
-                    and topics to avoid for better interactions.
+                    Share your preferred communication methods, accommodations
+                    needed, and topics to avoid for better interactions.
                   </p>
                 </Card.Body>
               </Card>
             </Col>
-            
+
             <Col md={6}>
               <Card className="h-100 border-0 shadow-sm">
                 <Card.Body className="text-center p-4">
@@ -159,13 +194,13 @@ const Home = () => {
                   </div>
                   <h4 className="mb-3">Trusted Support</h4>
                   <p className="text-muted">
-                    Include contact information for a trusted person who can 
+                    Include contact information for a trusted person who can
                     provide additional support when needed.
                   </p>
                 </Card.Body>
               </Card>
             </Col>
-            
+
             <Col md={6}>
               <Card className="h-100 border-0 shadow-sm">
                 <Card.Body className="text-center p-4">
@@ -174,13 +209,13 @@ const Home = () => {
                   </div>
                   <h4 className="mb-3">Easy Access</h4>
                   <p className="text-muted">
-                    Generate a unique passcode that others can use to quickly 
+                    Generate a unique passcode that others can use to quickly
                     access your Communication Passport when needed.
                   </p>
                 </Card.Body>
               </Card>
             </Col>
-            
+
             <Col md={6}>
               <Card className="h-100 border-0 shadow-sm">
                 <Card.Body className="text-center p-4">
@@ -189,21 +224,21 @@ const Home = () => {
                   </div>
                   <h4 className="mb-3">Better Connections</h4>
                   <p className="text-muted">
-                    Foster understanding and create more positive social 
+                    Foster understanding and create more positive social
                     interactions by sharing your communication needs.
                   </p>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
-          
+
           {/* Call to Action */}
           <Card className="mt-4 bg-light border-0">
             <Card.Body className="text-center p-4">
               <h5 className="mb-3">Ready to Get Started?</h5>
               <p className="text-muted mb-4">
-                Join our community and create your Communication Passport today to help 
-                others understand and support your communication needs.
+                Join our community and create your Communication Passport today
+                to help others understand and support your communication needs.
               </p>
               {!user && (
                 <Button as={Link} to="/register" variant="primary" size="lg">
@@ -214,6 +249,16 @@ const Home = () => {
           </Card>
         </Col>
       </Row>
+
+      {/* QR Code Generator Modal */}
+      {hasPassport && passportCode && (
+        <QRCodeGenerator
+          show={showQRModal}
+          onHide={() => setShowQRModal(false)}
+          passcode={passportCode}
+          passportName={passportName}
+        />
+      )}
     </Container>
   );
 };

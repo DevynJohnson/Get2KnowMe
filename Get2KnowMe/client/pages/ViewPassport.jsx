@@ -1,22 +1,33 @@
 // client/pages/ViewPassport.jsx
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Badge, Alert, Button, Spinner } from 'react-bootstrap';
-import { useParams, useNavigate } from 'react-router-dom';
-import '../styles/ViewPassport.css';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Badge,
+  Alert,
+  Button,
+  Spinner,
+} from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
+import "../styles/ViewPassport.css";
 
 const ViewPassport = () => {
   const { passcode } = useParams();
   const navigate = useNavigate();
-  
+
   const [passport, setPassport] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [showQRModal, setShowQRModal] = useState(false);
 
   useEffect(() => {
     if (passcode) {
       fetchPassport(passcode);
     } else {
-      setError('No passcode provided');
+      setError("No passcode provided");
       setLoading(false);
     }
   }, [passcode]);
@@ -25,33 +36,37 @@ const ViewPassport = () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/passport/public/${code}`);
-      
+
       if (response.ok) {
         const data = await response.json();
         setPassport(data.passport);
       } else if (response.status === 404) {
-        setError('Communication Passport not found. Please check the passcode and try again.');
+        setError(
+          "Communication Passport not found. Please check the passcode and try again."
+        );
       } else {
-        setError('Unable to load Communication Passport. Please try again later.');
+        setError(
+          "Unable to load Communication Passport. Please try again later."
+        );
       }
     } catch (err) {
-      console.error('Error fetching passport:', err);
-      setError('Network error. Please check your connection and try again.');
+      console.error("Error fetching passport:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getDisplayDiagnosis = () => {
-    if (passport.diagnosis === 'Other' && passport.customDiagnosis) {
+    if (passport.diagnosis === "Other" && passport.customDiagnosis) {
       return passport.customDiagnosis;
     }
     return passport.diagnosis;
@@ -76,7 +91,7 @@ const ViewPassport = () => {
             <Alert variant="danger" className="text-center">
               <Alert.Heading>Unable to Load Passport</Alert.Heading>
               <p>{error}</p>
-              <Button variant="outline-danger" onClick={() => navigate('/')}>
+              <Button variant="outline-danger" onClick={() => navigate("/")}>
                 Return to Homepage
               </Button>
             </Alert>
@@ -94,7 +109,7 @@ const ViewPassport = () => {
             <Alert variant="warning" className="text-center">
               <Alert.Heading>Passport Not Found</Alert.Heading>
               <p>The requested Communication Passport could not be found.</p>
-              <Button variant="outline-warning" onClick={() => navigate('/')}>
+              <Button variant="outline-warning" onClick={() => navigate("/")}>
                 Return to Homepage
               </Button>
             </Alert>
@@ -114,11 +129,14 @@ const ViewPassport = () => {
                 <i className="fas fa-id-card"></i>
               </div>
               <h2 className="passport-name">
-                {passport.preferredName || passport.firstName} {passport.lastName}
+                {passport.preferredName || passport.firstName}{" "}
+                {passport.lastName}
               </h2>
-              <Badge bg="primary" className="passport-badge">Communication Passport</Badge>
+              <Badge bg="primary" className="passport-badge">
+                Communication Passport
+              </Badge>
             </Card.Header>
-            
+
             <Card.Body className="p-4">
               {/* Diagnosis Section */}
               <div className="passport-section mb-4">
@@ -134,36 +152,41 @@ const ViewPassport = () => {
               </div>
 
               {/* Communication Preferences Section */}
-              {passport.communicationPreferences && passport.communicationPreferences.length > 0 && (
-                <div className="passport-section mb-4">
-                  <div className="section-header">
-                    <i className="fas fa-comments section-icon"></i>
-                    <h4 className="section-title">Communication Preferences</h4>
+              {passport.communicationPreferences &&
+                passport.communicationPreferences.length > 0 && (
+                  <div className="passport-section mb-4">
+                    <div className="section-header">
+                      <i className="fas fa-comments section-icon"></i>
+                      <h4 className="section-title">
+                        Communication Preferences
+                      </h4>
+                    </div>
+                    <div className="section-content">
+                      <ul className="preferences-list">
+                        {passport.communicationPreferences.map(
+                          (preference, index) => (
+                            <li key={index} className="preference-item">
+                              <i className="fas fa-check-circle preference-icon"></i>
+                              {preference}
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
                   </div>
-                  <div className="section-content">
-                    <ul className="preferences-list">
-                      {passport.communicationPreferences.map((preference, index) => (
-                        <li key={index} className="preference-item">
-                          <i className="fas fa-check-circle preference-icon"></i>
-                          {preference}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
+                )}
 
               {/* Words to Avoid Section */}
               {passport.avoidWords && (
                 <div className="passport-section mb-4">
                   <div className="section-header">
                     <i className="fas fa-exclamation-triangle section-icon text-warning"></i>
-                    <h4 className="section-title">Words/Phrases/Topics to Avoid</h4>
+                    <h4 className="section-title">
+                      Words/Phrases/Topics to Avoid
+                    </h4>
                   </div>
                   <div className="section-content">
-                    <div className="avoid-words-box">
-                      {passport.avoidWords}
-                    </div>
+                    <div className="avoid-words-box">{passport.avoidWords}</div>
                   </div>
                 </div>
               )}
@@ -239,13 +262,23 @@ const ViewPassport = () => {
                     <i className="fas fa-clock"></i>
                     Last updated: {formatDate(passport.updatedAt)}
                   </small>
-                  <div>
-                    <Button 
-                      variant="outline-primary" 
+                  <div className="d-flex gap-2">
+                    <Button
+                      variant="outline-info"
+                      size="sm"
+                      onClick={() => setShowQRModal(true)}
+                      title="Generate QR code for easy sharing"
+                    >
+                      <i className="fas fa-qrcode me-1"></i>
+                      QR Code
+                    </Button>
+                    <Button
+                      variant="outline-primary"
                       size="sm"
                       onClick={() => window.print()}
                     >
-                      <i className="fas fa-print"></i> Print
+                      <i className="fas fa-print me-1"></i>
+                      Print
                     </Button>
                   </div>
                 </div>
@@ -259,10 +292,18 @@ const ViewPassport = () => {
               <i className="fas fa-info-circle"></i> Important Notice
             </Alert.Heading>
             <p className="mb-0 small">
-              In case of emergency or if additional support is needed, 
-              please contact the trusted person listed above.
+              In case of emergency or if additional support is needed, please
+              contact the trusted person listed above.
             </p>
           </Alert>
+
+          {/* QR Code Generator Modal */}
+          <QRCodeGenerator
+            show={showQRModal}
+            onHide={() => setShowQRModal(false)}
+            passcode={passcode}
+            passportName={passport.preferredName || passport.firstName}
+          />
         </Col>
       </Row>
     </Container>

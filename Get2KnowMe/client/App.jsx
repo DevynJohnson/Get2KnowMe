@@ -1,7 +1,7 @@
 // client/App.jsx
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import NavTabs from './components/Nav.jsx';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import NavTabs from "./components/Nav.jsx";
 
 function App() {
   return (

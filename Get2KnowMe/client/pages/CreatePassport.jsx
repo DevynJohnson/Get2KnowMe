@@ -1,63 +1,74 @@
 // client/pages/CreatePassport.jsx
-import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col, Alert, Card, Badge } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import auth from '../utils/auth.js';
-import '../styles/CreatePassport.css';
+import React, { useState, useEffect } from "react";
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Alert,
+  Card,
+  Badge,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import auth from "../utils/auth.js";
+import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
+import "../styles/CreatePassport.css";
 
 const CreatePassport = () => {
   const navigate = useNavigate();
-  
+
   // Form state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    preferredName: '',
-    diagnosis: '',
-    customDiagnosis: '',
+    firstName: "",
+    lastName: "",
+    preferredName: "",
+    diagnosis: "",
+    customDiagnosis: "",
     communicationPreferences: [],
-    avoidWords: '',
-    customPreferences: '',
+    avoidWords: "",
+    customPreferences: "",
     trustedContact: {
-      name: '',
-      phone: '',
-      email: ''
+      name: "",
+      phone: "",
+      email: "",
     },
-    profilePasscode: '',
-    otherInformation: ''
+    profilePasscode: "",
+    otherInformation: "",
   });
-  
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
 
   // Diagnosis options
   const diagnosisOptions = [
-    'ASD (Autism Spectrum Disorder)',
-    'ADHD',
-    'OCD',
-    'Dyslexia',
-    'Tourette\'s Syndrome',
-    'Other'
+    "ASD (Autism Spectrum Disorder)",
+    "ADHD",
+    "OCD",
+    "Dyslexia",
+    "Tourette's Syndrome",
+    "Other",
   ];
 
   // Communication preference options
   const preferenceOptions = [
-    'Speak slowly',
-    'Allow extra time to process',
-    'Avoid complicated questions or confusing language',
-    'Avoid specific words/phrases/topics',
-    'Other'
+    "Speak slowly",
+    "Allow extra time to process",
+    "Avoid complicated questions or confusing language",
+    "Avoid specific words/phrases/topics",
+    "Other",
   ];
 
   // Check if user is authenticated
   useEffect(() => {
     if (!auth.loggedIn()) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
-    
+
     // Load existing passport if it exists
     loadExistingPassport();
   }, [navigate]);
@@ -65,10 +76,10 @@ const CreatePassport = () => {
   const loadExistingPassport = async () => {
     try {
       const token = auth.getToken();
-      const response = await fetch('/api/passport/my-passport', {
+      const response = await fetch("/api/passport/my-passport", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -78,121 +89,130 @@ const CreatePassport = () => {
       }
       // If 404, user doesn't have a passport yet - that's fine
     } catch (err) {
-      console.error('Error loading existing passport:', err);
+      console.error("Error loading existing passport:", err);
     }
   };
 
   const generatePasscode = async () => {
     try {
-      const response = await fetch('/api/passport/generate-passcode');
+      const response = await fetch("/api/passport/generate-passcode");
       const data = await response.json();
-      
+
       if (response.ok) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          profilePasscode: data.passcode
+          profilePasscode: data.passcode,
         }));
       }
     } catch (err) {
-      console.error('Error generating passcode:', err);
-      setError('Failed to generate passcode');
+      console.error("Error generating passcode:", err);
+      setError("Failed to generate passcode");
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name.startsWith('trustedContact.')) {
-      const field = name.split('.')[1];
-      setFormData(prev => ({
+
+    if (name.startsWith("trustedContact.")) {
+      const field = name.split(".")[1];
+      setFormData((prev) => ({
         ...prev,
         trustedContact: {
           ...prev.trustedContact,
-          [field]: value
-        }
+          [field]: value,
+        },
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
 
   const handlePreferenceChange = (preference) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      communicationPreferences: prev.communicationPreferences.includes(preference)
-        ? prev.communicationPreferences.filter(p => p !== preference)
-        : [...prev.communicationPreferences, preference]
+      communicationPreferences: prev.communicationPreferences.includes(
+        preference
+      )
+        ? prev.communicationPreferences.filter((p) => p !== preference)
+        : [...prev.communicationPreferences, preference],
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
     setIsLoading(true);
 
     // Validation
     if (!formData.firstName.trim()) {
-      setError('First name is required');
+      setError("First name is required");
       setIsLoading(false);
       return;
     }
 
     if (!formData.lastName.trim()) {
-      setError('Last name is required');
+      setError("Last name is required");
       setIsLoading(false);
       return;
     }
 
     if (!formData.diagnosis) {
-      setError('Please select a diagnosis');
+      setError("Please select a diagnosis");
       setIsLoading(false);
       return;
     }
 
-    if (formData.diagnosis === 'Other' && !formData.customDiagnosis.trim()) {
-      setError('Please specify your diagnosis');
+    if (formData.diagnosis === "Other" && !formData.customDiagnosis.trim()) {
+      setError("Please specify your diagnosis");
       setIsLoading(false);
       return;
     }
 
-    if (!formData.trustedContact.name.trim() || !formData.trustedContact.phone.trim()) {
-      setError('Trusted contact name and phone number are required');
+    if (
+      !formData.trustedContact.name.trim() ||
+      !formData.trustedContact.phone.trim()
+    ) {
+      setError("Trusted contact name and phone number are required");
       setIsLoading(false);
       return;
     }
 
     if (!formData.profilePasscode.trim()) {
-      setError('Profile passcode is required');
+      setError("Profile passcode is required");
       setIsLoading(false);
       return;
     }
 
     try {
       const token = auth.getToken();
-      const response = await fetch('/api/passport/create', {
-        method: 'POST',
+      const response = await fetch("/api/passport/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess(`Communication Passport ${isEditing ? 'updated' : 'created'} successfully!`);
+        setSuccess(
+          `Communication Passport ${
+            isEditing ? "updated" : "created"
+          } successfully!`
+        );
         setIsEditing(true);
       } else {
-        setError(data.message || 'Failed to save Communication Passport');
+        setError(data.message || "Failed to save Communication Passport");
       }
     } catch (err) {
-      console.error('Error saving passport:', err);
-      setError('Server error. Please try again.');
+      console.error("Error saving passport:", err);
+      setError("Server error. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -205,11 +225,12 @@ const CreatePassport = () => {
           <Card className="passport-card">
             <Card.Body className="p-4">
               <h2 className="passport-title text-center mb-4">
-                {isEditing ? 'Update' : 'Create'} Your Communication Passport
+                {isEditing ? "Update" : "Create"} Your Communication Passport
               </h2>
-              
+
               <p className="text-muted text-center mb-4">
-                This information will help others understand how to communicate with you effectively.
+                This information will help others understand how to communicate
+                with you effectively.
               </p>
 
               {error && <Alert variant="danger">{error}</Alert>}
@@ -270,14 +291,16 @@ const CreatePassport = () => {
                     required
                   >
                     <option value="">Select your diagnosis</option>
-                    {diagnosisOptions.map(option => (
-                      <option key={option} value={option}>{option}</option>
+                    {diagnosisOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
 
                 {/* Custom Diagnosis Field */}
-                {formData.diagnosis === 'Other' && (
+                {formData.diagnosis === "Other" && (
                   <Form.Group className="mb-3">
                     <Form.Label>Please specify your diagnosis *</Form.Label>
                     <Form.Control
@@ -295,13 +318,15 @@ const CreatePassport = () => {
                 <Form.Group className="mb-3">
                   <Form.Label>Communication Preferences</Form.Label>
                   <div className="preferences-container">
-                    {preferenceOptions.map(preference => (
+                    {preferenceOptions.map((preference) => (
                       <div key={preference} className="mb-2">
                         <Form.Check
                           type="checkbox"
                           id={`pref-${preference}`}
                           label={preference}
-                          checked={formData.communicationPreferences.includes(preference)}
+                          checked={formData.communicationPreferences.includes(
+                            preference
+                          )}
                           onChange={() => handlePreferenceChange(preference)}
                         />
                       </div>
@@ -310,7 +335,9 @@ const CreatePassport = () => {
                 </Form.Group>
 
                 {/* Avoid Words Field */}
-                {formData.communicationPreferences.includes('Avoid specific words/phrases/topics') && (
+                {formData.communicationPreferences.includes(
+                  "Avoid specific words/phrases/topics"
+                ) && (
                   <Form.Group className="mb-3">
                     <Form.Label>Words/Phrases/Topics to Avoid</Form.Label>
                     <Form.Control
@@ -325,9 +352,11 @@ const CreatePassport = () => {
                 )}
 
                 {/* Custom Preferences Field */}
-                {formData.communicationPreferences.includes('Other') && (
+                {formData.communicationPreferences.includes("Other") && (
                   <Form.Group className="mb-3">
-                    <Form.Label>Additional Communication Preferences</Form.Label>
+                    <Form.Label>
+                      Additional Communication Preferences
+                    </Form.Label>
                     <Form.Control
                       as="textarea"
                       rows={3}
@@ -344,10 +373,11 @@ const CreatePassport = () => {
                   <Card.Body>
                     <h5 className="mb-3">Trusted Contact Information</h5>
                     <p className="small text-muted mb-3">
-                      <strong>Important:</strong> Please consult with this person before adding them 
-                      as your trusted contact so they are prepared to provide support if needed.
+                      <strong>Important:</strong> Please consult with this
+                      person before adding them as your trusted contact so they
+                      are prepared to provide support if needed.
                     </p>
-                    
+
                     <Form.Group className="mb-3">
                       <Form.Label>Contact Name *</Form.Label>
                       <Form.Control
@@ -398,8 +428,8 @@ const CreatePassport = () => {
                       required
                       className="text-uppercase"
                     />
-                    <Button 
-                      type="button" 
+                    <Button
+                      type="button"
                       variant="outline-secondary"
                       onClick={generatePasscode}
                       className="passcode-generate-btn"
@@ -409,8 +439,9 @@ const CreatePassport = () => {
                     </Button>
                   </div>
                   <Form.Text className="text-muted">
-                    <strong>Create your own memorable passcode</strong> or use the Generate button. 
-                    This code allows others to access your Communication Passport (6-20 letters/numbers only).
+                    <strong>Create your own memorable passcode</strong> or use
+                    the Generate button. This code allows others to access your
+                    Communication Passport (6-20 letters/numbers only).
                   </Form.Text>
                 </Form.Group>
 
@@ -438,34 +469,47 @@ const CreatePassport = () => {
                   disabled={isLoading}
                   size="lg"
                 >
-                  {isLoading 
-                    ? (isEditing ? 'Updating...' : 'Creating...') 
-                    : (isEditing ? 'Update Passport' : 'Create Passport')
-                  }
+                  {isLoading
+                    ? isEditing
+                      ? "Updating..."
+                      : "Creating..."
+                    : isEditing
+                    ? "Update Passport"
+                    : "Create Passport"}
                 </Button>
               </Form>
 
               {/* Action buttons */}
               <div className="text-center mt-3">
                 {isEditing ? (
-                  <div className="d-flex gap-2 justify-content-center">
-                    <Button 
-                      variant="outline-secondary" 
-                      onClick={() => navigate('/')}
+                  <div className="d-flex gap-2 justify-content-center flex-wrap">
+                    <Button
+                      variant="outline-secondary"
+                      onClick={() => navigate("/")}
                     >
                       Cancel
                     </Button>
-                    <Button 
-                      variant="outline-info" 
-                      onClick={() => navigate(`/passport/view/${formData.profilePasscode}`)}
+                    <Button
+                      variant="outline-info"
+                      onClick={() =>
+                        navigate(`/passport/view/${formData.profilePasscode}`)
+                      }
                     >
                       View My Passport
                     </Button>
+                    <Button
+                      variant="outline-success"
+                      onClick={() => setShowQRModal(true)}
+                      title="Generate QR code for easy sharing"
+                    >
+                      <i className="fas fa-qrcode me-1"></i>
+                      Get QR Code
+                    </Button>
                   </div>
                 ) : (
-                  <Button 
-                    variant="outline-secondary" 
-                    onClick={() => navigate('/')}
+                  <Button
+                    variant="outline-secondary"
+                    onClick={() => navigate("/")}
                   >
                     Cancel
                   </Button>
@@ -473,6 +517,16 @@ const CreatePassport = () => {
               </div>
             </Card.Body>
           </Card>
+
+          {/* QR Code Generator Modal */}
+          {isEditing && (
+            <QRCodeGenerator
+              show={showQRModal}
+              onHide={() => setShowQRModal(false)}
+              passcode={formData.profilePasscode}
+              passportName={formData.preferredName || formData.firstName}
+            />
+          )}
         </Col>
       </Row>
     </Container>

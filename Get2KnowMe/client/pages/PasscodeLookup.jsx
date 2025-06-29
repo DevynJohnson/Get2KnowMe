@@ -1,21 +1,29 @@
 // client/pages/PasscodeLookup.jsx
-import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col, Card, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import '../styles/PasscodeLookup.css';
+import React, { useState } from "react";
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Card,
+  Alert,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import "../styles/PasscodeLookup.css";
 
 const PasscodeLookup = () => {
   const navigate = useNavigate();
-  const [passcode, setPasscode] = useState('');
-  const [error, setError] = useState('');
+  const [passcode, setPasscode] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     if (!passcode.trim()) {
-      setError('Please enter a passcode');
+      setError("Please enter a passcode");
       return;
     }
 
@@ -24,18 +32,18 @@ const PasscodeLookup = () => {
     try {
       // Test if the passcode exists by making a request
       const response = await fetch(`/api/passport/public/${passcode.trim()}`);
-      
+
       if (response.ok) {
         // Passcode is valid, navigate to the passport view
         navigate(`/passport/view/${passcode.trim()}`);
       } else if (response.status === 404) {
-        setError('Passcode not found. Please check the code and try again.');
+        setError("Passcode not found. Please check the code and try again.");
       } else {
-        setError('Unable to verify passcode. Please try again later.');
+        setError("Unable to verify passcode. Please try again later.");
       }
     } catch (err) {
-      console.error('Error checking passcode:', err);
-      setError('Network error. Please check your connection and try again.');
+      console.error("Error checking passcode:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setIsLoading(false);
     }
@@ -43,11 +51,11 @@ const PasscodeLookup = () => {
 
   const formatPasscode = (value) => {
     // Remove any non-alphanumeric characters and convert to uppercase
-    const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-    
+    const cleaned = value.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+
     // Add dashes every 4 characters for readability
-    const formatted = cleaned.match(/.{1,4}/g)?.join('-') || cleaned;
-    
+    const formatted = cleaned.match(/.{1,4}/g)?.join("-") || cleaned;
+
     return formatted;
   };
 
@@ -80,9 +88,7 @@ const PasscodeLookup = () => {
 
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-4">
-                  <Form.Label className="form-label">
-                    Passcode
-                  </Form.Label>
+                  <Form.Label className="form-label">Passcode</Form.Label>
                   <Form.Control
                     type="text"
                     value={passcode}
@@ -120,11 +126,14 @@ const PasscodeLookup = () => {
 
               <div className="text-center mt-4">
                 <hr className="my-4" />
-                <h6 className="text-muted mb-3">What is a Communication Passport?</h6>
+                <h6 className="text-muted mb-3">
+                  What is a Communication Passport?
+                </h6>
                 <p className="small text-muted">
-                  A Communication Passport provides important information about 
-                  how to communicate effectively with neurodivergent individuals, 
-                  including their preferred communication methods and accommodations.
+                  A Communication Passport provides important information about
+                  how to communicate effectively with neurodivergent
+                  individuals, including their preferred communication methods
+                  and accommodations.
                 </p>
               </div>
 
@@ -133,8 +142,9 @@ const PasscodeLookup = () => {
                   <i className="fas fa-exclamation-triangle text-warning mb-2"></i>
                   <h6 className="text-warning mb-2">Emergency Assistance</h6>
                   <p className="small text-muted mb-0">
-                    If you need immediate support, contact the trusted person 
-                    listed in the Communication Passport or call emergency services.
+                    If you need immediate support, contact the trusted person
+                    listed in the Communication Passport or call emergency
+                    services.
                   </p>
                 </div>
               </div>
@@ -143,7 +153,7 @@ const PasscodeLookup = () => {
 
           <div className="text-center mt-4">
             <p className="text-muted small">
-              Don't have a passcode? Ask the individual to share their 
+              Don't have a passcode? Ask the individual to share their
               Communication Passport passcode with you.
             </p>
           </div>

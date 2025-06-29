@@ -24,10 +24,12 @@ The Get2KnowMe application now includes a comprehensive Communication Passport s
 - **Trusted Contact**: Name, phone (required), email (optional)
 - **Profile Passcode**: Unique identifier for public access
 - **Additional Information**: Free text for other important details
+- **QR Code Generation**: Create QR codes for easy passport sharing
 
 ### 2. Public Passport Access (`/passport-lookup`)
 **Anyone can access a Communication Passport by:**
 - Entering the unique passcode
+- Scanning a QR code with their smartphone
 - Viewing the formatted passport information
 - Contacting the trusted person if needed
 
@@ -36,6 +38,7 @@ The Get2KnowMe application now includes a comprehensive Communication Passport s
 - Professional card layout
 - Easy-to-read sections
 - Print functionality
+- QR code generation for sharing
 - Emergency contact information
 - Mobile-responsive design
 
@@ -79,13 +82,24 @@ The User model now includes a `communicationPassport` subdocument with:
 2. Navigate to "My Passport"
 3. Fill out the Communication Passport form
 4. Generate or create a unique passcode
-5. Share the passcode with others as needed
+5. Generate QR codes for easy sharing
+6. Share the passcode or QR code with others as needed
 
 ### For Passport Viewers:
 1. Go to "View Passport" (no account needed)
-2. Enter the provided passcode
+2. Enter the provided passcode OR scan a QR code
 3. View the Communication Passport
 4. Contact trusted person if support is needed
+
+## QR Code Features
+- **Easy Generation**: Create QR codes directly from your passport
+- **Smartphone Compatible**: Works with any smartphone camera
+- **Multiple Sharing Options**: 
+  - Download QR code as PNG image
+  - Print QR code with instructions
+  - Copy passport link to clipboard
+- **Emergency Ready**: Perfect for emergency situations where quick access is needed
+- **Third-Party Friendly**: Allows caregivers, teachers, and support staff quick access
 
 ## Security Features
 - Passcode-based access (no personal data exposure)
@@ -95,8 +109,8 @@ The User model now includes a `communicationPassport` subdocument with:
 - Input validation and sanitization
 
 ## Future Enhancements
-- QR code generation for passcodes
 - Mobile application
-- Passport sharing via links
+- Batch QR code printing
+- Passport templates
 - Analytics for passport usage
 - Multi-language support
