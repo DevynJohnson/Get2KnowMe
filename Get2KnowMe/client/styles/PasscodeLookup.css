@@ -119,6 +119,37 @@
   }
 }
 
+/* Extra small devices */
+@media (max-width: 480px) {
+  .passcode-lookup-container {
+    padding: 0.5rem;
+  }
+  
+  .lookup-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .lookup-title {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  
+  .lookup-icon {
+    font-size: 2rem;
+  }
+  
+  .passcode-input {
+    font-size: 16px; /* Prevents iOS zoom */
+    padding: 0.875rem 1rem;
+    letter-spacing: 1px;
+  }
+  
+  .lookup-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
 /* Animation */
 @keyframes fadeInUp {
   from {

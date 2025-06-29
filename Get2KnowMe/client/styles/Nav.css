@@ -46,4 +46,24 @@
   .nav-link {
     padding: 0.75rem 1rem;
   }
+  
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+  
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .welcome-text {
+    font-size: 0.85rem;
+  }
 }
