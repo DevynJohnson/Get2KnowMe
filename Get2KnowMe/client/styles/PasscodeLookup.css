@@ -83,6 +83,49 @@
   border-radius: 10px;
 }
 
+/* Divider styling for "OR" between input and scan button */
+.divider-text {
+  position: relative;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.divider-text::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #dee2e6;
+}
+
+.divider-text span {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0 1rem;
+  position: relative;
+}
+
+/* QR Scanner button styling */
+.btn-outline-primary.w-100 {
+  border: 2px dashed #007bff;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary.w-100:hover {
+  border-style: solid;
+  transform: translateY(-1px);
+}
+
+/* Mobile camera access notice */
+.camera-notice {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
 /* Alert styling */
 .alert {
   border-radius: 10px;

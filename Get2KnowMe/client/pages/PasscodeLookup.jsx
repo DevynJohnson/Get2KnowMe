@@ -10,6 +10,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import QRCodeScanner from "../components/QRCodeScanner.jsx";
 import "../styles/PasscodeLookup.css";
 
 const PasscodeLookup = () => {
@@ -17,6 +18,7 @@ const PasscodeLookup = () => {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,6 +66,34 @@ const PasscodeLookup = () => {
     setPasscode(formatted);
   };
 
+  const handleScanSuccess = (scannedPasscode) => {
+    setPasscode(scannedPasscode);
+    // Automatically submit the form with the scanned passcode
+    handleSubmitWithPasscode(scannedPasscode);
+  };
+
+  const handleSubmitWithPasscode = async (codeToSubmit) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/passport/public/${codeToSubmit.trim()}`);
+
+      if (response.ok) {
+        navigate(`/passport/view/${codeToSubmit.trim()}`);
+      } else if (response.status === 404) {
+        setError("Passcode not found. Please check the code and try again.");
+      } else {
+        setError("Unable to verify passcode. Please try again later.");
+      }
+    } catch (err) {
+      console.error("Error checking passcode:", err);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Container className="passcode-lookup-container">
       <Row className="justify-content-center align-items-center min-vh-100">
@@ -76,7 +106,7 @@ const PasscodeLookup = () => {
                 </div>
                 <h2 className="lookup-title">Access Communication Passport</h2>
                 <p className="text-muted">
-                  Enter the passcode to view someone's Communication Passport
+                  Enter the passcode or scan a QR code to view someone's Communication Passport
                 </p>
               </div>
 
@@ -106,7 +136,7 @@ const PasscodeLookup = () => {
 
                 <Button
                   type="submit"
-                  className="w-100 lookup-btn"
+                  className="w-100 lookup-btn mb-3"
                   disabled={isLoading || !passcode.trim()}
                   size="lg"
                 >
@@ -121,6 +151,24 @@ const PasscodeLookup = () => {
                       View Passport
                     </>
                   )}
+                </Button>
+
+                {/* QR Scanner Button */}
+                <div className="text-center mb-3">
+                  <div className="divider-text">
+                    <span className="text-muted small">OR</span>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline-primary"
+                  className="w-100"
+                  size="lg"
+                  onClick={() => setShowScanner(true)}
+                >
+                  <i className="fas fa-camera me-2"></i>
+                  Scan QR Code
                 </Button>
               </Form>
 
@@ -159,6 +207,13 @@ const PasscodeLookup = () => {
           </div>
         </Col>
       </Row>
+
+      {/* QR Code Scanner Modal */}
+      <QRCodeScanner
+        show={showScanner}
+        onHide={() => setShowScanner(false)}
+        onScanSuccess={handleScanSuccess}
+      />
     </Container>
   );
 };
