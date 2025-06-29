@@ -16,6 +16,11 @@ const __dirname = path.dirname(__filename);
 // Connect to MongoDB using the method defined at server/src/config/connection.js
 connectToDatabase();
 
+// Add some debugging for environment
+console.log('Environment:', process.env.NODE_ENV);
+console.log('PORT:', PORT);
+console.log('CORS_ORIGIN:', process.env.CORS_ORIGIN);
+
 // Set up middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,10 +28,11 @@ app.use(express.urlencoded({ extended: true }));
 // CORS configuration for both development and production
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.CORS_ORIGIN] 
-    : ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://get2knowme.onrender.com"],
+    ? (process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN] : true)
+    : ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
   credentials: true,
 };
+console.log('CORS Options:', corsOptions);
 app.use(cors(corsOptions));
 
 // Define API routes
