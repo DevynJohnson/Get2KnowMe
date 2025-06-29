@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? [process.env.CORS_ORIGIN] 
-    : ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+    : ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://get2knowme.onrender.com"],
   credentials: true,
 };
 app.use(cors(corsOptions));
