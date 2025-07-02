@@ -23,18 +23,31 @@ const communicationPassportSchema = new Schema({
     enum: [
       'ASD (Autism Spectrum Disorder)',
       'ADHD',
+      'AuDHD (Autism + ADHD)',
       'OCD',
       'Dyslexia',
       'Tourette\'s Syndrome',
       'Other'
     ]
   },
+  diagnoses: [{
+    type: String,
+    enum: [
+      'ASD (Autism Spectrum Disorder)',
+      'ADHD',
+      'AuDHD (Autism + ADHD)',
+      'OCD',
+      'Dyslexia',
+      'Tourette\'s Syndrome',
+      'Other'
+    ]
+  }],
   customDiagnosis: {
     type: String,
     trim: true,
-    // Required only if diagnosis is 'Other'
+    // Required only if diagnosis is 'Other' (backward compatibility) or diagnoses includes 'Other'
     required: function() {
-      return this.diagnosis === 'Other';
+      return this.diagnosis === 'Other' || (this.diagnoses && this.diagnoses.includes('Other'));
     }
   },
   communicationPreferences: [{

@@ -25,7 +25,7 @@ const CreatePassport = () => {
     firstName: "",
     lastName: "",
     preferredName: "",
-    diagnosis: "",
+    diagnoses: [], // Changed from single diagnosis to multiple diagnoses
     customDiagnosis: "",
     communicationPreferences: [],
     avoidWords: "",
@@ -50,6 +50,7 @@ const CreatePassport = () => {
   const diagnosisOptions = [
     "ASD (Autism Spectrum Disorder)",
     "ADHD",
+    "AuDHD (Autism + ADHD)",
     "OCD",
     "Dyslexia",
     "Tourette's Syndrome",
@@ -144,6 +145,15 @@ const CreatePassport = () => {
     }));
   };
 
+  const handleDiagnosisChange = (diagnosis) => {
+    setFormData((prev) => ({
+      ...prev,
+      diagnoses: prev.diagnoses.includes(diagnosis)
+        ? prev.diagnoses.filter((d) => d !== diagnosis)
+        : [...prev.diagnoses, diagnosis],
+    }));
+  };
+
   // Handle phone number changes
   const handlePhoneChange = (phoneValue) => {
     setFormData((prev) => ({
@@ -183,13 +193,13 @@ const CreatePassport = () => {
       return;
     }
 
-    if (!formData.diagnosis) {
-      setError("Please select a diagnosis");
+    if (!formData.diagnoses || formData.diagnoses.length === 0) {
+      setError("Please select at least one diagnosis");
       setIsLoading(false);
       return;
     }
 
-    if (formData.diagnosis === "Other" && !formData.customDiagnosis.trim()) {
+    if (formData.diagnoses.includes("Other") && !formData.customDiagnosis.trim()) {
       setError("Please specify your diagnosis");
       setIsLoading(false);
       return;
@@ -304,24 +314,28 @@ const CreatePassport = () => {
 
                 {/* Diagnosis Field */}
                 <Form.Group className="mb-3">
-                  <Form.Label>Diagnosis *</Form.Label>
-                  <Form.Select
-                    name="diagnosis"
-                    value={formData.diagnosis}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="">Select your diagnosis</option>
+                  <Form.Label>Diagnoses * (Select all that apply)</Form.Label>
+                  <Form.Text className="text-muted d-block mb-2">
+                    💡 <strong>Tip:</strong> You can select multiple diagnoses if you have more than one condition. 
+                    For example, if you have both Autism and ADHD, you can select both individual options 
+                    or choose "AuDHD (Autism + ADHD)".
+                  </Form.Text>
+                  <div className="d-flex flex-column gap-2">
                     {diagnosisOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
+                      <Form.Check
+                        key={option}
+                        type="checkbox"
+                        id={`diagnosis-${option}`}
+                        label={option}
+                        checked={formData.diagnoses.includes(option)}
+                        onChange={() => handleDiagnosisChange(option)}
+                      />
                     ))}
-                  </Form.Select>
+                  </div>
                 </Form.Group>
 
                 {/* Custom Diagnosis Field */}
-                {formData.diagnosis === "Other" && (
+                {formData.diagnoses.includes("Other") && (
                   <Form.Group className="mb-3">
                     <Form.Label>Please specify your diagnosis *</Form.Label>
                     <Form.Control

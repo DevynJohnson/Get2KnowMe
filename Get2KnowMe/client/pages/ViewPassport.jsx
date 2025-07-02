@@ -68,10 +68,25 @@ const ViewPassport = () => {
   };
 
   const getDisplayDiagnosis = () => {
-    if (passport.diagnosis === "Other" && passport.customDiagnosis) {
-      return passport.customDiagnosis;
+    // Handle new multiple diagnoses format
+    if (passport.diagnoses && Array.isArray(passport.diagnoses)) {
+      const diagnoses = [...passport.diagnoses];
+      
+      // Replace "Other" with custom diagnosis if it exists
+      if (diagnoses.includes("Other") && passport.customDiagnosis) {
+        const otherIndex = diagnoses.indexOf("Other");
+        diagnoses[otherIndex] = passport.customDiagnosis;
+      }
+      
+      return diagnoses;
     }
-    return passport.diagnosis;
+    
+    // Handle old single diagnosis format for backward compatibility
+    if (passport.diagnosis === "Other" && passport.customDiagnosis) {
+      return [passport.customDiagnosis];
+    }
+    
+    return passport.diagnosis ? [passport.diagnosis] : [];
   };
 
   // Format phone number for display
@@ -152,9 +167,13 @@ const ViewPassport = () => {
                   <h4 className="section-title">Diagnosis</h4>
                 </div>
                 <div className="section-content">
-                  <Badge bg="info" className="diagnosis-badge">
-                    {getDisplayDiagnosis()}
-                  </Badge>
+                  <div className="d-flex flex-wrap gap-2">
+                    {getDisplayDiagnosis().map((diagnosis, index) => (
+                      <Badge key={index} bg="info" className="diagnosis-badge">
+                        {diagnosis}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </div>
 
