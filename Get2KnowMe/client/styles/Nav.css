@@ -146,7 +146,7 @@
 /* Responsive adjustments */
 @media (max-width: 991.98px) {
   .navbar-nav-centered {
-    text-align: center;
+    text-align: left !important; /* Changed from center to left */
     margin-top: 1rem;
     gap: 0.25rem;
   }
@@ -155,7 +155,17 @@
     margin: 0.25rem 0;
     display: block;
     width: 100%;
-    text-align: center;
+    text-align: left;
+    justify-content: flex-start;
+  }
+  
+  /* Override Bootstrap's default navbar nav centering on mobile */
+  .navbar-nav {
+    text-align: left !important;
+  }
+  
+  .navbar-collapse {
+    text-align: left !important;
   }
   
   .user-info {
@@ -355,4 +365,70 @@
 
 .settings-dropdown-btn.dropdown-toggle::after {
   display: none !important;
+}
+
+/* Ensure settings dropdown button aligns with other nav items */
+.settings-dropdown-btn {
+  border: none !important;
+  background: transparent !important;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.25rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  color: #495057 !important;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex !important;
+  align-items: center;
+  min-height: 38px;
+  font-weight: 500;
+}
+
+.settings-dropdown-btn:hover {
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+}
+
+.settings-dropdown-btn:focus {
+  box-shadow: none !important;
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+}
+
+/* Mobile responsive styles for settings dropdown */
+@media (max-width: 991.98px) {
+  .settings-dropdown-btn {
+    margin: 0.25rem 0;
+    display: block !important;
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+  }
+  
+  /* Force the dropdown list item to align left on mobile */
+  .nav-item.dropdown {
+    text-align: left !important;
+    width: 100%;
+  }
+  
+  /* Override any Bootstrap centering on mobile nav items */
+  .navbar-nav .nav-item.dropdown {
+    text-align: left !important;
+    display: block !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings-dropdown-btn {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-dropdown-btn {
+    padding: 0.6rem 0.75rem !important;
+    font-size: 0.9rem;
+  }
 }
