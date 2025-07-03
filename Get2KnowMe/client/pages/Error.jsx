@@ -69,43 +69,21 @@ const ErrorPage = () => {
           >
             {content.title}
           </h1>
-          <p
-            style={{
-              fontSize: "1.25rem",
-              marginBottom: "20px",
-              color: "#6c757d",
-            }}
-          >
+          <p className="error-description">
             {content.description}
           </p>
 
           {/* Error details */}
-          <div
-            className="error-details"
-            style={{
-              background: "#f8f9fa",
-              border: "1px solid #dee2e6",
-              borderRadius: "8px",
-              padding: "15px",
-              marginBottom: "30px",
-              display: "inline-block",
-            }}
-          >
-            <p style={{ fontSize: "1rem", margin: "0", color: "#6c757d" }}>
+          <div className="error-details">
+            <p className="error-details-status">
               Error {errorInfo.status}:{" "}
-              <strong style={{ color: "#dc3545" }}>
+              <strong className="error-details-status-text">
                 {errorInfo.statusText}
               </strong>
             </p>
             {errorInfo.message &&
               errorInfo.message !== errorInfo.statusText && (
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    margin: "5px 0 0 0",
-                    color: "#6c757d",
-                  }}
-                >
+                <p className="error-details-message">
                   {errorInfo.message}
                 </p>
               )}

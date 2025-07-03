@@ -32,7 +32,13 @@ export const colorSchemes = {
       secondaryGradient: 'linear-gradient(135deg, #8dd0c5 0%, #a3ddd6 100%)',
       secondaryGradientReverse: 'linear-gradient(135deg, #a3ddd6 0%, #8dd0c5 100%)',
       accentGradient: 'linear-gradient(135deg, #f3b256 0%, #f7c677 100%)',
-      preview: '#4c93a1'
+      preview: '#4c93a1',
+      // Light mode specific colors
+      bgColor: '#fefefe',
+      cardBg: '#ffffff',
+      textColor: '#1f2937',
+      textMuted: '#6b7280',
+      borderColor: '#e5e7eb'
     },
     sage: {
       name: 'Sage Garden',
@@ -44,7 +50,13 @@ export const colorSchemes = {
       secondaryGradient: 'linear-gradient(135deg, #b8c5a8 0%, #c8d4bb 100%)',
       secondaryGradientReverse: 'linear-gradient(135deg, #c8d4bb 0%, #b8c5a8 100%)',
       accentGradient: 'linear-gradient(135deg, #8dd0c5 0%, #a3ddd6 100%)',
-      preview: '#7a8471'
+      preview: '#7a8471',
+      // Light mode specific colors
+      bgColor: '#fefefe',
+      cardBg: '#ffffff',
+      textColor: '#1f2937',
+      textMuted: '#6b7280',
+      borderColor: '#e5e7eb'
     },
     azure: {
       name: 'Azure Sky',
@@ -56,7 +68,13 @@ export const colorSchemes = {
       secondaryGradient: 'linear-gradient(135deg, #6ba3b0 0%, #7eb1bd 100%)',
       secondaryGradientReverse: 'linear-gradient(135deg, #7eb1bd 0%, #6ba3b0 100%)',
       accentGradient: 'linear-gradient(135deg, #2d5a42 0%, #3d6b52 100%)',
-      preview: '#4c93a1'
+      preview: '#4c93a1',
+      // Light mode specific colors
+      bgColor: '#fefefe',
+      cardBg: '#ffffff',
+      textColor: '#1f2937',
+      textMuted: '#6b7280',
+      borderColor: '#e5e7eb'
     }
   },
   dark: {
@@ -70,7 +88,7 @@ export const colorSchemes = {
       secondaryGradient: 'linear-gradient(135deg, #4c93a1 0%, #8dd0c5 100%)',
       secondaryGradientReverse: 'linear-gradient(135deg, #8dd0c5 0%, #4c93a1 100%)',
       accentGradient: 'linear-gradient(135deg, #f3b256 0%, #f7c677 100%)',
-      preview: '#132835',
+      preview: '#8dd0c5',     // Use bright turquoise for preview
       // Dark mode specific colors
       bgColor: '#0f1419',      // Very dark background
       cardBg: '#1a2832',       // Lighter card background
@@ -88,7 +106,7 @@ export const colorSchemes = {
       secondaryGradient: 'linear-gradient(135deg, #8dd0c5 0%, #b8c5a8 100%)',
       secondaryGradientReverse: 'linear-gradient(135deg, #b8c5a8 0%, #8dd0c5 100%)',
       accentGradient: 'linear-gradient(135deg, #f3b256 0%, #f7c677 100%)',
-      preview: '#2d3328',
+      preview: '#b8c5a8',     // Use bright sage for preview
       // Dark mode specific colors
       bgColor: '#1a1f1a',      // Very dark forest background
       cardBg: '#2d3328',       // Lighter card background
@@ -106,7 +124,7 @@ export const colorSchemes = {
       secondaryGradient: 'linear-gradient(135deg, #6ba3b0 0%, #a3ddd6 100%)',
       secondaryGradientReverse: 'linear-gradient(135deg, #a3ddd6 0%, #6ba3b0 100%)',
       accentGradient: 'linear-gradient(135deg, #f7f9eb 0%, #fafbf4 100%)',
-      preview: '#2a3b42',
+      preview: '#a3ddd6',     // Use bright turquoise for preview
       // Dark mode specific colors
       bgColor: '#1a2328',      // Very dark slate background
       cardBg: '#2a3b42',       // Lighter card background
@@ -195,13 +213,19 @@ export const colorblindTypes = {
 
 // Utility function to apply color scheme to document
 export const applyColorScheme = (selectedTheme, selectedColorScheme, isColorblindMode = false, cbType = 'protanopia') => {
+  console.log('🎨 applyColorScheme called:', { selectedTheme, selectedColorScheme, isColorblindMode, cbType });
+  
   // Apply theme to document first (for both colorblind and regular modes)
   if (selectedTheme === 'dark') {
     document.documentElement.setAttribute('data-bs-theme', 'dark');
+    document.body.setAttribute('data-bs-theme', 'dark'); // Also set on body
     document.body.classList.add('dark-theme');
+    console.log('🌙 Applied dark theme classes');
   } else {
     document.documentElement.removeAttribute('data-bs-theme');
+    document.body.removeAttribute('data-bs-theme'); // Also remove from body
     document.body.classList.remove('dark-theme');
+    console.log('☀️ Applied light theme classes');
   }
 
   // Apply colorblind mode if enabled
@@ -217,6 +241,23 @@ export const applyColorScheme = (selectedTheme, selectedColorScheme, isColorblin
     document.documentElement.style.setProperty('--secondary-gradient-reverse', `linear-gradient(135deg, ${cbColors.accent} 0%, ${cbColors.secondary} 100%)`);
     document.documentElement.style.setProperty('--accent-gradient', `linear-gradient(135deg, ${cbColors.accent} 0%, ${cbColors.neutral} 100%)`);
     document.documentElement.style.setProperty('--preview-color', cbColors.primary);
+    
+    // Apply theme-specific background and text colors even in colorblind mode
+    if (selectedTheme === 'dark') {
+      document.documentElement.style.setProperty('--bg-color', '#0f172a');
+      document.documentElement.style.setProperty('--card-bg', '#1e293b');
+      document.documentElement.style.setProperty('--text-color', '#f1f5f9');
+      document.documentElement.style.setProperty('--text-muted', '#94a3b8');
+      document.documentElement.style.setProperty('--border-color', '#334155');
+      document.documentElement.style.setProperty('--neutral-bg', '#1e293b');
+    } else {
+      document.documentElement.style.setProperty('--bg-color', '#ffffff');
+      document.documentElement.style.setProperty('--card-bg', '#ffffff');
+      document.documentElement.style.setProperty('--text-color', '#1f2937');
+      document.documentElement.style.setProperty('--text-muted', '#6b7280');
+      document.documentElement.style.setProperty('--border-color', '#e5e7eb');
+      document.documentElement.style.setProperty('--neutral-bg', '#f9fafb');
+    }
     return;
   } else {
     document.documentElement.removeAttribute('data-colorblind');
@@ -238,22 +279,12 @@ export const applyColorScheme = (selectedTheme, selectedColorScheme, isColorblin
     document.documentElement.style.setProperty('--accent-gradient', fallbackScheme.accentGradient);
     document.documentElement.style.setProperty('--preview-color', fallbackScheme.preview);
     
-    // Apply background and card colors if available (for dark mode)
-    if (fallbackScheme.bgColor) {
-      document.documentElement.style.setProperty('--bg-color', fallbackScheme.bgColor);
-    }
-    if (fallbackScheme.cardBg) {
-      document.documentElement.style.setProperty('--card-bg', fallbackScheme.cardBg);
-    }
-    if (fallbackScheme.textColor) {
-      document.documentElement.style.setProperty('--text-color', fallbackScheme.textColor);
-    }
-    if (fallbackScheme.textMuted) {
-      document.documentElement.style.setProperty('--text-muted', fallbackScheme.textMuted);
-    }
-    if (fallbackScheme.borderColor) {
-      document.documentElement.style.setProperty('--border-color', fallbackScheme.borderColor);
-    }
+    // Apply background and card colors (required for proper theming)
+    document.documentElement.style.setProperty('--bg-color', fallbackScheme.bgColor);
+    document.documentElement.style.setProperty('--card-bg', fallbackScheme.cardBg);
+    document.documentElement.style.setProperty('--text-color', fallbackScheme.textColor);
+    document.documentElement.style.setProperty('--text-muted', fallbackScheme.textMuted);
+    document.documentElement.style.setProperty('--border-color', fallbackScheme.borderColor);
     return;
   }
 
@@ -268,20 +299,17 @@ export const applyColorScheme = (selectedTheme, selectedColorScheme, isColorblin
   document.documentElement.style.setProperty('--accent-gradient', scheme.accentGradient);
   document.documentElement.style.setProperty('--preview-color', scheme.preview);
   
-  // Apply background and card colors if available (for dark mode)
-  if (scheme.bgColor) {
-    document.documentElement.style.setProperty('--bg-color', scheme.bgColor);
-  }
-  if (scheme.cardBg) {
-    document.documentElement.style.setProperty('--card-bg', scheme.cardBg);
-  }
-  if (scheme.textColor) {
-    document.documentElement.style.setProperty('--text-color', scheme.textColor);
-  }
-  if (scheme.textMuted) {
-    document.documentElement.style.setProperty('--text-muted', scheme.textMuted);
-  }
-  if (scheme.borderColor) {
-    document.documentElement.style.setProperty('--border-color', scheme.borderColor);
-  }
+  // Always apply background and card colors (required for proper theming)
+  document.documentElement.style.setProperty('--bg-color', scheme.bgColor);
+  document.documentElement.style.setProperty('--card-bg', scheme.cardBg);
+  document.documentElement.style.setProperty('--text-color', scheme.textColor);
+  document.documentElement.style.setProperty('--text-muted', scheme.textMuted);
+  document.documentElement.style.setProperty('--border-color', scheme.borderColor);
+  
+  console.log('🎯 Applied CSS variables:', {
+    bgColor: scheme.bgColor,
+    cardBg: scheme.cardBg,
+    textColor: scheme.textColor,
+    primary: scheme.primary
+  });
 };

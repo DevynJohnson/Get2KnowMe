@@ -308,7 +308,7 @@ body:not([data-bs-theme="dark"]) .view-passport-container {
   --bs-body-bg: #121212;
   --bs-body-color: #ffffff;
   
-  /* Dark theme color scheme variables */
+  /* Base fallback colors - will be overridden by JavaScript color schemes */
   --bg-color: #0f1419;
   --card-bg: #1a2832;
   --text-color: #f8fafc;
@@ -327,30 +327,13 @@ body:not([data-bs-theme="dark"]) .view-passport-container {
   --success-border: #198754;
 }
 
-[data-bs-theme="dark"] .card {
-  background-color: #1e1e1e;
-  border-color: #333;
-}
-
 [data-bs-theme="dark"] .navbar {
-  background-color: #1e1e1e !important;
+  background-color: var(--card-bg) !important;
 }
 
 [data-bs-theme="dark"] .dropdown-menu {
-  background-color: #2d2d2d;
-  border-color: #444;
-}
-
-[data-bs-theme="dark"] .form-control {
-  background-color: #2d2d2d;
-  border-color: #444;
-  color: #ffffff;
-}
-
-[data-bs-theme="dark"] .form-control:focus {
-  background-color: #2d2d2d;
-  border-color: var(--primary-color);
-  color: #ffffff;
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
 }
 
 /* Dark theme specific styling */
@@ -1349,4 +1332,24 @@ a.text-primary:hover {
   border-radius: 12px !important;
   padding: 2rem !important;
   margin-top: 2rem !important;
+}
+
+/* Dark theme specific background application */
+[data-bs-theme="dark"] .app-container,
+[data-bs-theme="dark"] .main-content {
+  background-color: var(--bg-color) !important;
+}
+
+/* Dark theme container backgrounds for different page types */
+[data-bs-theme="dark"] .register-container,
+[data-bs-theme="dark"] .login-container,
+[data-bs-theme="dark"] .create-passport-container,
+[data-bs-theme="dark"] .view-passport-container,
+[data-bs-theme="dark"] .settings-container {
+  background: var(--bg-color) !important;
+}
+
+[data-bs-theme="dark"] body {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
 }

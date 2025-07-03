@@ -16,11 +16,37 @@
   color: var(--text-color);
 }
 
+.error-description {
+  font-size: 1.25rem;
+  margin-bottom: 20px;
+  color: var(--text-color-secondary);
+}
+
 .error-details {
   animation: slideInFromBottom 0.8s ease-out;
   transition: all 0.3s ease;
   background: var(--neutral-bg);
   border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+
+.error-details-status {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--text-color-secondary);
+}
+
+.error-details-status-text {
+  color: var(--accent-color);
+}
+
+.error-details-message {
+  font-size: 0.9rem;
+  margin: 5px 0 0 0;
+  color: var(--text-color-secondary);
 }
 
 .error-details:hover {

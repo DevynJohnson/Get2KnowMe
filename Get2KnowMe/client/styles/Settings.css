@@ -5,6 +5,23 @@
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
+/* Gradient header for section cards */
+.gradient-header {
+  background: var(--gradient-bg) !important;
+  border-bottom: none !important;
+  padding: 1rem 1.5rem !important;
+}
+
+.gradient-header h5 {
+  margin: 0 !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.gradient-header i {
+  opacity: 0.9;
+}
+
 .settings-sidebar {
   border: none;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);

@@ -88,8 +88,8 @@ const AppearanceSettings = () => {
 
       {/* Theme Selection */}
       <Card className="mb-4">
-        <Card.Header>
-          <h5 className="mb-0">
+        <Card.Header className="gradient-header">
+          <h5 className="mb-0 text-white">
             <i className="fas fa-palette me-2"></i>
             Theme Mode
           </h5>
@@ -165,8 +165,8 @@ const AppearanceSettings = () => {
 
       {/* Color Scheme Selection */}
       <Card className="mb-4">
-        <Card.Header>
-          <h5 className="mb-0">
+        <Card.Header className="gradient-header">
+          <h5 className="mb-0 text-white">
             <i className="fas fa-paint-brush me-2"></i>
             Color Scheme
           </h5>
@@ -222,8 +222,8 @@ const AppearanceSettings = () => {
 
       {/* Accessibility Options */}
       <Card className="mb-4">
-        <Card.Header>
-          <h5 className="mb-0">
+        <Card.Header className="gradient-header">
+          <h5 className="mb-0 text-white">
             <i className="fas fa-universal-access me-2"></i>
             Accessibility Options
           </h5>
@@ -301,8 +301,8 @@ const AppearanceSettings = () => {
 
       {/* Current Settings Info */}
       <Card>
-        <Card.Header>
-          <h5 className="mb-0">
+        <Card.Header className="gradient-header">
+          <h5 className="mb-0 text-white">
             <i className="fas fa-info-circle me-2"></i>
             Current Settings
           </h5>
