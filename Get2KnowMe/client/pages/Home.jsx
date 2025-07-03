@@ -1,163 +1,199 @@
-import React, { useState } from "react";
+import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import AuthService from "../utils/auth.js";
-import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
-import { usePassportData } from "../hooks/usePassportData.js";
 import '../styles/Home.css';
 
 const Home = () => {
-  const [showQRModal, setShowQRModal] = useState(false);
-
-  // Get user info if logged in
+  // Check if user is logged in
   let user = null;
   try {
     user = AuthService.getProfile();
   } catch {
-    // User not logged in, that's fine
     user = null;
   }
-
-  // Use the optimized passport data hook
-  const { hasPassport, isLoading, displayName, passportCode } = usePassportData();
 
   return (
     <Container className="home-container">
       <Row className="justify-content-center">
         <Col md={10} lg={8}>
-          {/* Main Welcome Card */}
+          {/* Hero Section */}
+          <Card className="home-card mb-4">
+            <Card.Body className="p-5 text-center">
+              <h1 className="display-4 home-title mb-4">
+                Welcome to Get2KnowMe
+              </h1>
+              <p className="lead mb-4">
+                Empowering neurodivergent individuals through Communication Passports
+              </p>
+              <p className="mb-4">
+                Create personalized Communication Passports that help others understand 
+                your communication needs, preferences, and accommodations. Foster better 
+                understanding and more positive interactions in every setting.
+              </p>
+              
+              {user ? (
+                <Link to="/profile" className="cta-button">
+                  <i className="fas fa-user"></i>
+                  Go to My Profile
+                </Link>
+              ) : (
+                <div className="d-flex gap-3 justify-content-center flex-wrap">
+                  <Link to="/register" className="cta-button">
+                    <i className="fas fa-user-plus"></i>
+                    Get Started
+                  </Link>
+                  <Link to="/passport-lookup" className="cta-button secondary">
+                    <i className="fas fa-search"></i>
+                    View a Passport
+                  </Link>
+                </div>
+              )}
+            </Card.Body>
+          </Card>
+
+          {/* What is a Communication Passport Section */}
           <Card className="home-card mb-4">
             <Card.Body className="p-5">
-              {!user && (
-                <h1 className="display-4 home-title">
-                  Welcome to Get2KnowMe
-                </h1>
-              )}
+              <h2 className="h3 mb-4">
+                <i className="fas fa-question-circle me-2"></i>
+                What is a Communication Passport?
+              </h2>
+              <p className="mb-4">
+                A Communication Passport is a personalized document that contains important 
+                information about how you communicate best. It helps others understand your 
+                communication style, preferences, and any accommodations you might need.
+              </p>
+              
+              <Row>
+                <Col md={6}>
+                  <h5>
+                    <i className="fas fa-lightbulb me-2"></i>
+                    What's Included:
+                  </h5>
+                  <ul className="feature-list-simple">
+                    <li>Communication preferences and style</li>
+                    <li>Sensory needs and accommodations</li>
+                    <li>Emergency contact information</li>
+                    <li>Helpful strategies for interaction</li>
+                    <li>Personal interests and strengths</li>
+                  </ul>
+                </Col>
+                <Col md={6}>
+                  <h5>
+                    <i className="fas fa-users me-2"></i>
+                    Who Can Benefit:
+                  </h5>
+                  <ul className="feature-list-simple">
+                    <li>Autistic individuals</li>
+                    <li>People with ADHD</li>
+                    <li>Those with learning differences</li>
+                    <li>Anyone who wants to communicate their needs</li>
+                    <li>Caregivers and support persons</li>
+                  </ul>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
 
-              {user ? (
-                <div className="welcome-message">
-                  <h3>
-                    <i className="fas fa-user-circle me-2"></i>
-                    Hello, {displayName || user.username || user.email}!
-                  </h3>
-                  <p className="mb-0">
-                    {isLoading
-                      ? "Loading your passport status..."
-                      : hasPassport
-                      ? "Need to update your Communication Passport? Click below to edit your details or view another person's passport."
-                      : "Ready to create your Communication Passport?"}
-                  </p>
-                </div>
-              ) : (
-                <div className="guest-message">
-                  <h3>
-                    <i className="fas fa-heart me-2"></i>
-                    Create Better Connections
-                  </h3>
-                  <p className="mb-0">
-                    A tool for neurodivergent individuals to create
-                    Communication Passports that help others understand their
-                    communication needs and preferences.
-                  </p>
-                </div>
-              )}
-
-              {/* Feature List - Only show for non-authenticated users */}
-              {!user && (
-                <ul className="feature-list">
-                  <li>
-                    <div className="feature-icon">
+          {/* Features Section */}
+          <Card className="home-card mb-4">
+            <Card.Body className="p-5">
+              <h2 className="h3 mb-4">
+                <i className="fas fa-star me-2"></i>
+                Key Features
+              </h2>
+              <Row>
+                <Col sm={6} lg={3} xl={3} className="mb-4">
+                  <div className="feature-card">
+                    <div className="feature-icon-large mb-3">
                       <i className="fas fa-comments"></i>
                     </div>
-                    Share your communication preferences and accommodations
-                  </li>
-                  <li>
-                    <div className="feature-icon">
+                    <h5>Easy Sharing</h5>
+                    <p>Generate QR codes to instantly share your passport with others.</p>
+                  </div>
+                </Col>
+                <Col sm={6} lg={3} xl={3} className="mb-4">
+                  <div className="feature-card">
+                    <div className="feature-icon-large mb-3">
                       <i className="fas fa-user-shield"></i>
                     </div>
-                    Include trusted contact information for support
-                  </li>
-                  <li>
-                    <div className="feature-icon">
-                      <i className="fas fa-qrcode"></i>
+                    <h5>Privacy Focused</h5>
+                    <p>Control what information you share and with whom.</p>
+                  </div>
+                </Col>
+                <Col sm={6} lg={3} xl={3} className="mb-4">
+                  <div className="feature-card">
+                    <div className="feature-icon-large mb-3">
+                      <i className="fas fa-mobile-alt"></i>
                     </div>
-                    Generate QR codes for easy passport sharing
-                  </li>
-                  <li>
-                    <div className="feature-icon">
+                    <h5>Mobile Friendly</h5>
+                    <p>Access your passport anywhere, on any device.</p>
+                  </div>
+                </Col>
+                <Col sm={6} lg={3} xl={3} className="mb-4">
+                  <div className="feature-card">
+                    <div className="feature-icon-large mb-3">
                       <i className="fas fa-heart"></i>
                     </div>
-                    Foster understanding and positive interactions
-                  </li>
-                </ul>
-              )}
+                    <h5>Build Understanding</h5>
+                    <p>Help others understand and support your communication needs.</p>
+                  </div>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
 
-              {/* Action Buttons */}
-              <div className="cta-buttons">
-                {user ? (
-                  <>
-                    <Link
-                      to="/create-passport"
-                      className={`cta-button ${isLoading ? 'disabled' : ''}`}
-                    >
-                      <i className={`fas ${hasPassport ? "fa-edit" : "fa-id-card"}`}></i>
-                      {isLoading
-                        ? "Loading..."
-                        : hasPassport
-                        ? "Edit My Passport"
-                        : "Create My Passport"}
-                    </Link>
-                    <Link to="/passport-lookup" className="cta-button secondary">
-                      <i className="fas fa-search"></i>
-                      View Someone's Passport
-                    </Link>
-                    {hasPassport && passportCode && (
-                      <button
-                        className="cta-button accent"
-                        onClick={() => setShowQRModal(true)}
-                        title="Generate QR code to share your passport"
-                      >
-                        <i className="fas fa-qrcode"></i>
-                        Share My QR Code
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Link to="/register" className="cta-button">
-                      <i className="fas fa-user-plus"></i>
-                      Get Started
-                    </Link>
-                    <Link to="/passport-lookup" className="cta-button secondary">
-                      <i className="fas fa-search"></i>
-                      View a Passport
-                    </Link>
-                  </>
-                )}
-              </div>
-
+          {/* How It Works Section */}
+          <Card className="home-card">
+            <Card.Body className="p-5">
+              <h2 className="h3 mb-4">
+                <i className="fas fa-cogs me-2"></i>
+                How It Works
+              </h2>
+              <Row>
+                <Col md={4} className="mb-4">
+                  <div className="step-card text-center">
+                    <div className="step-number">1</div>
+                    <h5>Create Account</h5>
+                    <p>Sign up for free and start building your Communication Passport.</p>
+                  </div>
+                </Col>
+                <Col md={4} className="mb-4">
+                  <div className="step-card text-center">
+                    <div className="step-number">2</div>
+                    <h5>Build Passport</h5>
+                    <p>Fill in your communication preferences, needs, and contact information.</p>
+                  </div>
+                </Col>
+                <Col md={4} className="mb-4">
+                  <div className="step-card text-center">
+                    <div className="step-number">3</div>
+                    <h5>Share & Connect</h5>
+                    <p>Generate QR codes or direct links to share with others easily.</p>
+                  </div>
+                </Col>
+              </Row>
+              
               {!user && (
-                <p className="text-muted text-center mt-3 mb-0">
-                  Already have an account?{" "}
-                  <Link to="/login" className="text-primary fw-medium">
-                    Sign in here
+                <div className="text-center mt-4">
+                  <p className="mb-3">Ready to get started?</p>
+                  <Link to="/register" className="cta-button">
+                    <i className="fas fa-rocket"></i>
+                    Create Your Passport
                   </Link>
-                </p>
+                  <p className="text-muted mt-3 mb-0">
+                    Already have an account?{" "}
+                    <Link to="/login" className="text-primary fw-medium">
+                      Sign in here
+                    </Link>
+                  </p>
+                </div>
               )}
             </Card.Body>
           </Card>
         </Col>
       </Row>
-
-      {/* QR Code Generator Modal */}
-      {hasPassport && passportCode && (
-        <QRCodeGenerator
-          show={showQRModal}
-          onHide={() => setShowQRModal(false)}
-          passcode={passportCode}
-          passportName={displayName}
-        />
-      )}
     </Container>
   );
 };

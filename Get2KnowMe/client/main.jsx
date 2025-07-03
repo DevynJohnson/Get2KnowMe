@@ -20,6 +20,7 @@ import Settings from './pages/Settings.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 
 // Lazy load less critical pages
+const Profile = React.lazy(() => import('./pages/Profile.jsx'));
 const CreatePassport = React.lazy(() => import('./pages/CreatePassport.jsx'));
 const ViewPassport = React.lazy(() => import('./pages/ViewPassport.jsx'));
 const PasscodeLookup = React.lazy(() => import('./pages/PasscodeLookup.jsx'));
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },        // Default route: /
       { path: 'login', element: <Login /> },     // Route: /login
       { path: 'register', element: <Register /> }, // Route: /register
+      { 
+        path: 'profile', 
+        element: (
+          <Suspense fallback={<div className="d-flex justify-content-center p-4"><div className="spinner-border" role="status"></div></div>}>
+            <Profile />
+          </Suspense>
+        )
+      },
       { 
         path: 'create-passport', 
         element: (

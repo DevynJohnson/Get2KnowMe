@@ -432,3 +432,14 @@
     font-size: 0.9rem;
   }
 }
+
+/* Dropdown item with subtitle styling */
+.dropdown-item small {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  margin-top: 0.1rem;
+}
+
+.dropdown-item:hover small {
+  color: rgba(255, 255, 255, 0.8) !important;
+}

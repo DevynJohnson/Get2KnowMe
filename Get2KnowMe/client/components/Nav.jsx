@@ -59,8 +59,8 @@ const NavTabs = () => {
             {user ? (
               <BsNav.Link
                 as={Link}
-                to="/create-passport"
-                active={currentPage === "/create-passport"}
+                to="/profile"
+                active={currentPage === "/profile"}
                 className="nav-item-custom"
               >
                 My Passport
@@ -79,31 +79,21 @@ const NavTabs = () => {
           
           {/* Right side navigation - Settings and Login/Logout */}
           <BsNav className="ms-auto">
-            {!user ? (
-              <BsNav.Link
-                as={Link}
-                to="/login"
-                active={currentPage === "/login"}
-                className="nav-item-custom"
+            {/* Settings Dropdown - Available for all users */}
+            <li className="nav-item dropdown">
+              <button
+                className="nav-link nav-item-custom btn btn-link settings-dropdown-btn"
+                id="settings-dropdown"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fas fa-sign-in-alt me-1"></i>
-                Login
-              </BsNav.Link>
-            ) : (
-              <>
-                {/* Settings Dropdown */}
-                <li className="nav-item dropdown">
-                  <button
-                    className="nav-link nav-item-custom btn btn-link settings-dropdown-btn"
-                    id="settings-dropdown"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i className="fas fa-cog me-1"></i>
-                    Settings
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="settings-dropdown">
+                <i className="fas fa-cog me-1"></i>
+                Settings
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="settings-dropdown">
+                {user ? (
+                  <>
                     <li><h6 className="dropdown-header"><i className="fas fa-user me-2"></i>Account Settings</h6></li>
                     <li><Link className="dropdown-item" to="/settings/profile">
                       <i className="fas fa-user me-2"></i>Profile Settings
@@ -118,9 +108,40 @@ const NavTabs = () => {
                     <li><Link className="dropdown-item text-danger" to="/settings/danger-zone">
                       <i className="fas fa-exclamation-triangle me-2"></i>Danger Zone
                     </Link></li>
-                  </ul>
-                </li>
+                  </>
+                ) : (
+                  <>
+                    <li><h6 className="dropdown-header"><i className="fas fa-user-plus me-2"></i>Create Account to Access</h6></li>
+                    <li><Link className="dropdown-item" to="/register">
+                      <i className="fas fa-user me-2"></i>Profile Settings
+                    </Link></li>
+                    <li><Link className="dropdown-item" to="/register">
+                      <i className="fas fa-shield-alt me-2"></i>Security & Password
+                    </Link></li>
+                    <li><Link className="dropdown-item" to="/settings/appearance">
+                      <i className="fas fa-palette me-2"></i>Appearance
+                    </Link></li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li><Link className="dropdown-item" to="/register">
+                      <i className="fas fa-rocket me-2"></i>Create Account
+                    </Link></li>
+                  </>
+                )}
+              </ul>
+            </li>
 
+            {!user ? (
+              <BsNav.Link
+                as={Link}
+                to="/login"
+                active={currentPage === "/login"}
+                className="nav-item-custom"
+              >
+                <i className="fas fa-sign-in-alt me-1"></i>
+                Login
+              </BsNav.Link>
+            ) : (
+              <>
                 {/* Logout Button */}
                 <BsNav.Link 
                   onClick={handleLogout} 
