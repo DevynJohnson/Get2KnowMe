@@ -222,7 +222,7 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
         </Button>
         
         {error && (
-          <Button variant="primary" onClick={handleRetry}>
+          <Button variant="primary" onClick={handleRetry} className="btn-primary">
             <i className="fas fa-redo me-1"></i>
             Try Again
           </Button>

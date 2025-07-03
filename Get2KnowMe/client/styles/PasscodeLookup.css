@@ -1,7 +1,7 @@
 /* PasscodeLookup.css - Styling for passcode lookup page */
 
 .passcode-lookup-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
   min-height: 100vh;
   padding: 2rem 0;
 }
@@ -17,7 +17,7 @@
 
 .lookup-icon {
   font-size: 3rem;
-  color: #667eea;
+  color: var(--primary-color);
   opacity: 0.8;
 }
 
@@ -46,8 +46,8 @@
 }
 
 .passcode-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
   outline: none;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .lookup-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
   border: none;
   border-radius: 25px;
   padding: 12px 30px;
@@ -207,12 +207,12 @@
 
 /* Accessibility improvements */
 .lookup-btn:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
 .passcode-input:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 

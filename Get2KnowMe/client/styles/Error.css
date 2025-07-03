@@ -2,6 +2,8 @@
 
 .error-container {
   animation: fadeIn 0.6s ease-in;
+  background: var(--gradient-bg);
+  color: var(--text-color);
 }
 
 .error-emoji {
@@ -11,11 +13,14 @@
 
 .error-title {
   animation: slideInFromTop 0.8s ease-out;
+  color: var(--text-color);
 }
 
 .error-details {
   animation: slideInFromBottom 0.8s ease-out;
   transition: all 0.3s ease;
+  background: var(--neutral-bg);
+  border: 1px solid var(--border-color);
 }
 
 .error-details:hover {
@@ -35,6 +40,21 @@
 .error-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.error-button.btn-primary {
+  background: var(--gradient-primary);
+  border: none;
+}
+
+.error-button.btn-outline-secondary {
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+}
+
+.error-button.btn-outline-secondary:hover {
+  background-color: var(--secondary-color);
+  color: white;
 }
 
 /* Animations */

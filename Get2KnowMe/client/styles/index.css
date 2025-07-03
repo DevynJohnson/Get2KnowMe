@@ -1,0 +1,24 @@
+/* Base styles */
+:root {
+  --bs-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  font-family: var(--bs-font-family);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--bg-color, #fefefe);
+  color: var(--text-color, #1f2937);
+}
+
+/* Removed conflicting dark theme styles - all theming handled in ColorSchemes.css */
+
+/* Additional spacing and styling */
+.main-content {
+  min-height: calc(100vh - 80px);
+}
+
+/* Loading spinner styles */
+.spinner-border {
+  width: 1.5rem;
+  height: 1.5rem;
+}

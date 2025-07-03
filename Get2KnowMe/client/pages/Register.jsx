@@ -111,48 +111,57 @@ const Register = () => {
               <h2 className="text-center register-title">Create Account</h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formEmail" className="mb-3">
-                  <Form.Label>Email Address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
-                    required
-                  />
-                </Form.Group>
+                {/* Email Section */}
+                <div className="form-section mb-3">
+                  <Form.Group controlId="formEmail">
+                    <Form.Label>Email Address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      autoComplete="email"
+                      required
+                    />
+                  </Form.Group>
+                </div>
 
-                <Form.Group controlId="formUsername" className="mb-3">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="username"
-                    placeholder="Create Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    autoComplete="username"
-                    required
-                  />
-                </Form.Group>
+                {/* Username Section */}
+                <div className="form-section mb-3">
+                  <Form.Group controlId="formUsername">
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="username"
+                      placeholder="Create Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      autoComplete="username"
+                      required
+                    />
+                  </Form.Group>
+                </div>
 
-                <Form.Group controlId="formPassword" className="mb-4">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="Create your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="new-password"
-                    required
-                  />
-                  <div className="helper-text">
-                    💡 Must be 8+ characters with uppercase, lowercase, and
-                    special character
-                  </div>
-                </Form.Group>
+                {/* Password Section */}
+                <div className="form-section mb-4">
+                  <Form.Group controlId="formPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      placeholder="Create your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="new-password"
+                      required
+                    />
+                    <div className="helper-text">
+                      💡 Must be 8+ characters with uppercase, lowercase, and
+                      special character
+                    </div>
+                  </Form.Group>
+                </div>
                 <Button
                   variant="primary"
                   type="submit"

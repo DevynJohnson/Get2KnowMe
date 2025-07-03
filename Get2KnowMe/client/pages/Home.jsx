@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import AuthService from "../utils/auth.js";
 import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
+import { usePassportData } from "../hooks/usePassportData.js";
+import '../styles/Home.css';
 
 const Home = () => {
-  const [hasPassport, setHasPassport] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [passportName, setPassportName] = useState("");
-  const [passportCode, setPassportCode] = useState("");
   const [showQRModal, setShowQRModal] = useState(false);
 
   // Get user info if logged in
@@ -20,230 +18,131 @@ const Home = () => {
     user = null;
   }
 
-  // Check if user has existing passport
-  useEffect(() => {
-    const checkExistingPassport = async () => {
-      if (!user) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const token = AuthService.getToken();
-        const response = await fetch("/api/passport/my-passport", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setHasPassport(true);
-          // Use preferred name, fallback to first name
-          const displayName =
-            data.passport.preferredName || data.passport.firstName;
-          setPassportName(displayName || "");
-          setPassportCode(data.passport.profilePasscode || "");
-        } else {
-          setHasPassport(false);
-          setPassportName("");
-          setPassportCode("");
-        }
-      } catch (err) {
-        console.error("Error checking passport:", err);
-        setHasPassport(false);
-        setPassportName("");
-        setPassportCode("");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkExistingPassport();
-  }, [user]);
+  // Use the optimized passport data hook
+  const { hasPassport, isLoading, displayName, passportCode } = usePassportData();
 
   return (
-    <Container className="mt-5">
+    <Container className="home-container">
       <Row className="justify-content-center">
         <Col md={10} lg={8}>
           {/* Main Welcome Card */}
-          <Card className="text-center shadow-sm mb-4">
+          <Card className="home-card mb-4">
             <Card.Body className="p-5">
-              <h1 className="display-4 mb-4" style={{ color: "#007bff" }}>
-                Welcome to Get2KnowMe
-              </h1>
+              {!user && (
+                <h1 className="display-4 home-title">
+                  Welcome to Get2KnowMe
+                </h1>
+              )}
 
               {user ? (
-                <div>
-                  <p className="lead mb-4">
-                    Hello,{" "}
-                    <strong>
-                      {passportName || user.username || user.email}
-                    </strong>
-                    !
+                <div className="welcome-message">
+                  <h3>
+                    <i className="fas fa-user-circle me-2"></i>
+                    Hello, {displayName || user.username || user.email}!
+                  </h3>
+                  <p className="mb-0">
                     {isLoading
-                      ? " Loading your passport status..."
+                      ? "Loading your passport status..."
                       : hasPassport
-                      ? " Need to update your Communication Passport? Click below to edit your details or view another person's passport."
-                      : " Ready to create your Communication Passport?"}
+                      ? "Need to update your Communication Passport? Click below to edit your details or view another person's passport."
+                      : "Ready to create your Communication Passport?"}
                   </p>
-                  <div className="d-flex gap-3 justify-content-center flex-wrap">
-                    <Button
-                      as={Link}
+                </div>
+              ) : (
+                <div className="guest-message">
+                  <h3>
+                    <i className="fas fa-heart me-2"></i>
+                    Create Better Connections
+                  </h3>
+                  <p className="mb-0">
+                    A tool for neurodivergent individuals to create
+                    Communication Passports that help others understand their
+                    communication needs and preferences.
+                  </p>
+                </div>
+              )}
+
+              {/* Feature List - Only show for non-authenticated users */}
+              {!user && (
+                <ul className="feature-list">
+                  <li>
+                    <div className="feature-icon">
+                      <i className="fas fa-comments"></i>
+                    </div>
+                    Share your communication preferences and accommodations
+                  </li>
+                  <li>
+                    <div className="feature-icon">
+                      <i className="fas fa-user-shield"></i>
+                    </div>
+                    Include trusted contact information for support
+                  </li>
+                  <li>
+                    <div className="feature-icon">
+                      <i className="fas fa-qrcode"></i>
+                    </div>
+                    Generate QR codes for easy passport sharing
+                  </li>
+                  <li>
+                    <div className="feature-icon">
+                      <i className="fas fa-heart"></i>
+                    </div>
+                    Foster understanding and positive interactions
+                  </li>
+                </ul>
+              )}
+
+              {/* Action Buttons */}
+              <div className="cta-buttons">
+                {user ? (
+                  <>
+                    <Link
                       to="/create-passport"
-                      variant="primary"
-                      size="lg"
-                      className="px-4"
-                      disabled={isLoading}
+                      className={`cta-button ${isLoading ? 'disabled' : ''}`}
                     >
-                      <i
-                        className={`fas ${
-                          hasPassport ? "fa-edit" : "fa-id-card"
-                        } me-2`}
-                      ></i>
+                      <i className={`fas ${hasPassport ? "fa-edit" : "fa-id-card"}`}></i>
                       {isLoading
                         ? "Loading..."
                         : hasPassport
                         ? "Edit My Passport"
                         : "Create My Passport"}
-                    </Button>
-                    <Button
-                      as={Link}
-                      to="/passport-lookup"
-                      variant="outline-primary"
-                      size="lg"
-                      className="px-4"
-                    >
-                      <i className="fas fa-search me-2"></i>
+                    </Link>
+                    <Link to="/passport-lookup" className="cta-button secondary">
+                      <i className="fas fa-search"></i>
                       View Someone's Passport
-                    </Button>
+                    </Link>
                     {hasPassport && passportCode && (
-                      <Button
-                        variant="outline-success"
-                        size="lg"
-                        className="px-4"
+                      <button
+                        className="cta-button accent"
                         onClick={() => setShowQRModal(true)}
                         title="Generate QR code to share your passport"
                       >
-                        <i className="fas fa-qrcode me-2"></i>
+                        <i className="fas fa-qrcode"></i>
                         Share My QR Code
-                      </Button>
+                      </button>
                     )}
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <p className="lead mb-4">
-                    A tool for neurodivergent individuals to create
-                    Communication Passports that help others understand their
-                    communication needs and preferences.
-                  </p>
-                  <div className="d-flex gap-3 justify-content-center flex-wrap mb-4">
-                    <Button
-                      as={Link}
-                      to="/register"
-                      variant="primary"
-                      size="lg"
-                      className="px-4"
-                    >
-                      <i className="fas fa-user-plus me-2"></i>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/register" className="cta-button">
+                      <i className="fas fa-user-plus"></i>
                       Get Started
-                    </Button>
-                    <Button
-                      as={Link}
-                      to="/passport-lookup"
-                      variant="outline-primary"
-                      size="lg"
-                      className="px-4"
-                    >
-                      <i className="fas fa-search me-2"></i>
+                    </Link>
+                    <Link to="/passport-lookup" className="cta-button secondary">
+                      <i className="fas fa-search"></i>
                       View a Passport
-                    </Button>
-                  </div>
-                  <p className="text-muted">
-                    Already have an account?{" "}
-                    <Link to="/login">Sign in here</Link>
-                  </p>
-                </div>
-              )}
-            </Card.Body>
-          </Card>
+                    </Link>
+                  </>
+                )}
+              </div>
 
-          {/* Feature Cards */}
-          <Row className="g-4">
-            <Col md={6}>
-              <Card className="h-100 border-0 shadow-sm">
-                <Card.Body className="text-center p-4">
-                  <div className="text-primary mb-3">
-                    <i className="fas fa-comments fa-3x"></i>
-                  </div>
-                  <h4 className="mb-3">Communication Preferences</h4>
-                  <p className="text-muted">
-                    Share your preferred communication methods, accommodations
-                    needed, and topics to avoid for better interactions.
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={6}>
-              <Card className="h-100 border-0 shadow-sm">
-                <Card.Body className="text-center p-4">
-                  <div className="text-success mb-3">
-                    <i className="fas fa-user-shield fa-3x"></i>
-                  </div>
-                  <h4 className="mb-3">Trusted Support</h4>
-                  <p className="text-muted">
-                    Include contact information for a trusted person who can
-                    provide additional support when needed.
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={6}>
-              <Card className="h-100 border-0 shadow-sm">
-                <Card.Body className="text-center p-4">
-                  <div className="text-warning mb-3">
-                    <i className="fas fa-qrcode fa-3x"></i>
-                  </div>
-                  <h4 className="mb-3">Easy Access</h4>
-                  <p className="text-muted">
-                    Generate a unique passcode that others can use to quickly
-                    access your Communication Passport when needed.
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={6}>
-              <Card className="h-100 border-0 shadow-sm">
-                <Card.Body className="text-center p-4">
-                  <div className="text-info mb-3">
-                    <i className="fas fa-heart fa-3x"></i>
-                  </div>
-                  <h4 className="mb-3">Better Connections</h4>
-                  <p className="text-muted">
-                    Foster understanding and create more positive social
-                    interactions by sharing your communication needs.
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          {/* Call to Action */}
-          <Card className="mt-4 bg-light border-0">
-            <Card.Body className="text-center p-4">
-              <h5 className="mb-3">Ready to Get Started?</h5>
-              <p className="text-muted mb-4">
-                Join our community and create your Communication Passport today
-                to help others understand and support your communication needs.
-              </p>
               {!user && (
-                <Button as={Link} to="/register" variant="primary" size="lg">
-                  Create Your Account
-                </Button>
+                <p className="text-muted text-center mt-3 mb-0">
+                  Already have an account?{" "}
+                  <Link to="/login" className="text-primary fw-medium">
+                    Sign in here
+                  </Link>
+                </p>
               )}
             </Card.Body>
           </Card>
@@ -256,7 +155,7 @@ const Home = () => {
           show={showQRModal}
           onHide={() => setShowQRModal(false)}
           passcode={passportCode}
-          passportName={passportName}
+          passportName={displayName}
         />
       )}
     </Container>

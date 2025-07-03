@@ -1,7 +1,7 @@
 /* ViewPassport.css - Styling for Communication Passport display page */
 
 .view-passport-container {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--gradient-bg);
   min-height: 100vh;
 }
 
@@ -14,7 +14,7 @@
 }
 
 .passport-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
   color: white;
   padding: 2rem 1rem;
   border-bottom: none;
@@ -39,7 +39,7 @@
 
 /* Section Styling */
 .passport-section {
-  border-left: 4px solid #667eea;
+  border-left: 4px solid var(--primary-color);
   padding-left: 1rem;
 }
 
@@ -52,7 +52,7 @@
 .section-icon {
   font-size: 1.2rem;
   margin-right: 0.75rem;
-  color: #667eea;
+  color: var(--primary-color);
   width: 20px;
   text-align: center;
 }
@@ -60,7 +60,7 @@
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
   margin: 0;
 }
 
@@ -87,46 +87,47 @@
   align-items: center;
   padding: 0.5rem 0;
   font-size: 1rem;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .preference-icon {
-  color: #28a745;
+  color: var(--accent-color);
   margin-right: 0.75rem;
   font-size: 0.9rem;
 }
 
-/* Content Boxes */
+/* Content Boxes - updated to use CSS variables */
 .avoid-words-box,
 .custom-preferences-box,
 .other-info-box {
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
+  background: var(--neutral-bg, #f8f9fa);
+  border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 8px;
   padding: 1rem;
   font-size: 1rem;
   line-height: 1.5;
-  color: #856404;
+  color: var(--text-color, #1f2937);
 }
 
 .avoid-words-box {
-  background: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
+  background: var(--danger-bg, #f8d7da);
+  border-color: var(--danger-border, #f5c6cb);
+  color: var(--danger-text, #721c24);
 }
 
 .other-info-box {
-  background: #d1ecf1;
-  border-color: #bee5eb;
-  color: #0c5460;
+  background: var(--info-bg, #d1ecf1);
+  border-color: var(--info-border, #bee5eb);
+  color: var(--info-text, #0c5460);
 }
 
-/* Trusted Contact Card */
+/* Trusted Contact Card - updated to use CSS variables */
 .trusted-contact-card {
-  background: #d4edda;
-  border: 1px solid #c3e6cb;
+  background: var(--success-bg, #d4edda);
+  border: 1px solid var(--success-border, #c3e6cb);
   border-radius: 10px;
   padding: 1.5rem;
+  color: var(--text-color, #1f2937);
 }
 
 .contact-info {
@@ -144,7 +145,7 @@
 }
 
 .contact-icon {
-  color: #28a745;
+  color: var(--accent-color);
   margin-right: 0.75rem;
   width: 20px;
   text-align: center;
@@ -152,7 +153,7 @@
 
 .contact-phone a,
 .contact-email a {
-  color: #28a745;
+  color: var(--accent-color);
   text-decoration: none;
   font-weight: 500;
 }
@@ -162,21 +163,23 @@
   text-decoration: underline;
 }
 
-/* Footer */
+/* Footer - updated to use CSS variables */
 .passport-footer {
-  background: #f8f9fa;
+  background: var(--neutral-bg, #f8f9fa);
   margin: 1rem -1.5rem -1.5rem -1.5rem;
   padding: 1rem 1.5rem;
   border-radius: 0 0 15px 15px;
+  color: var(--text-color, #1f2937);
 }
 
-/* Privacy Protection Styling */
+/* Privacy Protection Styling - updated to use CSS variables */
 .privacy-protection {
   text-align: center;
   padding: 2rem 1rem;
-  background-color: #f8f9fa;
+  background-color: var(--neutral-bg, #f8f9fa);
   border-radius: 10px;
-  border: 2px dashed #dee2e6;
+  border: 2px dashed var(--border-color, #e5e7eb);
+  color: var(--text-color, #1f2937);
 }
 
 .privacy-message {
@@ -189,7 +192,7 @@
   padding: 0.75rem 1.5rem;
   border-radius: 25px;
   transition: all 0.3s ease;
-  border: 2px solid #007bff;
+  border: 2px solid var(--primary-color);
 }
 
 .show-contact-btn:hover {
@@ -212,16 +215,16 @@
 }
 
 .hide-contact-btn:hover {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
   color: white;
 }
 
 /* Enhanced trusted contact card for revealed state */
 .trusted-contact-revealed .trusted-contact-card {
-  border: 2px solid #28a745;
+  border: 2px solid var(--accent-color);
   border-radius: 10px;
-  background-color: #f8fff9;
+  background-color: var(--success-bg, #f8fff9);
   padding: 1rem;
   position: relative;
 }
@@ -231,7 +234,7 @@
   position: absolute;
   top: -10px;
   right: -10px;
-  background-color: #28a745;
+  background-color: var(--accent-color);
   color: white;
   width: 30px;
   height: 30px;
@@ -361,7 +364,7 @@
 
 /* Accessibility Improvements */
 .passport-display-card:focus-within {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
@@ -415,7 +418,128 @@
 .section-header:focus,
 .contact-phone a:focus,
 .contact-email a:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Dark mode styling for ViewPassport */
+[data-bs-theme="dark"] .passport-display-card {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-bs-theme="dark"] .section-title {
+  color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .preference-item {
+  color: var(--text-color) !important;
+}
+
+/* Dark mode content boxes */
+[data-bs-theme="dark"] .avoid-words-box,
+[data-bs-theme="dark"] .custom-preferences-box,
+[data-bs-theme="dark"] .other-info-box {
+  background: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .avoid-words-box {
+  background: color-mix(in srgb, var(--card-bg) 80%, #dc3545 20%) !important;
+  border-color: #dc3545 !important;
+  color: #f8d7da !important;
+}
+
+[data-bs-theme="dark"] .other-info-box {
+  background: color-mix(in srgb, var(--card-bg) 80%, var(--primary-color) 20%) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Dark mode trusted contact card */
+[data-bs-theme="dark"] .trusted-contact-card {
+  background: color-mix(in srgb, var(--card-bg) 80%, var(--accent-color) 20%) !important;
+  border-color: var(--accent-color) !important;
+  color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .contact-name,
+[data-bs-theme="dark"] .contact-phone,
+[data-bs-theme="dark"] .contact-email {
+  color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .contact-phone a,
+[data-bs-theme="dark"] .contact-email a {
+  color: var(--primary-color) !important;
+}
+
+/* Dark mode privacy protection */
+[data-bs-theme="dark"] .privacy-protection {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .privacy-message {
+  color: var(--text-muted) !important;
+}
+
+/* Dark mode footer */
+[data-bs-theme="dark"] .passport-footer {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+/* Dark mode passport actions */
+[data-bs-theme="dark"] .passport-actions {
+  background: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Dark mode alerts */
+[data-bs-theme="dark"] .alert {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Dark mode buttons in passport */
+[data-bs-theme="dark"] .show-contact-btn {
+  background-color: transparent !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+[data-bs-theme="dark"] .show-contact-btn:hover {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+[data-bs-theme="dark"] .hide-contact-btn {
+  background-color: transparent !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-muted) !important;
+}
+
+[data-bs-theme="dark"] .hide-contact-btn:hover {
+  background-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Dark mode text elements */
+[data-bs-theme="dark"] .privacy-note {
+  color: var(--text-muted) !important;
+}
+
+[data-bs-theme="dark"] .passport-meta {
+  color: var(--text-muted) !important;
+}
+
+[data-bs-theme="dark"] .text-muted {
+  color: var(--text-muted) !important;
 }

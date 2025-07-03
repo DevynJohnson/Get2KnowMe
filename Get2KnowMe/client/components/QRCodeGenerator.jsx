@@ -256,6 +256,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
               size="sm"
               onClick={copyToClipboard}
               title="Copy link to clipboard"
+              className="btn-secondary"
             >
               <i className="fas fa-copy me-1"></i>
               Copy Link
@@ -265,6 +266,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
               size="sm"
               onClick={downloadQRCode}
               title="Download QR code as PNG"
+              className="btn-secondary-reverse"
             >
               <i className="fas fa-download me-1"></i>
               Download
@@ -274,6 +276,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
               size="sm"
               onClick={printQRCode}
               title="Print QR code"
+              className="btn-accent"
             >
               <i className="fas fa-print me-1"></i>
               Print

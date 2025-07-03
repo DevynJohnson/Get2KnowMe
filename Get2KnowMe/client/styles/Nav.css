@@ -11,13 +11,14 @@
 .brand-link {
   font-weight: bold;
   font-size: 1.5rem;
-  color: #007bff !important;
+  color: var(--primary-color) !important;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .brand-link:hover {
-  color: #0056b3 !important;
+  color: var(--primary-color) !important;
+  filter: brightness(0.8);
 }
 
 /* Centered navigation items */
@@ -35,18 +36,80 @@
   color: #495057 !important;
   text-decoration: none;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  min-height: 38px; /* Consistent height for all nav items */
 }
 
 .nav-item-custom:hover {
-  color: #007bff !important;
-  background-color: rgba(0, 123, 255, 0.1);
-  transform: translateY(-1px);
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+  /* Removed transform: translateY(-1px); to remove shadow effect */
 }
 
 .nav-item-custom.active {
-  color: #007bff !important;
-  background-color: rgba(0, 123, 255, 0.15);
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
   font-weight: 600;
+}
+
+/* Dropdown specific styling */
+.nav-item-custom .dropdown-toggle {
+  background: none !important;
+  border: none !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  margin: 0;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  color: #495057 !important;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  line-height: 1.5;
+  box-shadow: none !important;
+}
+
+.nav-item-custom .dropdown-toggle:hover {
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+  /* Removed transform: translateY(-1px); to remove shadow effect */
+  box-shadow: none !important;
+}
+
+.nav-item-custom .dropdown-toggle:focus {
+  box-shadow: none !important;
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+}
+
+.nav-item-custom .dropdown-toggle:active {
+  box-shadow: none !important;
+}
+
+.nav-item-custom .dropdown-toggle::after {
+  margin-left: 0.5rem;
+}
+
+/* Ensure all nav items have consistent baseline alignment */
+.navbar-nav {
+  align-items: center;
+}
+
+.navbar-nav .nav-link,
+.navbar-nav .dropdown-toggle,
+.navbar-nav .nav-item-custom {
+  display: flex;
+  align-items: center;
+  min-height: 38px; /* Consistent height for all nav items */
+}
+
+/* Remove any unwanted margins or padding that could cause misalignment */
+.navbar-nav .nav-item,
+.navbar-nav .dropdown {
+  margin-bottom: 0;
 }
 
 /* User info section */
@@ -161,7 +224,7 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: #007bff;
+  background-color: var(--primary-color);
   transition: all 0.3s ease;
   transform: translateX(-50%);
 }
@@ -172,4 +235,124 @@
 
 .nav-item-custom:hover::after {
   width: 60%;
+}
+
+
+
+/* Settings dropdown specific styling - cleaned up */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  min-width: 220px;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  color: #495057;
+}
+
+.dropdown-item:hover {
+  background: var(--gradient-bg);
+  color: white;
+  transform: translateX(5px);
+}
+
+.dropdown-item:hover .text-danger {
+  color: #ff6b6b !important;
+}
+
+.dropdown-item .fas {
+  width: 20px;
+  text-align: center;
+}
+
+.dropdown-divider {
+  margin: 0.5rem 0;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Fix for React Bootstrap NavDropdown */
+.navbar-nav .dropdown-menu {
+  position: absolute !important;
+  top: 100% !important;
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+  z-index: 1000 !important;
+}
+
+/* Ensure dropdown arrow is visible and clickable */
+.navbar-nav .dropdown-toggle::after {
+  display: inline-block !important;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+}
+
+/* Remove any conflicting styles that might prevent dropdown from working */
+.navbar-nav .nav-item.dropdown {
+  position: relative;
+}
+
+.navbar-nav .nav-item.dropdown .dropdown-toggle {
+  cursor: pointer;
+}
+
+/* Fix button dropdown styling to match nav items */
+.nav-item.dropdown .btn.nav-item-custom {
+  border: none !important;
+  background: none !important;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #495057 !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  line-height: 1.5;
+  box-shadow: none !important;
+}
+
+.nav-item.dropdown .btn.nav-item-custom:hover {
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.nav-item.dropdown .btn.nav-item-custom:focus {
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.nav-item.dropdown .btn.nav-item-custom:active {
+  color: var(--primary-color) !important;
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Hide dropdown arrow from settings button */
+.settings-dropdown-btn::after {
+  display: none !important;
+}
+
+.settings-dropdown-btn.dropdown-toggle::after {
+  display: none !important;
 }

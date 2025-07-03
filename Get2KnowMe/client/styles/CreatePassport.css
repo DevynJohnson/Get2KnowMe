@@ -1,7 +1,7 @@
 /* CreatePassport.css - Styling for Communication Passport creation page */
 
 .create-passport-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
   min-height: 100vh;
 }
 
@@ -20,10 +20,10 @@
 }
 
 .preferences-container {
-  background: #f8f9fa;
+  background: var(--neutral-bg, #f8f9fa);
   padding: 1rem;
   border-radius: 8px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--border-color, #e9ecef);
 }
 
 .preferences-container .form-check {
@@ -42,7 +42,7 @@
 }
 
 .passport-submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
   border: none;
   border-radius: 25px;
   padding: 12px 30px;
@@ -52,7 +52,7 @@
 
 .passport-submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 
 .passport-submit-btn:disabled {
@@ -63,7 +63,7 @@
 /* Enhanced form styling */
 .form-label {
   font-weight: 500;
-  color: #495057;
+  color: var(--text-color, #495057);
   margin-bottom: 0.5rem;
 }
 
@@ -75,25 +75,41 @@
 }
 
 .form-control:focus, .form-select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
 }
 
 .form-check-input:checked {
-  background-color: #667eea;
-  border-color: #667eea;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .form-check-input:focus {
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
 }
 
-/* Trusted contact section styling */
-.bg-light {
-  background-color: #f8f9fa !important;
-  border: 1px solid #e9ecef;
-  border-radius: 10px;
+/* Dark mode form label styling */
+[data-bs-theme="dark"] .form-label {
+  color: var(--text-color) !important;
 }
+
+/* Light mode form label styling */
+[data-bs-theme="light"] .form-label {
+  color: var(--text-color, #495057) !important;
+}
+
+/* Ensure preferences container matches theme */
+[data-bs-theme="dark"] .preferences-container {
+  background: transparent !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-bs-theme="light"] .preferences-container {
+  background: var(--neutral-bg, #f8f9fa) !important;
+  border-color: var(--border-color, #e9ecef) !important;
+}
+
+/* Removed trusted contact section styling since we're using form-section now */
 
 /* Character counter styling */
 .text-muted {
@@ -213,11 +229,11 @@
 
 /* Accessibility improvements */
 .form-check-input:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
 .passport-submit-btn:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }

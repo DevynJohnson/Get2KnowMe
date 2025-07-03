@@ -1,7 +1,7 @@
 /* Register.css - Styling for registration page */
 
 .register-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
   min-height: 100vh;
   padding: 20px 0;
 }
@@ -31,7 +31,7 @@
 }
 
 .register-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
   border: none;
   border-radius: 25px;
   padding: 12px 30px;
@@ -41,7 +41,7 @@
 
 .register-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 
 .register-btn:disabled {
@@ -50,14 +50,15 @@
 }
 
 .login-link {
-  color: #667eea;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .login-link:hover {
-  color: #764ba2;
+  color: var(--primary-color);
+  filter: brightness(0.8);
   text-decoration: underline;
 }
 

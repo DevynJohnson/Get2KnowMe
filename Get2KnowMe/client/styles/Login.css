@@ -1,7 +1,7 @@
 /* Login.css - Styling for login page */
 
 .login-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
   min-height: 100vh;
   padding: 20px 0;
 }
@@ -31,7 +31,7 @@
 }
 
 .login-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
   border: none;
   border-radius: 25px;
   padding: 12px 30px;
@@ -41,7 +41,7 @@
 
 .login-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 
 .login-btn:disabled {

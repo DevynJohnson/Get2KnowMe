@@ -113,7 +113,7 @@ const ViewPassport = () => {
             <Alert variant="danger" className="text-center">
               <Alert.Heading>Unable to Load Passport</Alert.Heading>
               <p>{error}</p>
-              <Button variant="outline-danger" onClick={() => navigate("/")}>
+              <Button variant="outline-danger" onClick={() => navigate("/")} className="btn-secondary">
                 Return to Homepage
               </Button>
             </Alert>
@@ -131,7 +131,7 @@ const ViewPassport = () => {
             <Alert variant="warning" className="text-center">
               <Alert.Heading>Passport Not Found</Alert.Heading>
               <p>The requested Communication Passport could not be found.</p>
-              <Button variant="outline-warning" onClick={() => navigate("/")}>
+              <Button variant="outline-warning" onClick={() => navigate("/")} className="btn-secondary">
                 Return to Homepage
               </Button>
             </Alert>
@@ -251,7 +251,7 @@ const ViewPassport = () => {
                         <Button
                           variant="outline-primary"
                           onClick={() => setShowTrustedContact(true)}
-                          className="show-contact-btn"
+                          className="show-contact-btn btn-secondary"
                         >
                           <i className="fas fa-eye me-2"></i>
                           Show Trusted Person Contact Information
@@ -340,6 +340,7 @@ const ViewPassport = () => {
                       size="sm"
                       onClick={() => setShowQRModal(true)}
                       title="Generate QR code for easy sharing"
+                      className="btn-secondary"
                     >
                       <i className="fas fa-qrcode me-1"></i>
                       QR Code
@@ -348,6 +349,7 @@ const ViewPassport = () => {
                       variant="outline-primary"
                       size="sm"
                       onClick={() => window.print()}
+                      className="btn-secondary-reverse"
                     >
                       <i className="fas fa-print me-1"></i>
                       Print

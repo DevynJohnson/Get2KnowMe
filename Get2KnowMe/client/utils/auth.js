@@ -38,6 +38,26 @@ class AuthService {
     }
   }
 
+  // Get time until token expiration in milliseconds
+  getTimeUntilExpiration(token) {
+    try {
+      const decoded = jwtDecode(token);
+      if (!decoded?.exp) return 0;
+      const expirationTime = decoded.exp * 1000; // Convert to milliseconds
+      const currentTime = Date.now();
+      return Math.max(0, expirationTime - currentTime);
+    } catch (err) {
+      console.error('Error getting time until expiration:', err);
+      return 0;
+    }
+  }
+
+  // Check if token will expire soon (within 5 minutes)
+  isTokenExpiringSoon(token) {
+    const timeUntilExpiration = this.getTimeUntilExpiration(token);
+    return timeUntilExpiration <= 5 * 60 * 1000; // 5 minutes in milliseconds
+  }
+
   // Retrieve token from localStorage
   getToken() {
     return localStorage.getItem('id_token');
@@ -54,9 +74,15 @@ class AuthService {
   }
 
   // Log out by removing the token and redirecting
-  logout() {
+  logout(message = null) {
     try {
       localStorage.removeItem('id_token');
+      
+      // If a message is provided, store it for display
+      if (message) {
+        sessionStorage.setItem('logoutMessage', message);
+      }
+      
       window.location.href = '/';
     } catch (err) {
       console.error('Error removing token:', err);

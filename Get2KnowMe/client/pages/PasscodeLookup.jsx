@@ -117,26 +117,29 @@ const PasscodeLookup = () => {
               )}
 
               <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-4">
-                  <Form.Label className="form-label">Passcode</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={passcode}
-                    onChange={handlePasscodeChange}
-                    placeholder="Enter passcode (e.g., AB12-CD34)"
-                    className="passcode-input"
-                    maxLength={20}
-                    autoComplete="off"
-                    autoFocus
-                  />
-                  <Form.Text className="text-muted">
-                    Enter the alphanumeric code provided to you
-                  </Form.Text>
-                </Form.Group>
+                {/* Passcode Section */}
+                <div className="form-section mb-4">
+                  <Form.Group>
+                    <Form.Label className="form-label">Passcode</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={passcode}
+                      onChange={handlePasscodeChange}
+                      placeholder="Enter passcode (e.g., AB12-CD34)"
+                      className="passcode-input"
+                      maxLength={20}
+                      autoComplete="off"
+                      autoFocus
+                    />
+                    <Form.Text className="text-muted">
+                      Enter the alphanumeric code provided to you
+                    </Form.Text>
+                  </Form.Group>
+                </div>
 
                 <Button
                   type="submit"
-                  className="w-100 lookup-btn mb-3"
+                  className="w-100 lookup-btn mb-3 btn-secondary"
                   disabled={isLoading || !passcode.trim()}
                   size="lg"
                 >
@@ -162,8 +165,7 @@ const PasscodeLookup = () => {
 
                 <Button
                   type="button"
-                  variant="outline-primary"
-                  className="w-100"
+                  className="btn-secondary-reverse w-100"
                   size="lg"
                   onClick={() => setShowScanner(true)}
                 >

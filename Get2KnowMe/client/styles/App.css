@@ -10,7 +10,7 @@
 /* Main Content Area */
 .main-content {
   flex: 1;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--bg-color);
   min-height: calc(100vh - 76px); /* Account for navbar height */
 }
 
@@ -18,16 +18,17 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
+  color: var(--text-color);
+  background: var(--bg-color);
 }
 
 /* Utility classes */
 .text-primary {
-  color: #007bff !important;
+  color: var(--primary-color) !important;
 }
 
 .text-secondary {
-  color: #6c757d !important;
+  color: var(--secondary-color) !important;
 }
 
 /* Card enhancements */

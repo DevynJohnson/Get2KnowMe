@@ -8,7 +8,7 @@
 }
 
 .passport-info {
-  background: #f8f9fa;
+  background: var(--neutral-bg);
   border-radius: 8px;
   padding: 15px;
   margin: 15px 0;
@@ -71,11 +71,11 @@
 
 /* Accessibility improvements */
 .modal-header .btn-close:focus {
-  outline: 2px solid #007bff;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
 .modal-footer .btn:focus {
-  outline: 2px solid #007bff;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }

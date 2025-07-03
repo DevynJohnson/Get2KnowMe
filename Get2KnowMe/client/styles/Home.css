@@ -1,0 +1,204 @@
+/* Home.css - Styling for home page */
+
+.home-container {
+  background: var(--bg-color);
+  min-height: 100vh;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-container .container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.home-container .row {
+  margin: 0;
+  width: 100%;
+}
+
+.home-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.home-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.home-title {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.home-subtitle {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.welcome-message {
+  background: var(--secondary-gradient);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.welcome-message h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.guest-message {
+  background: var(--secondary-gradient);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.guest-message h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.feature-list li {
+  padding: 0.75rem 0;
+  color: #495057;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(108, 117, 125, 0.1);
+}
+
+.feature-list li:last-child {
+  border-bottom: none;
+}
+
+.feature-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 25px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-top: 1rem;
+}
+
+.status-badge.authenticated {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.status-badge.guest {
+  background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+  color: white;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.cta-button {
+  background: var(--gradient-bg);
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 30%, transparent);
+  color: white;
+  text-decoration: none;
+}
+
+.cta-button.secondary {
+  background: var(--secondary-gradient);
+}
+
+.cta-button.secondary:hover {
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--secondary-color) 30%, transparent);
+}
+
+.cta-button.accent {
+  background: var(--accent-gradient);
+}
+
+.cta-button.accent:hover {
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--accent-color) 30%, transparent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 10px;
+  }
+  
+  .home-card {
+    margin: 10px;
+    border-radius: 15px;
+  }
+  
+  .home-title {
+    font-size: 2rem;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-button {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+}

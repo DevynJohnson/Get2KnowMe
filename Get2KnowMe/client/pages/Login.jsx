@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import auth from "../utils/auth.js";
+import LogoutNotification from "../components/LogoutNotification.jsx";
 import "../styles/Login.css";
 
 const Login = () => {
@@ -73,10 +74,12 @@ const Login = () => {
   };
 
   return (
-    <Container
-      className="d-flex justify-content-center align-items-center login-container"
-      style={{ minHeight: "100vh" }}
-    >
+    <>
+      <LogoutNotification />
+      <Container
+        className="d-flex justify-content-center align-items-center login-container"
+        style={{ minHeight: "100vh" }}
+      >
       <Row className="w-100">
         <Col md={6} lg={5} className="mx-auto">
           <Card className="login-card p-4">
@@ -84,33 +87,40 @@ const Login = () => {
               <h2 className="text-center login-title">Welcome Back</h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formEmailOrUsername" className="mb-3">
-                  <Form.Label>Email or Username</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="emailOrUsername"
-                    placeholder="Enter your email or username"
-                    value={emailOrUsername}
-                    onChange={(e) => setEmailOrUsername(e.target.value)}
-                    autoComplete="username"
-                    required
-                  />
-                  <div className="helper-text">
-                    💡 You can use either your email address or username
-                  </div>
-                </Form.Group>
-                <Form.Group controlId="formPassword" className="mb-4">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                    required
-                  />
-                </Form.Group>
+                {/* Email/Username Section */}
+                <div className="form-section mb-3">
+                  <Form.Group controlId="formEmailOrUsername">
+                    <Form.Label>Email or Username</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="emailOrUsername"
+                      placeholder="Enter your email or username"
+                      value={emailOrUsername}
+                      onChange={(e) => setEmailOrUsername(e.target.value)}
+                      autoComplete="username"
+                      required
+                    />
+                    <div className="helper-text">
+                      💡 You can use either your email address or username
+                    </div>
+                  </Form.Group>
+                </div>
+
+                {/* Password Section */}
+                <div className="form-section mb-4">
+                  <Form.Group controlId="formPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="current-password"
+                      required
+                    />
+                  </Form.Group>
+                </div>
                 <Button
                   variant="primary"
                   type="submit"
@@ -133,6 +143,7 @@ const Login = () => {
         </Col>
       </Row>
     </Container>
+    </>
   );
 };
 

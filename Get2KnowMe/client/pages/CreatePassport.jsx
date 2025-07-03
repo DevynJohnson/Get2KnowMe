@@ -1,5 +1,5 @@
 // client/pages/CreatePassport.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Form,
   Button,
@@ -45,6 +45,9 @@ const CreatePassport = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
+
+  // Ref for scrolling to alerts
+  const alertRef = useRef(null);
 
   // Diagnosis options
   const diagnosisOptions = [
@@ -238,14 +241,29 @@ const CreatePassport = () => {
           } successfully!`
         );
         setIsEditing(true);
+        // Scroll to alert after a brief delay to ensure it's rendered
+        setTimeout(() => scrollToAlert(), 100);
       } else {
         setError(data.message || "Failed to save Communication Passport");
+        setTimeout(() => scrollToAlert(), 100);
       }
     } catch (err) {
       console.error("Error saving passport:", err);
       setError("Server error. Please try again.");
+      setTimeout(() => scrollToAlert(), 100);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Function to scroll to alert area
+  const scrollToAlert = () => {
+    if (alertRef.current) {
+      alertRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
     }
   };
 
@@ -264,234 +282,252 @@ const CreatePassport = () => {
                 with you effectively.
               </p>
 
-              {error && <Alert variant="danger">{error}</Alert>}
-              {success && <Alert variant="success">{success}</Alert>}
+              {/* Alert container with ref for scrolling */}
+              <div ref={alertRef}>
+                {error && <Alert variant="danger">{error}</Alert>}
+                {success && <Alert variant="success">{success}</Alert>}
+              </div>
 
               <Form onSubmit={handleSubmit}>
                 {/* Name Fields */}
-                <Row className="mb-3">
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label>First Name *</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        placeholder="Enter your first name"
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label>Last Name *</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        placeholder="Enter your last name"
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
+                <div className="form-section mb-3">
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          placeholder="Enter your first name"
+                          required
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          placeholder="Enter your last name"
+                          required
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Preferred Name (Optional)</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="preferredName"
-                    value={formData.preferredName}
-                    onChange={handleInputChange}
-                    placeholder="What would you like to be called? (e.g., nickname, chosen name)"
-                  />
-                  <Form.Text className="text-muted">
-                    If provided, this is how others will address you
-                  </Form.Text>
-                </Form.Group>
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Preferred Name (Optional)</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="preferredName"
+                      value={formData.preferredName}
+                      onChange={handleInputChange}
+                      placeholder="What would you like to be called? (e.g., nickname, chosen name)"
+                    />
+                    <Form.Text className="text-muted">
+                      If provided, this is how others will address you
+                    </Form.Text>
+                  </Form.Group>
+                </div>
 
                 {/* Diagnosis Field */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Diagnoses * (Select all that apply)</Form.Label>
-                  <Form.Text className="text-muted d-block mb-2">
-                    💡 <strong>Tip:</strong> You can select multiple diagnoses if you have more than one condition. 
-                    For example, if you have both Autism and ADHD, you can select both individual options 
-                    or choose "AuDHD (Autism + ADHD)".
-                  </Form.Text>
-                  <div className="d-flex flex-column gap-2">
-                    {diagnosisOptions.map((option) => (
-                      <Form.Check
-                        key={option}
-                        type="checkbox"
-                        id={`diagnosis-${option}`}
-                        label={option}
-                        checked={formData.diagnoses.includes(option)}
-                        onChange={() => handleDiagnosisChange(option)}
-                      />
-                    ))}
-                  </div>
-                </Form.Group>
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Diagnoses (Select all that apply)</Form.Label>
+                    <Form.Text className="text-muted d-block mb-2">
+                      💡 <strong>Tip:</strong> You can select multiple diagnoses if you have more than one condition. 
+                      For example, if you have both Autism and ADHD, you can select both individual options 
+                      or choose "AuDHD (Autism + ADHD)".
+                    </Form.Text>
+                    <div className="preferences-container">
+                      {diagnosisOptions.map((option) => (
+                        <div key={option} className="mb-2">
+                          <Form.Check
+                            type="checkbox"
+                            id={`diagnosis-${option}`}
+                            label={option}
+                            checked={formData.diagnoses.includes(option)}
+                            onChange={() => handleDiagnosisChange(option)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </Form.Group>
+                </div>
 
                 {/* Custom Diagnosis Field */}
                 {formData.diagnoses.includes("Other") && (
-                  <Form.Group className="mb-3">
-                    <Form.Label>Please specify your diagnosis *</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="customDiagnosis"
-                      value={formData.customDiagnosis}
-                      onChange={handleInputChange}
-                      placeholder="Enter your specific diagnosis"
-                      required
-                    />
-                  </Form.Group>
+                  <div className="form-section mb-3">
+                    <Form.Group>
+                      <Form.Label>Please specify your diagnosis</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="customDiagnosis"
+                        value={formData.customDiagnosis}
+                        onChange={handleInputChange}
+                        placeholder="Enter your specific diagnosis"
+                        required
+                      />
+                    </Form.Group>
+                  </div>
                 )}
 
                 {/* Communication Preferences */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Communication Preferences</Form.Label>
-                  <div className="preferences-container">
-                    {preferenceOptions.map((preference) => (
-                      <div key={preference} className="mb-2">
-                        <Form.Check
-                          type="checkbox"
-                          id={`pref-${preference}`}
-                          label={preference}
-                          checked={formData.communicationPreferences.includes(
-                            preference
-                          )}
-                          onChange={() => handlePreferenceChange(preference)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </Form.Group>
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Communication Preferences</Form.Label>
+                    <div className="preferences-container">
+                      {preferenceOptions.map((preference) => (
+                        <div key={preference} className="mb-2">
+                          <Form.Check
+                            type="checkbox"
+                            id={`pref-${preference}`}
+                            label={preference}
+                            checked={formData.communicationPreferences.includes(
+                              preference
+                            )}
+                            onChange={() => handlePreferenceChange(preference)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </Form.Group>
+                </div>
 
                 {/* Avoid Words Field */}
                 {formData.communicationPreferences.includes(
                   "Avoid specific words/phrases/topics"
                 ) && (
-                  <Form.Group className="mb-3">
-                    <Form.Label>Words/Phrases/Topics to Avoid</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      name="avoidWords"
-                      value={formData.avoidWords}
-                      onChange={handleInputChange}
-                      placeholder="List specific words, phrases, or topics to avoid..."
-                    />
-                  </Form.Group>
+                  <div className="form-section mb-3">
+                    <Form.Group>
+                      <Form.Label>Words/Phrases/Topics to Avoid</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="avoidWords"
+                        value={formData.avoidWords}
+                        onChange={handleInputChange}
+                        placeholder="List specific words, phrases, or topics to avoid..."
+                      />
+                    </Form.Group>
+                  </div>
                 )}
 
                 {/* Custom Preferences Field */}
                 {formData.communicationPreferences.includes("Other") && (
-                  <Form.Group className="mb-3">
-                    <Form.Label>
-                      Additional Communication Preferences
-                    </Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      name="customPreferences"
-                      value={formData.customPreferences}
-                      onChange={handleInputChange}
-                      placeholder="Describe any other communication accommodations you need..."
-                    />
-                  </Form.Group>
+                  <div className="form-section mb-3">
+                    <Form.Group>
+                      <Form.Label>
+                        Additional Communication Preferences
+                      </Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="customPreferences"
+                        value={formData.customPreferences}
+                        onChange={handleInputChange}
+                        placeholder="Describe any other communication accommodations you need..."
+                      />
+                    </Form.Group>
+                  </div>
                 )}
 
                 {/* Trusted Contact Section */}
-                <Card className="mb-4 bg-light">
-                  <Card.Body>
-                    <h5 className="mb-3">Trusted Contact Information</h5>
-                    <p className="small text-muted mb-3">
-                      <strong>Important:</strong> Please consult with this
-                      person before adding them as your trusted contact so they
-                      are prepared to provide support if needed.
-                    </p>
+                <div className="form-section mb-4">
+                  <h5 className="mb-3">Trusted Contact Information</h5>
+                  <p className="small text-muted mb-3">
+                    <strong>Important:</strong> Please consult with this
+                    person before adding them as your trusted contact so they
+                    are prepared to provide support if needed.
+                  </p>
 
-                    <Form.Group className="mb-3">
-                      <Form.Label>Contact Name *</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="trustedContact.name"
-                        value={formData.trustedContact.name}
-                        onChange={handleInputChange}
-                        placeholder="Enter trusted contact's name"
-                        required
-                      />
-                    </Form.Group>
-
-                    <PhoneNumberInput
-                      value={formData.trustedContact.phone}
-                      onChange={handlePhoneChange}
-                      label="Phone Number"
-                      placeholder="Enter phone number"
-                      required
-                    />
-
-                    <Form.Group className="mb-0">
-                      <Form.Label>Email Address (Optional)</Form.Label>
-                      <Form.Control
-                        type="email"
-                        name="trustedContact.email"
-                        value={formData.trustedContact.email}
-                        onChange={handleInputChange}
-                        placeholder="Enter email address"
-                      />
-                    </Form.Group>
-                  </Card.Body>
-                </Card>
-
-                {/* Profile Passcode */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Profile Passcode *</Form.Label>
-                  <div className="d-flex gap-2">
+                  <Form.Group className="mb-3">
+                    <Form.Label>Contact Name</Form.Label>
                     <Form.Control
                       type="text"
-                      name="profilePasscode"
-                      value={formData.profilePasscode}
+                      name="trustedContact.name"
+                      value={formData.trustedContact.name}
                       onChange={handleInputChange}
-                      placeholder="Create your own passcode (e.g., MyName123)"
+                      placeholder="Enter trusted contact's name"
                       required
-                      className="text-uppercase"
                     />
-                    <Button
-                      type="button"
-                      variant="outline-secondary"
-                      onClick={generatePasscode}
-                      className="passcode-generate-btn"
-                      title="Generate a random passcode"
-                    >
-                      Generate
-                    </Button>
-                  </div>
-                  <Form.Text className="text-muted">
-                    <strong>Create your own memorable passcode</strong> or use
-                    the Generate button. This code allows others to access your
-                    Communication Passport (6-20 letters/numbers only).
-                  </Form.Text>
-                </Form.Group>
+                  </Form.Group>
+
+                  <PhoneNumberInput
+                    value={formData.trustedContact.phone}
+                    onChange={handlePhoneChange}
+                    label="Phone Number"
+                    placeholder="Enter phone number"
+                    required
+                  />
+
+                  <Form.Group className="mb-0">
+                    <Form.Label>Email Address (Optional)</Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="trustedContact.email"
+                      value={formData.trustedContact.email}
+                      onChange={handleInputChange}
+                      placeholder="Enter email address"
+                    />
+                  </Form.Group>
+                </div>
+
+                {/* Profile Passcode */}
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Profile Passcode *</Form.Label>
+                    <div className="d-flex gap-2">
+                      <Form.Control
+                        type="text"
+                        name="profilePasscode"
+                        value={formData.profilePasscode}
+                        onChange={handleInputChange}
+                        placeholder="Create your own passcode (e.g., MyName123)"
+                        required
+                        className="text-uppercase"
+                      />
+                      <Button
+                        type="button"
+                        className="btn-secondary passcode-generate-btn"
+                        onClick={generatePasscode}
+                        title="Generate a random passcode"
+                      >
+                        Generate
+                      </Button>
+                    </div>
+                    <Form.Text className="text-muted">
+                      <strong>Create your own memorable passcode</strong> or use
+                      the Generate button. This code allows others to access your
+                      Communication Passport (6-20 letters/numbers only).
+                    </Form.Text>
+                  </Form.Group>
+                </div>
 
                 {/* Other Information */}
-                <Form.Group className="mb-4">
-                  <Form.Label>Additional Information</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    name="otherInformation"
-                    value={formData.otherInformation}
-                    onChange={handleInputChange}
-                    placeholder="Any other important information you'd like to share..."
-                    maxLength={1000}
-                  />
-                  <Form.Text className="text-muted">
-                    {formData.otherInformation.length}/1000 characters
-                  </Form.Text>
-                </Form.Group>
+                <div className="form-section mb-4">
+                  <Form.Group>
+                    <Form.Label>Additional Information</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={4}
+                      name="otherInformation"
+                      value={formData.otherInformation}
+                      onChange={handleInputChange}
+                      placeholder="Any other important information you'd like to share..."                      maxLength={1000}
+                    />
+                    <Form.Text className="text-muted">
+                      {formData.otherInformation.length}/1000 characters
+                    </Form.Text>
+                  </Form.Group>
+                </div>
 
                 {/* Submit Button */}
                 <Button
@@ -521,7 +557,7 @@ const CreatePassport = () => {
                       Cancel
                     </Button>
                     <Button
-                      variant="outline-info"
+                      className="btn-secondary"
                       onClick={() =>
                         navigate(`/passport/view/${formData.profilePasscode}`)
                       }
@@ -529,7 +565,7 @@ const CreatePassport = () => {
                       View My Passport
                     </Button>
                     <Button
-                      variant="outline-success"
+                      className="btn-secondary-reverse"
                       onClick={() => setShowQRModal(true)}
                       title="Generate QR code for easy sharing"
                     >
