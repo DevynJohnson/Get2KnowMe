@@ -20,54 +20,31 @@ const Home = () => {
           {/* Hero Section */}
           <Card className="home-card mb-4">
             <Card.Body className="p-5 text-center">
-              {/* <h1 className="display-4 home-title mb-4">
+              <h1 className="display-4 home-title mb-4">
                 Welcome to Get2KnowMe
-              </h1> */}
-              <img src="/get2knowme_logo_svg.svg" alt="Get2KnowMe Logo" className="home-logo mb-4" />
+              </h1>
               <p className="lead mb-4">
                 Empowering neurodivergent individuals through digital
                 Communication Passports
               </p>
-              <h2 className="h3 mb-4">What is Get2KnowMe?</h2>
               <p className="mb-4">
-                Get2KnowMe is made for being understood and its purpose is to
-                help people be seen for who they are - not just their diagnosis.
-              </p>
-              <p className="mb-4">
-                Together we can make communication fairer, kinder, and more
+                Get2KnowMe is made for being understood and its purpose is to
+                help people be seen for who they are, not just their diagnosis.
+                Together, we can make communication fairer, kinder, and more
                 human. Get2KnowMe provides a simple and secure platform that
                 helps people communicate their needs, preferences, and
-                personality - especially when words are difficult to find.
+                personality, especially when words are difficult to find. It’s
+                designed for neurodivergent individuals, people
+                with communication differences, and anyone who wants to be
+                better understood by others. With Get2KnowMe, you can create
+                a Digital Communication Passport: a personalised profile that
+                explains how you communicate, any adaptations you need, what
+                support you find helpful, and what makes you feel safe, seen and
+                heard. Each passport comes with a unique QR code, allowing you
+                to easily share your information with teachers, healthcare
+                workers, emergency workers, employers, caregivers, friends, or
+                anyone you meet.
               </p>
-              <p className="mb-4">
-                It's designed for neurodivergent individuals, people with
-                communication differences, or anybody who wants to be better
-                understood.
-              </p>
-              <p className="mb-4">
-                With Get2KnowMe, you can create a Digital Communication
-                Passport: a personalized profile that explains how you
-                communicate, any adaptations or accommodations you need, and
-                what support is helpful for you, as well as the things that make
-                you feel safe, seen and heard.
-              </p>
-              <p className="mb-4">
-                Each passport comes with a unique QR code, allowing you to
-                easily share your information with teachers, healthcare workers,
-                emergency workers, employers, caregivers, friends, or anyone you
-                meet.
-              </p>
-              <h2 className="h3 mb-4">Why It Matters</h2>
-                  <p className="mb-4">
-                    Having to explain yourself repeatedly can be exhausting,
-                    especially in high-stress situations or unfamiliar
-                    environments. Get2KnowMe gives you a voice, even in times
-                    when it may be hard to speak.
-                  </p>
-                  <p className="mb-4">
-                    Get2KnowMe is about autonomy, dignity, and creating a world
-                    where people are met with understanding - not assumptions.
-                  </p>
 
               {user ? (
                 <Link to="/profile" className="cta-button">
@@ -107,32 +84,14 @@ const Home = () => {
                 <Col md={6}>
                   <h5>
                     <i className="fas fa-lightbulb me-2"></i>
-                    What's Included in a Communication Passport:
+                    What's Included:
                   </h5>
                   <ul className="feature-list-simple">
-                    <li>
-                      Important health alerts (e.g., epilepsy, diabetes,
-                      allergies, etc.)
-                    </li>
-                    <li>
-                      Communication preferences and style (e.g., verbal,
-                      non-verbal, assistive technology)
-                    </li>
-                    <li>
-                      Sensory needs and accommodations (e.g., sensitivities to
-                      lights, sounds, or touch)
-                    </li>
-                    <li>
-                      Contact information for a trusted person in the event more
-                      support is needed or in case of emergencies
-                    </li>
-                    <li>Triggers and how to avoid them</li>
+                    <li>Communication preferences and style</li>
+                    <li>Sensory needs and accommodations</li>
+                    <li>Emergency contact information</li>
                     <li>Helpful strategies for interaction</li>
                     <li>Personal interests and strengths</li>
-                    <li>
-                      Any additional information to help others interact with
-                      you respectfully and effectively
-                    </li>
                   </ul>
                 </Col>
                 <Col md={6}>
@@ -141,18 +100,11 @@ const Home = () => {
                     Who Can Benefit:
                   </h5>
                   <ul className="feature-list-simple">
-                    <li>
-                      Neurodivergent individuals (e.g., autistic individuals,
-                      those with ADHD)
-                    </li>
-                    <li>Those with speech or language differences</li>
-                    <li>People with intellectual or cognitive disabilities</li>
-                    <li>Children, teens or adults</li>
-                    <li>
-                      Anybody who would like to be better understood or
-                      struggles through social interactions
-                    </li>
-                    <li>Allies, caregivers and support professionals</li>
+                    <li>Autistic individuals</li>
+                    <li>People with ADHD</li>
+                    <li>Those with learning differences</li>
+                    <li>Anyone who wants to communicate their needs</li>
+                    <li>Caregivers and support persons</li>
                   </ul>
                 </Col>
               </Row>
@@ -202,7 +154,7 @@ const Home = () => {
                     <div className="feature-icon-large mb-3">
                       <i className="fas fa-heart"></i>
                     </div>
-                    <h5>Be Understood</h5>
+                    <h5>Build Understanding</h5>
                     <p>
                       Help others understand and support your communication
                       needs.

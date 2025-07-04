@@ -39,6 +39,28 @@
   text-align: center;
 }
 
+.home-logo {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+/* Responsive logo sizing */
+@media (max-width: 768px) {
+  .home-logo {
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .home-logo {
+    max-width: 120px;
+  }
+}
+
 .home-subtitle {
   color: var(--text-muted);
   font-size: 1.125rem;
