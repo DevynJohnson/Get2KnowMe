@@ -327,6 +327,82 @@
   color: white;
 }
 
+/* Educational Content Styles */
+.use-case-card {
+  text-align: center;
+  padding: 1.5rem;
+  height: 100%;
+  border-radius: 15px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.use-case-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.use-case-icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.use-case-icon i {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Educational content blockquotes for diagnosis quotes */
+.blockquote {
+  background: var(--secondary-color-light);
+  border-left: 4px solid var(--primary-color);
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.blockquote p {
+  margin: 0.5rem 0;
+  font-style: italic;
+  color: var(--text-color);
+}
+
+.blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Accordion body typography */
+.accordion-body h5 {
+  color: var(--primary-color);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.accordion-body h6 {
+  color: var(--secondary-color);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.accordion-body p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Make accordion headers bold */
+.accordion-button {
+  font-weight: bold !important;
+}
+
+.accordion-button:not(.collapsed) {
+  font-weight: bold !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .feature-card {

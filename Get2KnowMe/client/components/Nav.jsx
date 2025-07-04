@@ -52,7 +52,7 @@ const NavTabs = () => {
               active={currentPage === "/passport-lookup"}
               className="nav-item-custom"
             >
-              View Passport
+              View A Passport
             </BsNav.Link>
 
             {/* Authenticated user passport link OR Create Account for non-authenticated */}
@@ -63,7 +63,7 @@ const NavTabs = () => {
                 active={currentPage === "/profile"}
                 className="nav-item-custom"
               >
-                My Passport
+                My Profile
               </BsNav.Link>
             ) : (
               <BsNav.Link
@@ -75,6 +75,16 @@ const NavTabs = () => {
                 Create Account
               </BsNav.Link>
             )}
+
+            {/* Learn More link - available to all users */}
+            <BsNav.Link
+              as={Link}
+              to="/learn-more"
+              active={currentPage === "/learn-more"}
+              className="nav-item-custom"
+            >
+              Learn More
+            </BsNav.Link>
           </BsNav>
           
           {/* Right side navigation - Settings and Login/Logout */}

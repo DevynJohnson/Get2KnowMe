@@ -51,10 +51,10 @@ const Profile = () => {
           <Card className="home-card mb-4">
             <Card.Body className="p-5">
               <div className="welcome-message">
-                <h1 className="display-5 mb-3">
+                {/* <h1 className="display-5 mb-3">
                   <i className="fas fa-user-circle me-2"></i>
                   My Profile
-                </h1>
+                </h1> */}
                 <h3>
                   Hello, {displayName || user.username || user.email}!
                 </h3>
@@ -62,7 +62,7 @@ const Profile = () => {
                   {isLoading
                     ? "Loading your passport status..."
                     : hasPassport
-                    ? "Manage your Communication Passport and share it with others."
+                    ? "This is where you can manage your Communication Passport and easily share it with others. Simply select Share My QR Code below and ask them to scan it with their smartphone camera and follow the link provided, or use the View Somebody's Passport option in this app to scan a QR code or enter your passcode." 
                     : "Create your Communication Passport to help others understand your communication needs."}
                 </p>
               </div>
