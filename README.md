@@ -1,4 +1,4 @@
-# Get2KnowMe
+# Get2KnowMe [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A web application designed to empower neurodivergent individuals by providing them with a digital platform to create and share their communication needs and preferences with others.
 
@@ -66,21 +66,32 @@ Get2KnowMe is deployed and available for use at: https://get2knowme.onrender.com
 
 No installation is required - simply visit the website to start creating your communication passport.
 
-### Development Setup (For Authorized Contributors Only)
+### Development Setup
 
-This is a proprietary application with restricted access. Development setup requires:
+To run Get2KnowMe locally for development or contribution:
 
-- Authorization from the project owner
-- Access to private environment configuration
-- Database credentials and API keys
+1. **Fork and clone the repository**
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Set up environment variables**
+   - Copy `.env.example` to `.env` in the project root:
+     ```bash
+     cp .env.example .env
+     ```
+   - Fill in the required values in your `.env` file. Do not commit your actual secrets or production credentials.
+   - If you are contributing, use placeholder/test values as provided in `.env.example`.
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-**For development access, please contact [dljohnson1313@gmail.com](mailto:dljohnson1313@gmail.com)**
-
-#### Technical Requirements
-- Node.js (v18 or higher)
-- MongoDB database access
-- Environment configuration files
-- Git access to private repository
+#### Environment Variables Best Practices
+- **Never commit real secrets or production credentials to the repository.**
+- Use a `.env.example` file to document all required environment variables and provide safe placeholder values.
+- Contributors should create their own `.env` file locally based on `.env.example`.
+- Production secrets should only be set in your deployment environment, never in version control.
 
 ## Usage
 
@@ -144,27 +155,21 @@ This is a proprietary application with restricted access. Development setup requ
 
 ## Contributing
 
-Get2KnowMe is a proprietary application with **invitation-only contributions**. We carefully select contributors who align with our mission and values.
+We welcome contributions from the community! To get started:
 
-### How to Get Involved
+1. Fork this repository
+2. Create a new branch for your feature or fix (`git checkout -b feature/your-feature-name`)
+3. Make your changes and commit them (`git commit -m 'Describe your change'`)
+4. Push your branch to your fork (`git push origin feature/your-feature-name`)
+5. Open a Pull Request describing your changes
 
-**For potential contributors:**
-- Contact [dljohnson1313@gmail.com](mailto:dljohnson1313@gmail.com) to express your interest
-- Include your background, relevant experience, and how you'd like to contribute
-- Authorization is required before any development access is granted
-
-**For authorized contributors:**
-1. Receive development environment setup instructions
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Follow established code standards and guidelines
-4. Submit changes through approved channels
-5. Participate in code review process
-
-### Contribution Guidelines (For Authorized Contributors)
+### Contribution Guidelines
 - Follow existing code style and conventions
 - Write clear, descriptive commit messages
-- Update documentation as needed
-- Respect proprietary code and confidentiality requirements
+- Update or add documentation as needed
+- Be respectful and inclusive in all communications
+
+If you have questions about environment variables or setup, please open an issue or discussion!
 
 ## Testing
 
@@ -188,7 +193,7 @@ If you experience any issues with the application, please:
 ### Development Team
 
 **Lead Developer**  
-Devyn Johnson  
+Devyn Johnson
 - [GitHub Profile](https://www.github.com/DevynJohnson)  
 - [Portfolio](https://devynjohnson.me)  
 - [LinkedIn](https://www.linkedin.com/in/devyn-johnson-a5259213b/)
@@ -232,18 +237,15 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
 - [Concurrently](https://www.npmjs.com/package/concurrently) - Parallel script execution
             
 ## License
+MIT License
 
-This project is proprietary software under exclusive copyright. 
+Copyright (c) 2025 Devyn Johnson
 
-**Copyright © 2025 Devyn Johnson. All rights reserved.**
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-No part of this software may be reproduced, distributed, modified, or sold without express written permission from the author. This includes but is not limited to:
-- Source code
-- Documentation
-- Design assets
-- User interface elements
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-For licensing inquiries or permission requests, please contact [dljohnson1313@gmail.com](mailto:dljohnson1313@gmail.com).
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
