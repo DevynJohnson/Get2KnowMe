@@ -62,7 +62,7 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 ## Installation
 
 ### Live Application
-Get2KnowMe is deployed and available for use at: https://get2knowme.onrender.com
+Get2KnowMe is deployed and available for use at: https://get2knowme.co.uk or https://get2know.me
 
 No installation is required - simply visit the website to start creating your communication passport.
 
