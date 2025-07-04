@@ -1,8 +1,20 @@
 import React from "react";
-import { Card, Row, Col, Accordion } from "react-bootstrap";
+import { Card, Row, Col, Accordion, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import AuthService from "../utils/auth.js";
 
 // Educational content about autism
-export const AutismContent = () => (
+export const AutismContent = () => {
+  // Check if user is logged in
+  let isLoggedIn = false;
+  try {
+    const user = AuthService.getProfile();
+    isLoggedIn = !!user;
+  } catch {
+    isLoggedIn = false;
+  }
+
+  return (
   <Accordion.Item eventKey="0">
     <Accordion.Header>Understanding Autism: A Quick Guide</Accordion.Header>
     <Accordion.Body>
@@ -91,13 +103,34 @@ export const AutismContent = () => (
         <li>Outline helpful accommodations in schools, workplaces, or public settings</li>
         <li>Reduce anxiety around new people or environments</li>
       </ul>
-      <p>Create your personalised autism-friendly passport!</p>
+      <div className="text-center mt-3">
+        <Button 
+          as={Link} 
+          to={isLoggedIn ? "/create-passport" : "/register"}
+          variant="primary"
+          size="lg"
+        >
+          <i className="fas fa-id-card me-2"></i>
+          Create your personalised autism-friendly passport!
+        </Button>
+      </div>
     </Accordion.Body>
   </Accordion.Item>
-);
+  );
+};
 
 // Educational content about ADHD
-export const ADHDContent = () => (
+export const ADHDContent = () => {
+  // Check if user is logged in
+  let isLoggedIn = false;
+  try {
+    const user = AuthService.getProfile();
+    isLoggedIn = !!user;
+  } catch {
+    isLoggedIn = false;
+  }
+
+  return (
   <Accordion.Item eventKey="1">
     <Accordion.Header>Understanding ADHD: A Quick Guide</Accordion.Header>
     <Accordion.Body>
@@ -202,16 +235,27 @@ export const ADHDContent = () => (
         <li><a href="https://www.adhdfoundation.org.uk" target="_blank" rel="noopener noreferrer">ADHD Foundation</a></li>
         <li><a href="https://www.adhdadult.uk" target="_blank" rel="noopener noreferrer">ADHD Adult</a></li>
       </ul>
-      <p>Start creating your ADHD-friendly passport [here]</p>
+      <div className="text-center mt-3">
+        <Button 
+          as={Link} 
+          to={isLoggedIn ? "/create-passport" : "/register"}
+          variant="primary"
+          size="lg"
+        >
+          <i className="fas fa-id-card me-2"></i>
+          Start creating your ADHD-friendly passport
+        </Button>
+      </div>
     </Accordion.Body>
   </Accordion.Item>
-);
+  );
+};
 
 // Main educational sections component - now focused on autism and ADHD only
 export const DiagnosisEducationSection = () => (
   <Card className="home-card mb-4">
     <Card.Body className="p-5">
-      <Accordion defaultActiveKey="0">
+      <Accordion>
         <AutismContent />
         <ADHDContent />
       </Accordion>
