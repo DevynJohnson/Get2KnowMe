@@ -54,3 +54,25 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+/* Print Styles */
+@media print {
+  /* Remove top margin/padding that accounts for navbar */
+  .main-content {
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Ensure app container uses full height */
+  .app-container {
+    min-height: 100vh !important;
+  }
+  
+  /* Hide any other non-essential elements */
+  .navbar,
+  nav,
+  .custom-navbar {
+    display: none !important;
+  }
+}

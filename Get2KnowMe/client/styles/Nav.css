@@ -568,3 +568,12 @@
     visibility: hidden !important;
   }
 }
+
+/* Print Styles - Hide navigation when printing */
+@media print {
+  .custom-navbar,
+  .navbar,
+  nav {
+    display: none !important;
+  }
+}
