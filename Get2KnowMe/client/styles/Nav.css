@@ -173,6 +173,32 @@
     margin: 1rem 0 0.5rem 0;
     font-size: 0.85rem;
   }
+  
+  /* Ensure consistent spacing for all nav items in collapsed view */
+  .navbar-collapse .navbar-nav .nav-item,
+  .navbar-collapse .navbar-nav .nav-link,
+  .navbar-collapse .navbar-nav .dropdown {
+    margin: 0.25rem 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Settings dropdown specific styling in collapsed view */
+  .navbar-collapse .dropdown .dropdown-toggle {
+    width: 100% !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  /* Ensure all nav items have consistent height */
+  .navbar-collapse .nav-item-custom,
+  .navbar-collapse .settings-dropdown-btn {
+    min-height: 44px !important; /* Better touch target size */
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -191,7 +217,6 @@
   }
 }
 
-/* Extra small devices */
 @media (max-width: 480px) {
   .navbar-brand,
   .brand-link {
@@ -205,6 +230,12 @@
   
   .user-info {
     font-size: 0.8rem;
+  }
+  
+  .navbar-collapse .nav-item-custom,
+  .navbar-collapse .settings-dropdown-btn {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    padding: 0.75rem 1rem !important;
   }
 }
 
@@ -419,17 +450,41 @@
   }
 }
 
-@media (max-width: 768px) {
-  .settings-dropdown-btn {
-    padding: 0.75rem 1rem !important;
-    font-size: 0.95rem;
+/* Additional mobile navigation improvements */
+@media (max-width: 991.98px) {
+  /* Ensure consistent spacing for all nav items in collapsed view */
+  .navbar-collapse .navbar-nav .nav-item,
+  .navbar-collapse .navbar-nav .nav-link,
+  .navbar-collapse .navbar-nav .dropdown {
+    margin: 0.25rem 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Settings dropdown specific styling in collapsed view */
+  .navbar-collapse .dropdown .dropdown-toggle {
+    width: 100% !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  /* Ensure all nav items have consistent height */
+  .navbar-collapse .nav-item-custom,
+  .navbar-collapse .settings-dropdown-btn {
+    min-height: 44px !important; /* Better touch target size */
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
   }
 }
 
+/* Very small screens - additional improvements */
 @media (max-width: 480px) {
-  .settings-dropdown-btn {
-    padding: 0.6rem 0.75rem !important;
-    font-size: 0.9rem;
+  .navbar-collapse .nav-item-custom,
+  .navbar-collapse .settings-dropdown-btn {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    padding: 0.75rem 1rem !important;
   }
 }
 
@@ -442,4 +497,74 @@
 
 .dropdown-item:hover small {
   color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Hide icons in collapsed navbar on smaller screens */
+@media (max-width: 767.98px) {
+  /* Hide ALL icons in navbar when collapsed - comprehensive approach */
+  .navbar-collapse i,
+  .navbar-collapse .fas,
+  .navbar-collapse .fa,
+  .navbar-collapse .fab,
+  .navbar-collapse .far,
+  .navbar-collapse .fal,
+  .navbar-collapse .fad,
+  .navbar-collapse .fass,
+  .navbar-collapse .fasr,
+  .navbar-collapse .fasl,
+  .navbar-collapse .fasd {
+    display: none !important;
+  }
+  
+  /* Specifically target the settings dropdown and login/logout icons */
+  .navbar-collapse .settings-dropdown-btn i,
+  .navbar-collapse .settings-dropdown-btn .fas,
+  .navbar-collapse .nav-item-custom i,
+  .navbar-collapse .nav-item-custom .fas,
+  .navbar-collapse .nav-item-custom.logout-btn i,
+  .navbar-collapse .nav-item-custom.logout-btn .fas {
+    display: none !important;
+  }
+  
+  /* Adjust spacing when icons are hidden */
+  .navbar-collapse .settings-dropdown-btn,
+  .navbar-collapse .nav-item-custom.logout-btn,
+  .navbar-collapse .nav-item-custom {
+    padding-left: 1rem !important;
+  }
+  
+  /* Ensure proper alignment in collapsed view */
+  .navbar-collapse .navbar-nav {
+    text-align: left !important;
+  }
+  
+  .navbar-collapse .nav-item-custom {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0.25rem 0 !important;
+  }
+}
+
+/* Force icon hiding with highest specificity */
+@media (max-width: 767.98px) {
+  /* Target settings button specifically */
+  .navbar-collapse .nav-item.dropdown .settings-dropdown-btn i,
+  .navbar-collapse .nav-item.dropdown .settings-dropdown-btn .fas,
+  .navbar-collapse .nav-item.dropdown .btn i,
+  .navbar-collapse .nav-item.dropdown .btn .fas,
+  
+  /* Target login/logout links specifically */
+  .navbar-nav .nav-item-custom[href*="login"] i,
+  .navbar-nav .nav-item-custom[href*="login"] .fas,
+  .navbar-collapse .nav-item_custom.logout-btn i,
+  .navbar-collapse .nav-item_custom.logout-btn .fas,
+  
+  /* Catch-all for any remaining icons in nav items */
+  .navbar-collapse .navbar-nav i[class*="fa"],
+  .navbar-collapse .ms-auto i[class*="fa"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
 }

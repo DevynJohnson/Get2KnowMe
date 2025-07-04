@@ -69,24 +69,18 @@ const Profile = () => {
 
               {/* Action Buttons */}
               <div className="cta-buttons">
-                <Link
-                  to="/create-passport"
-                  className={`cta-button ${isLoading ? 'disabled' : ''}`}
-                >
-                  <i className={`fas ${hasPassport ? "fa-edit" : "fa-id-card"}`}></i>
-                  {isLoading
-                    ? "Loading..."
-                    : hasPassport
-                    ? "Edit My Passport"
-                    : "Create My Passport"}
-                </Link>
-                <Link to="/passport-lookup" className="cta-button secondary">
-                  <i className="fas fa-search"></i>
-                  View Someone's Passport
-                </Link>
+                {!hasPassport && (
+                  <Link
+                    to="/create-passport"
+                    className={`cta-button ${isLoading ? 'disabled' : ''}`}
+                  >
+                    <i className="fas fa-id-card"></i>
+                    {isLoading ? "Loading..." : "Create My Passport"}
+                  </Link>
+                )}
                 {hasPassport && passportCode && (
                   <button
-                    className="cta-button accent"
+                    className="cta-button primary large"
                     onClick={() => setShowQRModal(true)}
                     title="Generate QR code to share your passport"
                   >
@@ -108,18 +102,34 @@ const Profile = () => {
                 </h5>
                 <Row className="mt-3">
                   <Col md={6} className="mb-3">
-                    <Link to="/settings/profile" className="quick-action-link">
+                    <Link to={`/passport/${passportCode}`} className="quick-action-link">
                       <div className="quick-action-card">
-                        <i className="fas fa-user-cog"></i>
-                        <span>Account Settings</span>
+                        <i className="fas fa-eye"></i>
+                        <span>View My Passport</span>
                       </div>
                     </Link>
                   </Col>
                   <Col md={6} className="mb-3">
-                    <Link to="/settings/appearance" className="quick-action-link">
+                    <Link to="/passport-lookup" className="quick-action-link">
                       <div className="quick-action-card">
-                        <i className="fas fa-palette"></i>
-                        <span>Appearance</span>
+                        <i className="fas fa-search"></i>
+                        <span>View Someone's Passport</span>
+                      </div>
+                    </Link>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <Link to="/create-passport" className="quick-action-link">
+                      <div className="quick-action-card">
+                        <i className="fas fa-edit"></i>
+                        <span>Edit My Passport</span>
+                      </div>
+                    </Link>
+                  </Col>
+                  <Col md={6} className="mb-3">
+                    <Link to="/settings/profile" className="quick-action-link">
+                      <div className="quick-action-card">
+                        <i className="fas fa-user-cog"></i>
+                        <span>Account Settings</span>
                       </div>
                     </Link>
                   </Col>

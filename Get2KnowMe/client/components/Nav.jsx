@@ -18,10 +18,24 @@ const NavTabs = () => {
     user = null;
   }
 
+  // Function to close the navbar collapse (for mobile)
+  const closeNavbar = () => {
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+      // Trigger Bootstrap's collapse hide
+      if (navbarToggler) {
+        navbarToggler.click();
+      }
+    }
+  };
+
   // Function to log out the user
   const handleLogout = () => {
     try {
       AuthService.logout();
+      closeNavbar(); // Close navbar after logout
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -41,6 +55,7 @@ const NavTabs = () => {
               to="/" 
               active={currentPage === "/"}
               className="nav-item-custom"
+              onClick={closeNavbar}
             >
               Home
             </BsNav.Link>
@@ -51,6 +66,7 @@ const NavTabs = () => {
               to="/passport-lookup"
               active={currentPage === "/passport-lookup"}
               className="nav-item-custom"
+              onClick={closeNavbar}
             >
               View A Passport
             </BsNav.Link>
@@ -62,6 +78,7 @@ const NavTabs = () => {
                 to="/profile"
                 active={currentPage === "/profile"}
                 className="nav-item-custom"
+                onClick={closeNavbar}
               >
                 My Profile
               </BsNav.Link>
@@ -71,6 +88,7 @@ const NavTabs = () => {
                 to="/register"
                 active={currentPage === "/register"}
                 className="nav-item-custom"
+                onClick={closeNavbar}
               >
                 Create Account
               </BsNav.Link>
@@ -82,6 +100,7 @@ const NavTabs = () => {
               to="/learn-more"
               active={currentPage === "/learn-more"}
               className="nav-item-custom"
+              onClick={closeNavbar}
             >
               Learn More
             </BsNav.Link>
@@ -105,34 +124,34 @@ const NavTabs = () => {
                 {user ? (
                   <>
                     <li><h6 className="dropdown-header"><i className="fas fa-user me-2"></i>Account Settings</h6></li>
-                    <li><Link className="dropdown-item" to="/settings/profile">
+                    <li><Link className="dropdown-item" to="/settings/profile" onClick={closeNavbar}>
                       <i className="fas fa-user me-2"></i>Profile Settings
                     </Link></li>
-                    <li><Link className="dropdown-item" to="/settings/security">
+                    <li><Link className="dropdown-item" to="/settings/security" onClick={closeNavbar}>
                       <i className="fas fa-shield-alt me-2"></i>Security & Password
                     </Link></li>
-                    <li><Link className="dropdown-item" to="/settings/appearance">
+                    <li><Link className="dropdown-item" to="/settings/appearance" onClick={closeNavbar}>
                       <i className="fas fa-palette me-2"></i>Appearance
                     </Link></li>
                     <li><hr className="dropdown-divider" /></li>
-                    <li><Link className="dropdown-item text-danger" to="/settings/danger-zone">
+                    <li><Link className="dropdown-item text-danger" to="/settings/danger-zone" onClick={closeNavbar}>
                       <i className="fas fa-exclamation-triangle me-2"></i>Danger Zone
                     </Link></li>
                   </>
                 ) : (
                   <>
                     <li><h6 className="dropdown-header"><i className="fas fa-user-plus me-2"></i>Create Account to Access</h6></li>
-                    <li><Link className="dropdown-item" to="/register">
+                    <li><Link className="dropdown-item" to="/register" onClick={closeNavbar}>
                       <i className="fas fa-user me-2"></i>Profile Settings
                     </Link></li>
-                    <li><Link className="dropdown-item" to="/register">
+                    <li><Link className="dropdown-item" to="/register" onClick={closeNavbar}>
                       <i className="fas fa-shield-alt me-2"></i>Security & Password
                     </Link></li>
-                    <li><Link className="dropdown-item" to="/settings/appearance">
+                    <li><Link className="dropdown-item" to="/settings/appearance" onClick={closeNavbar}>
                       <i className="fas fa-palette me-2"></i>Appearance
                     </Link></li>
                     <li><hr className="dropdown-divider" /></li>
-                    <li><Link className="dropdown-item" to="/register">
+                    <li><Link className="dropdown-item" to="/register" onClick={closeNavbar}>
                       <i className="fas fa-rocket me-2"></i>Create Account
                     </Link></li>
                   </>
@@ -146,6 +165,7 @@ const NavTabs = () => {
                 to="/login"
                 active={currentPage === "/login"}
                 className="nav-item-custom"
+                onClick={closeNavbar}
               >
                 <i className="fas fa-sign-in-alt me-1"></i>
                 Login
