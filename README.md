@@ -4,9 +4,15 @@ A web application designed to empower neurodivergent individuals by providing th
 
 ## Description
 
-Get2KnowMe is a comprehensive communication passport application that enables users to create personalized profiles containing their communication preferences, support needs, and trusted contact information. This innovative solution helps foster positive social interactions by providing essential information to third parties who may be unaware of specific communication needs or accommodations for individuals, especially those in the neurodivergent community.
+Get2KnowMe is made for being understood and its purpose is to help people be seen for who they are - not just their diagnosis.
 
-The application generates a unique digital passport that can be shared via QR code or passcode, making it easy for users to communicate their needs in various social situations including interactions with shopkeepers, healthcare providers, educators, law enforcement, and other service providers.
+Together we can make communication fairer, kinder, and more human. Get2KnowMe provides a simple and secure platform that helps people communicate their needs, preferences, and personality - especially when words are difficult to find.
+
+It's designed for neurodivergent individuals, people with communication differences, or anybody who wants to be better understood.
+
+With Get2KnowMe, you can create a Digital Communication Passport: a personalized profile that explains how you communicate, any adaptations or accommodations you need, and what support is helpful for you, as well as the things that make you feel safe, seen and heard.
+
+Each passport comes with a unique QR code, allowing you to easily share your information with teachers, healthcare workers, emergency workers, employers, caregivers, friends, or anyone you meet.
 
 ## Key Features
 
@@ -138,20 +144,27 @@ This is a proprietary application with restricted access. Development setup requ
 
 ## Contributing
 
-We welcome contributions to improve Get2KnowMe! Please follow these guidelines:
+Get2KnowMe is a proprietary application with **invitation-only contributions**. We carefully select contributors who align with our mission and values.
 
-1. Fork the repository
+### How to Get Involved
+
+**For potential contributors:**
+- Contact [dljohnson1313@gmail.com](mailto:dljohnson1313@gmail.com) to express your interest
+- Include your background, relevant experience, and how you'd like to contribute
+- Authorization is required before any development access is granted
+
+**For authorized contributors:**
+1. Receive development environment setup instructions
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Follow established code standards and guidelines
+4. Submit changes through approved channels
+5. Participate in code review process
 
-### Development Guidelines
+### Contribution Guidelines (For Authorized Contributors)
 - Follow existing code style and conventions
 - Write clear, descriptive commit messages
-- Include tests for new functionality
 - Update documentation as needed
-- Ensure all tests pass before submitting
+- Respect proprietary code and confidentiality requirements
 
 ## Testing
 
