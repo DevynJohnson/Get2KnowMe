@@ -1,9 +1,10 @@
 // server/src/routes/passport-routes.js
 import express from 'express';
+import { validatePassportData } from '../middleware/passportValidator.js';
+import { normalizePhoneNumber } from '../utils/phoneNormalization.js';
 import User from '../models/User.js';
 import { generateFriendlyPasscode, validatePasscode } from '../utils/passcodeGenerator.js';
-import { authenticateToken } from '../utils/auth.js';
-import { validateInternationalPhone } from '../utils/phoneValidation.js';
+import authenticateTokenMiddleware from '../middleware/authenticateTokenMiddleware.js';
 
 const router = express.Router();
 
@@ -19,72 +20,41 @@ router.get('/generate-passcode', (req, res) => {
 });
 
 // POST /api/passport/create - Create or update communication passport (protected route)
-router.post('/create', async (req, res) => {
+router.post('/create', authenticateTokenMiddleware, validatePassportData, async (req, res) => {
   try {
-    const { user } = authenticateToken(req);
-    if (!user) {
-      return res.status(401).json({ message: 'Authentication required' });
-    }
+    const userId = req.user._id; // Assuming authenticateTokenMiddleware sets req.user
 
-    const userId = user._id;
     const passportData = req.body;
 
-    // Validate passcode format
-    if (!validatePasscode(passportData.profilePasscode)) {
-      return res.status(400).json({
-        message: 'Invalid passcode format. Use 6-20 alphanumeric characters.'
-      });
-    }
-
-    // Clean and normalize the passcode before storing (remove dashes, uppercase)
+    // Clean and normalize the passcode
     const cleanPasscode = passportData.profilePasscode.replace(/-/g, '').toUpperCase();
 
-    // Check if passcode is already in use by another user
+    // Check passcode uniqueness
     const existingPasscode = await User.findOne({
       'communicationPassport.profilePasscode': cleanPasscode,
       _id: { $ne: userId }
     });
-
     if (existingPasscode) {
       return res.status(400).json({
         message: 'This passcode is already in use. Please choose a different one.'
       });
     }
 
-    // Required fields except trustedContact (which is an object)
-    const requiredFields = ['firstName', 'lastName', 'diagnoses', 'profilePasscode'];
-    for (const field of requiredFields) {
-      if (!passportData[field] || (Array.isArray(passportData[field]) && passportData[field].length === 0)) {
-        return res.status(400).json({ message: `Missing required field: ${field}` });
-      }
+    // Normalize the trusted contact phone number
+    const normalizedPhone = normalizePhoneNumber(passportData.trustedContact.phone, passportData.trustedContact.countryCode);
+    if (!normalizedPhone) {
+      return res.status(400).json({ message: 'Failed to normalize trusted contact phone number.' });
     }
+    passportData.trustedContact.phone = normalizedPhone;
 
-    // Validate trustedContact subfields
-    if (!passportData.trustedContact
-      || !passportData.trustedContact.name
-      || !passportData.trustedContact.phone
-      || !passportData.trustedContact.countryCode) {
-      return res.status(400).json({ message: 'Trusted contact name, phone, and country code are required.' });
-    }
-
-    // Validate trusted contact phone number format (international)
-    if (!validateInternationalPhone(passportData.trustedContact.phone, passportData.trustedContact.countryCode)) {
-      return res.status(400).json({ message: 'Trusted contact phone number is invalid for the selected country.' });
-    }
-
-    // Conditional validation for custom diagnosis
-    if (passportData.diagnoses.includes('Other') && !passportData.customDiagnosis) {
-      return res.status(400).json({ message: 'Please specify your diagnosis.' });
-    }
-
-    // Update user with communication passport data (store cleaned passcode)
+    // Update user
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
         $set: {
           communicationPassport: {
             ...passportData,
-            profilePasscode: cleanPasscode, // Store the cleaned version
+            profilePasscode: cleanPasscode,
             updatedAt: new Date()
           }
         }
@@ -103,35 +73,18 @@ router.post('/create', async (req, res) => {
 
   } catch (error) {
     console.error('Error creating communication passport:', error);
-
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(err => err.message);
-      return res.status(400).json({ message: messages.join('. ') });
-    }
-
     return res.status(500).json({ message: 'Error saving communication passport' });
   }
 });
 
 // GET /api/passport/my-passport - Get current user's communication passport (protected route)
-router.get('/my-passport', async (req, res) => {
+router.get('/my-passport', authenticateTokenMiddleware, async (req, res) => {
   try {
-    const { user } = authenticateToken(req);
-    if (!user) {
-      return res.status(401).json({ message: 'Authentication required' });
-    }
-
-    const foundUser = await User.findById(user._id);
-    if (!foundUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    if (!foundUser.communicationPassport) {
-      return res.status(404).json({ message: 'Communication passport not found' });
-    }
-
+    const userId = req.user._id;
+    const foundUser = await User.findById(userId);
+    if (!foundUser) return res.status(404).json({ message: 'User not found' });
+    if (!foundUser.communicationPassport) return res.status(404).json({ message: 'Communication passport not found' });
     return res.json({ passport: foundUser.communicationPassport });
-
   } catch (error) {
     console.error('Error fetching communication passport:', error);
     return res.status(500).json({ message: 'Error fetching communication passport' });
@@ -191,25 +144,16 @@ router.get('/public/:passcode', async (req, res) => {
 });
 
 // DELETE /api/passport/delete - Delete communication passport (protected route)
-router.delete('/delete', async (req, res) => {
+router.delete('/delete', authenticateTokenMiddleware, async (req, res) => {
   try {
-    const { user } = authenticateToken(req);
-    if (!user) {
-      return res.status(401).json({ message: 'Authentication required' });
-    }
-
+    const userId = req.user._id;
     const updatedUser = await User.findByIdAndUpdate(
-      user._id,
+      userId,
       { $unset: { communicationPassport: "" } },
       { new: true }
     );
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
+    if (!updatedUser) return res.status(404).json({ message: 'User not found' });
     return res.json({ message: 'Communication passport deleted successfully' });
-
   } catch (error) {
     console.error('Error deleting communication passport:', error);
     return res.status(500).json({ message: 'Error deleting communication passport' });

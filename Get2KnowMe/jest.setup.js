@@ -1,0 +1,1 @@
+process.env.FIELD_ENCRYPTION_SECRET = 'testsecretkey123';

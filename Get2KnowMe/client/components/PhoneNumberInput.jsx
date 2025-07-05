@@ -25,7 +25,6 @@ const PhoneNumberInput = ({
         international
         countryCallingCodeEditable={false}
         country={props.country || undefined} // Use controlled country prop, do not default
-        defaultCountry={'GB'} // Remove defaultCountry to avoid US default
         value={value}
         onChange={onChange}
         placeholder={placeholder}
