@@ -20,6 +20,9 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [consentError, setConsentError] = useState("");
 
   // Password validation function
   const validatePassword = (password) => {
@@ -42,9 +45,9 @@ const Register = () => {
 
     // Get the actual values from the form elements (handles autofill)
     const formData = new FormData(e.target);
-    const emailValue = formData.get('email') || email;
-    const usernameValue = formData.get('username') || username;
-    const passwordValue = formData.get('password') || password;
+    const emailValue = formData.get("email") || email;
+    const usernameValue = formData.get("username") || username;
+    const passwordValue = formData.get("password") || password;
 
     // Update state with actual values if they were autofilled
     if (emailValue !== email) {
@@ -56,31 +59,42 @@ const Register = () => {
     if (passwordValue !== password) {
       setPassword(passwordValue);
     }
+  if (!ageConfirmed || !agreedToTerms) {
+  setError(
+    "You must confirm age eligibility and agree to the Privacy Policy and Terms of Service."
+  );
+  setIsLoading(false);
+  return;
+}
 
-    if (!emailValue || !usernameValue || !passwordValue) {
-      setError("Please fill in all fields");
-      setIsLoading(false);
-      return;
-    }
+if (!emailValue || !usernameValue || !passwordValue) {
+  setError("Please fill in all fields");
+  setIsLoading(false);
+  return;
+}
 
-    // Validate password strength
-    const passwordError = validatePassword(passwordValue);
-    if (passwordError) {
-      setError(passwordError);
-      setIsLoading(false);
-      return;
-    }
+// Validate password strength
+const passwordError = validatePassword(passwordValue);
+if (passwordError) {
+  setError(passwordError);
+  setIsLoading(false);
+  return;
+}
 
-    try {
-      const response = await fetch("/api/users/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          email: emailValue, 
-          username: usernameValue, 
-          password: passwordValue 
-        }),
-      });
+try {
+  const response = await fetch("/api/users/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+  email: emailValue,
+  username: usernameValue,
+  password: passwordValue,
+  consent: {
+    ageConfirmed: ageConfirmed,
+    agreedToTerms: agreedToTerms,
+  },
+}),
+  });
 
       const data = await response.json().catch(() => ({}));
 
@@ -162,6 +176,37 @@ const Register = () => {
                     </div>
                   </Form.Group>
                 </div>
+                <Form.Group controlId="formAgeConfirmed" className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="I hereby confirm that I am 16 years of age, or if I am under 16 years of age that I have explicit consent from my parent or guardian to use this application."
+                    checked={ageConfirmed}
+                    onChange={(e) => setAgeConfirmed(e.target.checked)}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="formAgreedToTerms" className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label={
+                      <>
+                        I agree to the{" "}
+                        <Link to="/legal/terms-of-service">
+                          Terms of Service
+                        </Link>{" "}
+                        and{" "}
+                        <Link to="/legal/privacy-policy">Privacy Policy</Link>.
+                      </>
+                    }
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    required
+                  />
+                </Form.Group>
+
+                {consentError && <Alert variant="danger">{consentError}</Alert>}
+
                 <Button
                   variant="primary"
                   type="submit"

@@ -21,6 +21,8 @@ console.log('Environment:', process.env.NODE_ENV);
 console.log('PORT:', PORT);
 console.log('CORS_ORIGIN:', process.env.CORS_ORIGIN);
 
+// ✅ Trust Render's reverse proxy so req.ip and x-forwarded-for work as expected
+app.set('trust proxy', 1);
 // Set up middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

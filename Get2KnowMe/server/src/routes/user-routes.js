@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Post Signup route - creates a new user
+// POST Signup route - creates a new user
 router.post('/signup', async (req, res) => {
   console.log('Received signup request:', req.body);
   try {
@@ -72,27 +72,44 @@ router.post('/signup', async (req, res) => {
     req.body.email = email.trim().toLowerCase();
     req.body.username = username.trim().toLowerCase();
 
-    const user = await User.create(req.body);
+    // Extract IP address and user-agent
+    const ip =
+      req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+    const userAgent = req.headers['user-agent'];
+
+    const user = await User.create({
+      email,
+      username,
+      password,
+      consent: {
+        ...consent,
+        ipAddress: ip,
+        userAgent: userAgent,
+        timestamp: new Date(),
+      },
+    });
+
     const token = signToken(user);
     res.json({ token, user });
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
-      // Handle duplicate key error (MongoDB error code for unique constraint violation)
       const field = Object.keys(error.keyPattern)[0];
-      const message = field === 'email' 
-        ? 'This email address is already registered' 
-        : field === 'username' 
-        ? 'This username is already taken' 
-        : 'This account information is already in use';
+      const message =
+        field === 'email'
+          ? 'This email address is already registered'
+          : field === 'username'
+          ? 'This username is already taken'
+          : 'There was an error creating your account';
       return res.status(400).json({ message });
     }
     if (error.name === 'ValidationError') {
-      // Handle validation errors (like password requirements)
-      const messages = Object.values(error.errors).map(err => err.message);
+      const messages = Object.values(error.errors).map((err) => err.message);
       return res.status(400).json({ message: messages.join('. ') });
     }
-    res.status(500).json({ message: 'An error occurred while creating your account' });
+    res
+      .status(500)
+      .json({ message: 'An error occurred while creating your account' });
   }
 });
 

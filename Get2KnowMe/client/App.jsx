@@ -5,6 +5,7 @@ import NavTabs from "./components/Nav.jsx";
 import LogoutNotification from "./components/LogoutNotification.jsx";
 import { useColorScheme } from "./hooks/useColorScheme.js";
 import { useTokenExpiration } from "./hooks/useTokenExpiration.js";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   // Apply color scheme on every page load
@@ -20,6 +21,7 @@ function App() {
       <main className="main-content">
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }
