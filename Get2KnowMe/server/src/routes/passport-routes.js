@@ -51,6 +51,28 @@ router.post('/create', async (req, res) => {
       });
     }
 
+    // Custom validation for required fields
+    const requiredFields = [
+      'firstName',
+      'lastName',
+      'diagnoses',
+      'trustedContact',
+      'profilePasscode'
+    ];
+    for (const field of requiredFields) {
+      if (!passportData[field] || (Array.isArray(passportData[field]) && passportData[field].length === 0)) {
+        return res.status(400).json({ message: `Missing required field: ${field}` });
+      }
+    }
+
+    // Custom logic for conditional fields
+    if (passportData.diagnoses.includes('Other') && !passportData.customDiagnosis) {
+      return res.status(400).json({ message: 'Please specify your diagnosis.' });
+    }
+    if (!passportData.trustedContact.name || !passportData.trustedContact.phone || !passportData.trustedContact.countryCode) {
+      return res.status(400).json({ message: 'Trusted contact name, phone, and country code are required.' });
+    }
+
     // Update user with communication passport data (store cleaned passcode)
     const updatedUser = await User.findByIdAndUpdate(
       userId,

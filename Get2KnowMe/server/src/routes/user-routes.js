@@ -57,7 +57,21 @@ router.post('/login', async (req, res) => {
 
 // Post Signup route - creates a new user
 router.post('/signup', async (req, res) => {
+  console.log('Received signup request:', req.body);
   try {
+    // Log the incoming request for debugging
+    console.log('Signup request body:', req.body);
+
+    // Ensure required fields are present
+    const { email, username, password } = req.body;
+    if (!email || !username || !password) {
+      return res.status(400).json({ message: 'Email, username, and password are required.' });
+    }
+
+    // Normalize email and username
+    req.body.email = email.trim().toLowerCase();
+    req.body.username = username.trim().toLowerCase();
+
     const user = await User.create(req.body);
     const token = signToken(user);
     res.json({ token, user });

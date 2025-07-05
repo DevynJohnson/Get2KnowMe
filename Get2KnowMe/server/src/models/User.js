@@ -5,12 +5,10 @@ import bcrypt from 'bcrypt';
 const communicationPassportSchema = new Schema({
   firstName: {
     type: String,
-    required: true,
     trim: true
   },
   lastName: {
     type: String,
-    required: true,
     trim: true
   },
   preferredName: {
@@ -19,7 +17,6 @@ const communicationPassportSchema = new Schema({
   },
   diagnosis: {
     type: String,
-    required: true,
     enum: [
       'ASD (Autism Spectrum Disorder)',
       'ADHD',
@@ -71,17 +68,14 @@ const communicationPassportSchema = new Schema({
   trustedContact: {
     name: {
       type: String,
-      required: true,
       trim: true
     },
     phone: {
       type: String,
-      required: true,
       trim: true
     },
     countryCode: {
       type: String,
-      required: true,
       trim: true,
       default: 'US'
     },
@@ -93,7 +87,6 @@ const communicationPassportSchema = new Schema({
   },
   profilePasscode: {
     type: String,
-    required: true,
     unique: true,
     trim: true,
     minlength: 6,
@@ -121,28 +114,22 @@ const communicationPassportSchema = new Schema({
 const userSchema = new Schema({
   email: {
     type: String,
-    required: true,
     unique: true,
     match: [/.+@.+\..+/, 'Please enter a valid e-mail address'],
-    trim: true, // Ensures spaces are trimmed from the email
+    trim: true // Ensures spaces are trimmed from the email
   },
   password: {
     type: String,
-    required: true,
     validate: {
       validator: function(password) {
         // Check if password is at least 8 characters long
         if (password.length < 8) return false;
-        
         // Check for at least one uppercase letter
         if (!/[A-Z]/.test(password)) return false;
-        
         // Check for at least one lowercase letter
         if (!/[a-z]/.test(password)) return false;
-        
         // Check for at least one special character
         if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) return false;
-        
         return true;
       },
       message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one special character (!@#$%^&*()_+-=[]{};\'"\\|,.<>/?)'
@@ -150,18 +137,17 @@ const userSchema = new Schema({
   },
   username: {
     type: String,
-    required: true,
-    unique: true,
+    unique: true
   },
   communicationPassport: communicationPassportSchema,
   createdAt: {
     type: Date,
-    default: Date.now, // Automatically set the creation date
+    default: Date.now // Automatically set the creation date
   },
   updatedAt: {
     type: Date,
-    default: Date.now, // Automatically set the update date
-  },
+    default: Date.now // Automatically set the update date
+  }
 });
 
 // Hash the password before saving the user
@@ -177,6 +163,17 @@ userSchema.pre('save', async function (next) {
   } else {
     next();
   }
+});
+
+// Normalize email and username before saving
+userSchema.pre('save', function (next) {
+  if (this.isModified('email') && this.email) {
+    this.email = this.email.trim().toLowerCase();
+  }
+  if (this.isModified('username') && this.username) {
+    this.username = this.username.trim().toLowerCase();
+  }
+  next();
 });
 
 // Method to compare passwords during login
