@@ -84,19 +84,9 @@ const communicationPassportSchema = new Schema({
     trim: true
   },
   likes: {
-  customPreferences: {
     type: String,
     trim: true
   },
-  triggers: {
-    type: String,
-    trim: true
-  },
-  likes: {
-    type: String,
-    trim: true
-  },
-  dislikes: {
   dislikes: {
     type: String,
     trim: true
@@ -123,7 +113,6 @@ const communicationPassportSchema = new Schema({
   },
   profilePasscode: {
     type: String,
-    unique: true,
     trim: true,
     minlength: 6,
     maxlength: 20
@@ -217,7 +206,7 @@ userSchema.pre('save', function (next) {
     this.email = this.email.trim().toLowerCase();
   }
   if (this.isModified('username') && this.username) {
-    this.username = this.username.trim().toLowerCase();
+    this.username = this.username.trim();
   }
   next();
 });
@@ -232,6 +221,13 @@ userSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: new Date() }); // Set the current date for updatedAt
   next();
 });
+
+// Ensures unique profile passcode while not requiring it during user creation
+userSchema.index(
+  { 'communicationPassport.profilePasscode': 1 },
+  { unique: true, sparse: true }
+);
+
 
 const User = model("User", userSchema);
 

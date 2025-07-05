@@ -1,7 +1,6 @@
 const PrivacyPolicy = () => (
   <div className="p-4 max-w-4xl mx-auto">
-    <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
-    <p className="mb-2">Effective Date: [June 28, 2025]</p>
+    <p className="mb-2">Effective Date: June 28, 2025</p>
 
     <p className="mb-4">
       Welcome to <strong>Get2KnowYou</strong>, an application that helps
@@ -87,7 +86,7 @@ const PrivacyPolicy = () => (
       aware that we have inadvertently collected data without such consent, we
       will delete it as soon as possible.
     </p>
-    
+
     <h2 className="text-2xl font-semibold mt-6 mb-2">8. Contact</h2>
     <p>Email us at: [jwbarry@outlook.com]</p>
   </div>

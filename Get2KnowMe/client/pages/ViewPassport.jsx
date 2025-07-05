@@ -71,21 +71,21 @@ const ViewPassport = () => {
     // Handle new multiple diagnoses format
     if (passport.diagnoses && Array.isArray(passport.diagnoses)) {
       const diagnoses = [...passport.diagnoses];
-      
+
       // Replace "Other" with custom diagnosis if it exists
       if (diagnoses.includes("Other") && passport.customDiagnosis) {
         const otherIndex = diagnoses.indexOf("Other");
         diagnoses[otherIndex] = passport.customDiagnosis;
       }
-      
+
       return diagnoses;
     }
-    
+
     // Handle old single diagnosis format for backward compatibility
     if (passport.diagnosis === "Other" && passport.customDiagnosis) {
       return [passport.customDiagnosis];
     }
-    
+
     return passport.diagnosis ? [passport.diagnosis] : [];
   };
 
@@ -113,7 +113,11 @@ const ViewPassport = () => {
             <Alert variant="danger" className="text-center">
               <Alert.Heading>Unable to Load Passport</Alert.Heading>
               <p>{error}</p>
-              <Button variant="outline-danger" onClick={() => navigate("/")} className="btn-secondary">
+              <Button
+                variant="outline-danger"
+                onClick={() => navigate("/")}
+                className="btn-secondary"
+              >
                 Return to Homepage
               </Button>
             </Alert>
@@ -131,7 +135,11 @@ const ViewPassport = () => {
             <Alert variant="warning" className="text-center">
               <Alert.Heading>Passport Not Found</Alert.Heading>
               <p>The requested Communication Passport could not be found.</p>
-              <Button variant="outline-warning" onClick={() => navigate("/")} className="btn-secondary">
+              <Button
+                variant="outline-warning"
+                onClick={() => navigate("/")}
+                className="btn-secondary"
+              >
                 Return to Homepage
               </Button>
             </Alert>
@@ -312,6 +320,54 @@ const ViewPassport = () => {
                 </div>
               )}
 
+              {/* Triggers Section */}
+              {passport.triggers && passport.triggers.trim() !== "" && (
+                <div className="passport-section mb-4">
+                  <div className="section-header">
+                    <i className="fas fa-bolt section-icon text-danger"></i>
+                    <h4 className="section-title">Triggers</h4>
+                  </div>
+                  <div className="section-content">
+                    <div className="triggers-box">
+                      <i className="fas fa-exclamation-circle trigger-icon text-danger me-2"></i>
+                      {passport.triggers}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Likes Section */}
+              {passport.likes && passport.likes.trim() !== "" && (
+                <div className="passport-section mb-4">
+                  <div className="section-header">
+                    <i className="fas fa-thumbs-up section-icon text-success"></i>
+                    <h4 className="section-title">Likes</h4>
+                  </div>
+                  <div className="section-content">
+                    <div className="likes-box">
+                      <i className="fas fa-heart like-icon text-success me-2"></i>
+                      {passport.likes}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Dislikes Section */}
+              {passport.dislikes && passport.dislikes.trim() !== "" && (
+                <div className="passport-section mb-4">
+                  <div className="section-header">
+                    <i className="fas fa-thumbs-down section-icon text-warning"></i>
+                    <h4 className="section-title">Dislikes</h4>
+                  </div>
+                  <div className="section-content">
+                    <div className="dislikes-box">
+                      <i className="fas fa-minus-circle dislike-icon text-warning me-2"></i>
+                      {passport.dislikes}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Other Information Section */}
               {passport.otherInformation && (
                 <div className="passport-section mb-4">
@@ -367,7 +423,8 @@ const ViewPassport = () => {
             </Alert.Heading>
             <p className="mb-0 small">
               If additional support is needed, please contact the trusted person
-              listed above. In case of an emergency contact your local emergency services.
+              listed above. In case of an emergency contact your local emergency
+              services.
             </p>
           </Alert>
 

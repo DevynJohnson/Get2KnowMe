@@ -59,22 +59,32 @@ router.post('/login', async (req, res) => {
 router.post('/signup', async (req, res) => {
   console.log('Received signup request:', req.body);
   try {
-    // Log the incoming request for debugging
-    console.log('Signup request body:', req.body);
+    const { email, username, password, consent } = req.body;
 
-    // Ensure required fields are present
-    const { email, username, password } = req.body;
     if (!email || !username || !password) {
-      return res.status(400).json({ message: 'Email, username, and password are required.' });
+      return res
+        .status(400)
+        .json({ message: 'Email, username, and password are required.' });
     }
 
-    // Normalize email and username
+    if (
+      !consent ||
+      consent.ageConfirmed !== true ||
+      consent.agreedToTerms !== true
+    ) {
+      return res.status(400).json({
+        message:
+          'You must confirm age eligibility and agree to the Terms and Privacy Policy.',
+      });
+    }
+
+    // Normalize
     req.body.email = email.trim().toLowerCase();
     req.body.username = username.trim().toLowerCase();
 
-    // Extract IP address and user-agent
     const ip =
-      req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+      req.headers['x-forwarded-for']?.split(',')[0] ||
+      req.socket.remoteAddress;
     const userAgent = req.headers['user-agent'];
 
     const user = await User.create({
