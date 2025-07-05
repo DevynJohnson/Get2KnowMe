@@ -3,6 +3,7 @@ import express from 'express';
 import User from '../models/User.js';
 import { generateFriendlyPasscode, validatePasscode } from '../utils/passcodeGenerator.js';
 import { authenticateToken } from '../utils/auth.js';
+import { validateInternationalPhone } from '../utils/phoneValidation.js';
 
 const router = express.Router();
 
@@ -71,6 +72,10 @@ router.post('/create', async (req, res) => {
     }
     if (!passportData.trustedContact.name || !passportData.trustedContact.phone || !passportData.trustedContact.countryCode) {
       return res.status(400).json({ message: 'Trusted contact name, phone, and country code are required.' });
+    }
+    // Validate trusted contact phone number format (international)
+    if (!validateInternationalPhone(passportData.trustedContact.phone, passportData.trustedContact.countryCode)) {
+      return res.status(400).json({ message: 'Trusted contact phone number is invalid for the selected country.' });
     }
 
     // Update user with communication passport data (store cleaned passcode)

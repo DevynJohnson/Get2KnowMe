@@ -16,6 +16,7 @@ import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
 import PhoneNumberInput from "../components/PhoneNumberInput.jsx";
 import { validatePhoneNumber } from '../utils/phoneUtils.js';
 import "../styles/CreatePassport.css";
+import "../styles/PhoneNumberInput.css"; // Add this line to ensure PhoneNumberInput styles are loaded
 
 const CreatePassport = () => {
   const navigate = useNavigate();
