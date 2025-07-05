@@ -155,12 +155,30 @@ const CreatePassport = () => {
   };
 
   const handleDiagnosisChange = (diagnosis) => {
-    setFormData((prev) => ({
-      ...prev,
-      diagnoses: prev.diagnoses.includes(diagnosis)
-        ? prev.diagnoses.filter((d) => d !== diagnosis)
-        : [...prev.diagnoses, diagnosis],
-    }));
+    setFormData((prev) => {
+      // If selecting "No Diagnosis", clear all others and only select it
+      if (diagnosis === "No Diagnosis") {
+        if (prev.diagnoses.includes("No Diagnosis")) {
+          // Unchecking "No Diagnosis"
+          return { ...prev, diagnoses: [] };
+        } else {
+          // Checking "No Diagnosis" (remove all others)
+          return { ...prev, diagnoses: ["No Diagnosis"] };
+        }
+      } else {
+        // If "No Diagnosis" is already selected, ignore other selections
+        if (prev.diagnoses.includes("No Diagnosis")) {
+          return prev;
+        }
+        // Toggle the selected diagnosis
+        return {
+          ...prev,
+          diagnoses: prev.diagnoses.includes(diagnosis)
+            ? prev.diagnoses.filter((d) => d !== diagnosis)
+            : [...prev.diagnoses, diagnosis],
+        };
+      }
+    });
   };
 
   // Handle phone number changes
@@ -363,17 +381,24 @@ const CreatePassport = () => {
                       💡 <strong>Tip:</strong> You can select multiple diagnoses if needed.
                     </Form.Text>
                     <div className="preferences-container">
-                      {diagnosisOptions.map((option) => (
-                        <div key={option} className="mb-2">
-                          <Form.Check
-                            type="checkbox"
-                            id={`diagnosis-${option}`}
-                            label={option}
-                            checked={formData.diagnoses.includes(option)}
-                            onChange={() => handleDiagnosisChange(option)}
-                          />
-                        </div>
-                      ))}
+                      {diagnosisOptions.map((option) => {
+                        // If "No Diagnosis" is selected, disable all others
+                        const noDiagnosisSelected = formData.diagnoses.includes("No Diagnosis");
+                        const isNoDiagnosis = option === "No Diagnosis";
+                        const isDisabled = !isNoDiagnosis && noDiagnosisSelected;
+                        return (
+                          <div key={option} className="mb-2">
+                            <Form.Check
+                              type="checkbox"
+                              id={`diagnosis-${option}`}
+                              label={option}
+                              checked={formData.diagnoses.includes(option)}
+                              onChange={() => handleDiagnosisChange(option)}
+                              disabled={isDisabled}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   </Form.Group>
                 </div>
