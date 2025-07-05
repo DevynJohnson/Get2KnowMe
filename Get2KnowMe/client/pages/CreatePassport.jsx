@@ -28,12 +28,14 @@ const CreatePassport = () => {
     diagnoses: [], // Changed from single diagnosis to multiple diagnoses
     customDiagnosis: "",
     communicationPreferences: [],
-    avoidWords: "",
     customPreferences: "",
+    triggers: "",
+    likes: "",
+    dislikes: "",
     trustedContact: {
       name: "",
       phone: "",
-      countryCode: "US",
+      countryCode: "",
       email: "",
     },
     profilePasscode: "",
@@ -53,19 +55,23 @@ const CreatePassport = () => {
   const diagnosisOptions = [
     "ASD (Autism Spectrum Disorder)",
     "ADHD",
-    "AuDHD (Autism + ADHD)",
     "OCD",
     "Dyslexia",
     "Tourette's Syndrome",
+    "C-PTSD (Complex PTSD)",
+    "Anxiety",
+    "No Diagnosis",
     "Other",
   ];
 
   // Communication preference options
   const preferenceOptions = [
-    "Speak slowly",
-    "Allow extra time to process",
-    "Avoid complicated questions or confusing language",
-    "Avoid specific words/phrases/topics",
+    "I will understand things better if you speak slowly",
+    "I may need extra time to process when you are speaking to me, it may take me a moment to respond",
+    "Please avoid complicated questions or confusing language",
+    "I do not enjoy physical contact, please do not touch me",
+    "Please use gestures and non-verbal cues if possible, they help me understand better",
+    "Reading can take me some time, please be patient and allow me time to process the information",
     "Other",
   ];
 
@@ -164,6 +170,18 @@ const CreatePassport = () => {
       trustedContact: {
         ...prev.trustedContact,
         phone: phoneValue || "",
+        // Do NOT clear countryCode here!
+      },
+    }));
+  };
+
+  // Handle country code changes from PhoneNumberInput
+  const handleCountryChange = (countryCode) => {
+    setFormData((prev) => ({
+      ...prev,
+      trustedContact: {
+        ...prev.trustedContact,
+        countryCode: countryCode || "GB",
       },
     }));
   };
@@ -340,11 +358,9 @@ const CreatePassport = () => {
                 {/* Diagnosis Field */}
                 <div className="form-section mb-3">
                   <Form.Group>
-                    <Form.Label>Diagnoses (Select all that apply)</Form.Label>
+                    <Form.Label>Diagnoses</Form.Label>
                     <Form.Text className="text-muted d-block mb-2">
-                      💡 <strong>Tip:</strong> You can select multiple diagnoses if you have more than one condition. 
-                      For example, if you have both Autism and ADHD, you can select both individual options 
-                      or choose "AuDHD (Autism + ADHD)".
+                      💡 <strong>Tip:</strong> You can select multiple diagnoses if needed.
                     </Form.Text>
                     <div className="preferences-container">
                       {diagnosisOptions.map((option) => (
@@ -401,25 +417,6 @@ const CreatePassport = () => {
                   </Form.Group>
                 </div>
 
-                {/* Avoid Words Field */}
-                {formData.communicationPreferences.includes(
-                  "Avoid specific words/phrases/topics"
-                ) && (
-                  <div className="form-section mb-3">
-                    <Form.Group>
-                      <Form.Label>Words/Phrases/Topics to Avoid</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={3}
-                        name="avoidWords"
-                        value={formData.avoidWords}
-                        onChange={handleInputChange}
-                        placeholder="List specific words, phrases, or topics to avoid..."
-                      />
-                    </Form.Group>
-                  </div>
-                )}
-
                 {/* Custom Preferences Field */}
                 {formData.communicationPreferences.includes("Other") && (
                   <div className="form-section mb-3">
@@ -438,6 +435,54 @@ const CreatePassport = () => {
                     </Form.Group>
                   </div>
                 )}
+
+                {/* Triggers Field */}
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Triggers (Optional)</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      name="triggers"
+                      value={formData.triggers}
+                      onChange={handleInputChange}
+                      placeholder="Describe any triggers, situations, or things that may cause distress or discomfort..."
+                    />
+                    <Form.Text className="text-muted">
+                      This information can help others avoid situations that may be difficult for you.
+                    </Form.Text>
+                  </Form.Group>
+                </div>
+
+                {/* Likes Field */}
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Likes (Optional)</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={2}
+                      name="likes"
+                      value={formData.likes}
+                      onChange={handleInputChange}
+                      placeholder="List things you enjoy, topics you like, or activities that make you happy..."
+                    />
+                  </Form.Group>
+                </div>
+
+                {/* Dislikes Field */}
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Dislikes (Optional)</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={2}
+                      name="dislikes"
+                      value={formData.dislikes}
+                      onChange={handleInputChange}
+                      placeholder="List things you dislike, topics to avoid, or activities that make you uncomfortable..."
+                    />
+                  </Form.Group>
+                </div>
 
                 {/* Trusted Contact Section */}
                 <div className="form-section mb-4">
@@ -466,6 +511,8 @@ const CreatePassport = () => {
                     label="Phone Number"
                     placeholder="Enter phone number"
                     required
+                    country={formData.trustedContact.countryCode || "GB"}
+                    onCountryChange={handleCountryChange}
                   />
 
                   <Form.Group className="mb-0">
@@ -524,7 +571,7 @@ const CreatePassport = () => {
                       placeholder="Any other important information you'd like to share..."                      maxLength={1000}
                     />
                     <Form.Text className="text-muted">
-                      {formData.otherInformation.length}/1000 characters
+                      {(formData.otherInformation || '').length}/1000 characters
                     </Form.Text>
                   </Form.Group>
                 </div>

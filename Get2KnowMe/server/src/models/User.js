@@ -20,10 +20,12 @@ const communicationPassportSchema = new Schema({
     enum: [
       'ASD (Autism Spectrum Disorder)',
       'ADHD',
-      'AuDHD (Autism + ADHD)',
       'OCD',
       'Dyslexia',
       'Tourette\'s Syndrome',
+      'C-PTSD (Complex PTSD)',
+      'Anxiety',
+      'No Diagnosis',
       'Other'
     ]
   },
@@ -32,10 +34,12 @@ const communicationPassportSchema = new Schema({
     enum: [
       'ASD (Autism Spectrum Disorder)',
       'ADHD',
-      'AuDHD (Autism + ADHD)',
       'OCD',
       'Dyslexia',
       'Tourette\'s Syndrome',
+      'C-PTSD (Complex PTSD)',
+      'Anxiety',
+      'No Diagnosis',
       'Other'
     ]
   }],
@@ -50,18 +54,28 @@ const communicationPassportSchema = new Schema({
   communicationPreferences: [{
     type: String,
     enum: [
-      'Speak slowly',
-      'Allow extra time to process',
-      'Avoid complicated questions or confusing language',
-      'Avoid specific words/phrases/topics',
+      'I will understand things better if you speak slowly',
+      'I may need extra time to process when you are speaking to me, it may take me a moment to respond',
+      'Please avoid complicated questions or confusing language',
+      'I do not enjoy physical contact, please do not touch me',
+      'Please use gestures and non-verbal cues if possible, they help me understand better',
+      'Reading can take me some time, please be patient and allow me time to process the information',
       'Other'
     ]
   }],
-  avoidWords: {
+  customPreferences: {
     type: String,
     trim: true
   },
-  customPreferences: {
+  triggers: {
+    type: String,
+    trim: true
+  },
+  likes: {
+    type: String,
+    trim: true
+  },
+  dislikes: {
     type: String,
     trim: true
   },

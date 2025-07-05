@@ -24,7 +24,8 @@ const PhoneNumberInput = ({
       <PhoneInput
         international
         countryCallingCodeEditable={false}
-        defaultCountry="US"
+        country={props.country || undefined} // Use controlled country prop, do not default
+        defaultCountry={'GB'} // Remove defaultCountry to avoid US default
         value={value}
         onChange={onChange}
         placeholder={placeholder}
@@ -32,6 +33,7 @@ const PhoneNumberInput = ({
         numberInputProps={{
           className: `form-control ${error ? 'is-invalid' : ''}`,
         }}
+        onCountryChange={props.onCountryChange}
         {...props}
       />
       {error && (
