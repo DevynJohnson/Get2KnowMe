@@ -21,13 +21,15 @@ export const formatPhoneForDisplay = (phoneNumber) => {
 /**
  * Validates a phone number
  * @param {string} phoneNumber - The phone number to validate
+ * @param {string} [country] - Optional country code (e.g., 'GB', 'US')
  * @returns {boolean} - Whether the phone number is valid
  */
-export const validatePhoneNumber = (phoneNumber) => {
+export const validatePhoneNumber = (phoneNumber, country) => {
   if (!phoneNumber) return false;
   
   try {
-    return isValidPhoneNumber(phoneNumber);
+    // Pass country code if provided
+    return isValidPhoneNumber(phoneNumber, country);
   } catch (error) {
     console.warn('Error validating phone number:', error);
     return false;
