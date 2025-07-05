@@ -217,8 +217,9 @@ const CreatePassport = () => {
 
   // Validate phone number
   const validatePhoneNumberField = (phone) => {
+    const country = formData.trustedContact.countryCode || undefined;
     if (!phone) return "Phone number is required";
-    if (!validatePhoneNumber(phone)) {
+    if (!validatePhoneNumber(phone, country)) {
       return "Please enter a valid phone number";
     }
     return null;
