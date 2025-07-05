@@ -75,7 +75,7 @@ const communicationPassportSchema = new Schema({
   trustedContact: {
     name: { type: String, trim: true },
     phone: { type: String, trim: true },
-    countryCode: { type: String, trim: true, default: 'US' },
+    countryCode: { type: String, trim: true, default: 'GB' },
     email: {
       type: String,
       trim: true,

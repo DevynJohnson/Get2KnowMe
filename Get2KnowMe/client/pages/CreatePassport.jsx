@@ -11,12 +11,14 @@ import {
   Badge,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { parsePhoneNumber } from 'libphonenumber-js';
 import auth from "../utils/auth.js";
 import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
 import PhoneNumberInput from "../components/PhoneNumberInput.jsx";
 import { validatePhoneNumber } from '../utils/phoneUtils.js';
 import "../styles/CreatePassport.css";
-import "../styles/PhoneNumberInput.css"; // Add this line to ensure PhoneNumberInput styles are loaded
+import "../styles/PhoneNumberInput.css";
+
 
 const CreatePassport = () => {
   const navigate = useNavigate();
@@ -206,15 +208,26 @@ const CreatePassport = () => {
   };
 
   // Handle country code changes from PhoneNumberInput
-  const handleCountryChange = (countryCode) => {
-    setFormData((prev) => ({
-      ...prev,
-      trustedContact: {
-        ...prev.trustedContact,
-        countryCode: countryCode || "GB",
-      },
-    }));
-  };
+ const handleCountryChange = (countryCode) => {
+  // fallback logic to parse from number if no countryCode
+  if (!countryCode && formData.trustedContact.phone) {
+    try {
+      const parsed = parsePhoneNumber(formData.trustedContact.phone);
+      countryCode = parsed?.country || "GB";
+    } catch (err) {
+      console.warn("Could not infer country from phone number", err);
+      countryCode = "GB";
+    }
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    trustedContact: {
+      ...prev.trustedContact,
+      countryCode: countryCode.toUpperCase(),
+    },
+  }));
+};
 
   // Validate phone number
   const validatePhoneNumberField = (phone) => {
