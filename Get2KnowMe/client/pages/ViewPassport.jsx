@@ -94,6 +94,25 @@ const ViewPassport = () => {
     return formatPhoneForDisplay(phone);
   };
 
+  // Helper to get display health alerts (with custom/allergy text)
+  const getDisplayHealthAlerts = () => {
+    if (!passport.healthAlert || !Array.isArray(passport.healthAlert)) return [];
+    return passport.healthAlert.map((alert) => {
+      if (alert === "Other" && passport.customHealthAlert && passport.customHealthAlert.trim() !== "") return { label: "Other", detail: passport.customHealthAlert };
+      if (alert === "Allergies" && passport.allergyList && passport.allergyList.trim() !== "") return { label: "Allergies", detail: passport.allergyList };
+      return { label: alert };
+    });
+  };
+
+  // Helper to get badge color for health alert
+  const getHealthAlertBadgeColor = (alert) => {
+    if (alert === "Epilepsy") return "danger"; // red
+    if (alert === "Type 1 Diabetes" || alert === "Type 2 Diabetes") return "warning"; // yellow
+    if (alert.startsWith("Allergies")) return "success"; // green
+    if (alert === "Other" || (passport.customHealthAlert && alert === passport.customHealthAlert)) return "purple";
+    return "secondary";
+  };
+
   if (loading) {
     return (
       <Container className="view-passport-container d-flex justify-content-center align-items-center">
@@ -162,12 +181,62 @@ const ViewPassport = () => {
                 {passport.preferredName || passport.firstName}{" "}
                 {passport.lastName}
               </h2>
+              {/* Health Alerts Badges - REMOVE allergy badge from top */}
+              <div className="mb-2">
+                {getDisplayHealthAlerts().map((alertObj, idx) => (
+                  alertObj.label !== 'Allergies' ? (
+                    <Badge
+                      key={idx}
+                      bg={getHealthAlertBadgeColor(alertObj.label)}
+                      className={`health-alert-badge me-1 mb-1 ${getHealthAlertBadgeColor(alertObj.label) === "purple" ? "bg-purple" : ""}`}
+                      style={getHealthAlertBadgeColor(alertObj.label) === "purple" ? { backgroundColor: "#a259d9", color: "#fff" } : {}}
+                    >
+                      {alertObj.label}
+                    </Badge>
+                  ) : null
+                ))}
+              </div>
               <Badge bg="primary" className="passport-badge">
                 Communication Passport
               </Badge>
             </Card.Header>
 
             <Card.Body className="p-4">
+              {/* Health Alerts Section */}
+              {passport.healthAlert && passport.healthAlert.length > 0 && (
+                <div className="passport-section mb-4">
+                  <div className="section-header">
+                    <i className="fas fa-notes-medical section-icon text-danger"></i>
+                    <h4 className="section-title">Health Alerts</h4>
+                  </div>
+                  <div className="section-content">
+                    <div className="d-flex flex-wrap gap-2 mb-2">
+                      {getDisplayHealthAlerts().map((alertObj, idx) => (
+                        <Badge
+                          key={idx}
+                          bg={getHealthAlertBadgeColor(alertObj.label)}
+                          className={`health-alert-badge ${getHealthAlertBadgeColor(alertObj.label) === "purple" ? "bg-purple" : ""}`}
+                          style={getHealthAlertBadgeColor(alertObj.label) === "purple" ? { backgroundColor: "#a259d9", color: "#fff" } : {}}
+                        >
+                          {alertObj.label}
+                        </Badge>
+                      ))}
+                    </div>
+                    {/* Show user input for Allergies and Other below the badge */}
+                    {getDisplayHealthAlerts().map((alertObj, idx) => (
+                      alertObj.detail ? (
+                        <div key={idx} className={`mt-1 ms-1 ${alertObj.label === 'Allergies' ? 'allergy-list-text' : 'custom-health-alert-text'}`}>
+                          {alertObj.label === 'Allergies' ? null : (
+                            <i className="fas fa-question-circle text-purple me-1"></i>
+                          )}
+                          <span className="fw-bold">{alertObj.label}:</span> {alertObj.detail}
+                        </div>
+                      ) : null
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Diagnosis Section */}
               <div className="passport-section mb-4">
                 <div className="section-header">
