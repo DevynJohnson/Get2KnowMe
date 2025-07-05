@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
-import fieldEncryption from "mongoose-field-encryption";
+import { fieldEncryption } from "mongoose-field-encryption";
 
 // Communication Passport subdocument schema
 const communicationPassportSchema = new Schema({
