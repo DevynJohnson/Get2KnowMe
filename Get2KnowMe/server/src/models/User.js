@@ -42,6 +42,20 @@ const communicationPassportSchema = new Schema({
       return this.diagnosis === 'Other' || (this.diagnoses && this.diagnoses.includes('Other'));
     }
   },
+  healthAlert: [{
+    type: String,
+    trim: true,
+    enum: [
+      'None',
+      'Type 1 Diabetes',
+      'Type 2 Diabetes',
+      'Epilepsy',
+      'Allergies',
+      'Other'
+    ]
+  }],
+  customHealthAlert: { type: String, trim: true },
+  allergyList: { type: String, trim: true },
   communicationPreferences: [{
     type: String,
     enum: [
@@ -83,6 +97,9 @@ communicationPassportSchema.plugin(fieldEncryption, {
     'diagnosis',
     'diagnoses',
     'customDiagnosis',
+    'healthAlert',
+    'customHealthAlert',
+    'allergyList',
     'communicationPreferences',
     'customPreferences',
     'triggers',

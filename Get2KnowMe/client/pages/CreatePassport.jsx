@@ -27,6 +27,7 @@ const CreatePassport = () => {
     preferredName: "",
     diagnoses: [], // Changed from single diagnosis to multiple diagnoses
     customDiagnosis: "",
+    healthAlert: [],
     communicationPreferences: [],
     customPreferences: "",
     triggers: "",
@@ -61,6 +62,16 @@ const CreatePassport = () => {
     "C-PTSD (Complex PTSD)",
     "Anxiety",
     "No Diagnosis",
+    "Other",
+  ];
+
+  // Health alert options
+  const healthAlertOptions = [
+    "None",
+    "Type 1 Diabetes",
+    "Type 2 Diabetes",
+    "Epilepsy",
+    "Allergies",
     "Other",
   ];
 
@@ -370,6 +381,64 @@ const CreatePassport = () => {
                     <Form.Text className="text-muted">
                       If provided, this is how others will address you
                     </Form.Text>
+                  </Form.Group>
+                </div>
+
+                {/* Health Alerts Field */}
+                <div className="form-section mb-3">
+                  <Form.Group>
+                    <Form.Label>Health Alerts</Form.Label>
+                    <Form.Text className="text-muted d-block mb-2">
+                      Select any health conditions or alerts you want others to be aware of. You can select multiple if needed.
+                    </Form.Text>
+                    <div className="preferences-container">
+                      {healthAlertOptions.map((option) => (
+                        <div key={option} className="mb-2">
+                          <Form.Check
+                            type="checkbox"
+                            id={`healthAlert-${option}`}
+                            label={option}
+                            checked={formData.healthAlert.includes(option)}
+                            onChange={() => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                healthAlert: prev.healthAlert.includes(option)
+                                  ? prev.healthAlert.filter((a) => a !== option)
+                                  : [...prev.healthAlert, option],
+                              }));
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {/* Show input for 'Other' health alert */}
+                    {formData.healthAlert.includes("Other") && (
+                      <div className="mt-2">
+                        <Form.Label>Please specify your health alert</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="customHealthAlert"
+                          value={formData.customHealthAlert || ""}
+                          onChange={handleInputChange}
+                          placeholder="Enter your specific health alert"
+                          required
+                        />
+                      </div>
+                    )}
+                    {/* Show input for 'Allergies' */}
+                    {formData.healthAlert.includes("Allergies") && (
+                      <div className="mt-2">
+                        <Form.Label>Please list your allergies</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="allergyList"
+                          value={formData.allergyList || ""}
+                          onChange={handleInputChange}
+                          placeholder="List your allergies here"
+                          required
+                        />
+                      </div>
+                    )}
                   </Form.Group>
                 </div>
 
