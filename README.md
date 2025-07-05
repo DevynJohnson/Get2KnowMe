@@ -48,6 +48,7 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 
 
 
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -57,6 +58,7 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 - [Contributing](#contributing)
 - [Testing](#testing)
 - [Credits](#credits)
+- [GDPR & Privacy Compliance](#gdpr--privacy-compliance)
 - [License](#license)
 
 ## Installation
@@ -236,6 +238,24 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
 - [ESLint](https://eslint.org) - JavaScript linting
 - [Concurrently](https://www.npmjs.com/package/concurrently) - Parallel script execution
             
+## GDPR & Privacy Compliance
+
+Get2KnowMe is committed to protecting user privacy and complying with the General Data Protection Regulation (GDPR) and other relevant privacy laws. Key measures include:
+
+- **Explicit Consent**: Users must provide explicit consent to the Terms of Service and Privacy Policy during registration, including age confirmation and agreement to data processing.
+- **Right of Access & Deletion**: Users can access, export, or delete their data at any time via the application interface or by contacting support.
+- **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
+- **Data Security**: Passwords are securely hashed (bcrypt). All data is encrypted in transit (HTTPS). Passport data is only visible when a user chooses to share their passcode or QR code.
+- **Children’s Privacy**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements.
+- **Data Hosting**: Data is stored securely using Render and MongoDB Atlas, both of which provide strong security and compliance features.
+- **Breach Notification**: Users will be notified promptly in the event of a data breach affecting their personal data.
+- **Third-Party Processors**: Only reputable, GDPR-compliant third-party services are used for hosting and infrastructure. No user data is sold or shared for marketing purposes.
+- **Privacy Policy & Terms**: Full Privacy Policy and Terms of Service are available in the app and repository, outlining user rights and data practices.
+
+For any privacy-related requests or questions, users can contact the team at [jwbarry@outlook.com] or [dljohnson1313@gmail.com].
+
+---
+
 ## License
 MIT License
 

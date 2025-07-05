@@ -35,7 +35,7 @@ const TermsOfService = () => (
     <p className="mb-4">We may revise these terms. Continued use means you accept changes.</p>
 
     <h2 className="text-2xl font-semibold mt-6 mb-2">9. Contact</h2>
-    <p>Email us at: [jwbarry@outlook.com]</p>
+    <p>Email us at: dljohnson1313@gmail.com</p>
   </div>
 );
 
