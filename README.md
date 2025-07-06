@@ -22,6 +22,8 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 - **Trusted Contact Integration**: Emergency contact information with privacy controls
 - **Responsive Design**: Optimized for mobile devices and various screen sizes
 - **Print-Friendly Format**: Clean, professional printing capabilities for physical copies
+- **Accessibility Options**: Accessibility customization options including toggle on/off options for colorblindness and dyslexia-friendly fonts
+- **Advanced Security & Data Encryption**: All sensitive personal data is encrypted at rest and protected by strong authentication, ensuring your information is always safe
 
 ## Screenshots
 
@@ -128,6 +130,7 @@ To run Get2KnowMe locally for development or contribution:
 - **JSON Web Tokens 9.0.2** - Secure authentication mechanism
 - **bcrypt 6.0.0** - Password hashing library
 - **JWT Decode 4.0.0** - JWT token decoding utility
+- **mongoose-field-encryption 7.0.1** - Field-level encryption for sensitive data in MongoDB
 
 ### Additional Libraries
 - **QRCode 1.5.4** - QR code generation
@@ -171,7 +174,7 @@ We welcome contributions from the community! To get started:
 - Update or add documentation as needed
 - Be respectful and inclusive in all communications
 
-If you have questions about environment variables or setup, please open an issue or discussion!
+If you have questions about environment variables or setup, please open an issue or reach out to [dljohnson1313@gmail.com]!
 
 ## Testing
 
@@ -232,11 +235,17 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
 #### Security & Authentication
 - [JSON Web Tokens](https://jwt.io) - Secure token-based authentication
 - [bcrypt](https://www.npmjs.com/package/bcrypt) - Password hashing
+- [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption) - Field-level encryption for sensitive data
 - [CORS](https://www.npmjs.com/package/cors) - Cross-origin resource sharing
 
 #### Development Tools
 - [ESLint](https://eslint.org) - JavaScript linting
 - [Concurrently](https://www.npmjs.com/package/concurrently) - Parallel script execution
+
+#### Testing Tools
+- [Jest](https://jestjs.io) - JavaScript testing framework
+- [Supertest](https://www.npmjs.com/package/supertest) - HTTP assertions for integration testing
+- [mongodb-memory-server](https://www.npmjs.com/package/mongodb-memory-server) - In-memory MongoDB server for testing
             
 ## GDPR & Privacy Compliance
 
@@ -246,6 +255,7 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **Right of Access & Deletion**: Users can access, export, or delete their data at any time via the application interface or by contacting support.
 - **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
 - **Data Security**: Passwords are securely hashed (bcrypt). All data is encrypted in transit (HTTPS). Passport data is only visible when a user chooses to share their passcode or QR code.
+- **Database Encryption**: Personally identifiable information (PII) is encrypted at the field level in MongoDB using [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption), ensuring sensitive data is protected at rest.
 - **Children’s Privacy**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements.
 - **Data Hosting**: Data is stored securely using Render and MongoDB Atlas, both of which provide strong security and compliance features.
 - **Breach Notification**: Users will be notified promptly in the event of a data breach affecting their personal data.
