@@ -245,6 +245,23 @@
   font-size: 0.8rem;
 }
 
+/* Get2KnowMe Logo Styling */
+.get2knowme-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100px;
+  max-width: 80%;
+  width: auto;
+}
+
+@media (max-width: 576px) {
+  .get2knowme-logo {
+    height: 75px;
+    max-width: 90%;
+  }
+}
+
 /* Print Styles */
 @media print {
   .view-passport-container {

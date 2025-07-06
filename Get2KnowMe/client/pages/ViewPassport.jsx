@@ -13,6 +13,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { formatPhoneForDisplay, createPhoneLink } from "../utils/phoneUtils.js";
 import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
+import get2knowmeLogo from "/get2knowme_logo_svg.svg";
 import "../styles/ViewPassport.css";
 
 const ViewPassport = () => {
@@ -175,27 +176,13 @@ const ViewPassport = () => {
           <Card className="passport-display-card">
             <Card.Header className="passport-header text-center">
               <div className="passport-icon mb-2">
-                <i className="fas fa-id-card"></i>
+                <img src={get2knowmeLogo} alt="Get2KnowMe Logo" className="get2knowme-logo" />
               </div>
               <h2 className="passport-name">
                 {passport.preferredName || passport.firstName}{" "}
                 {passport.lastName}
               </h2>
-              {/* Health Alerts Badges - REMOVE allergy badge from top */}
-              <div className="mb-2">
-                {getDisplayHealthAlerts().map((alertObj, idx) => (
-                  alertObj.label !== 'Allergies' ? (
-                    <Badge
-                      key={idx}
-                      bg={getHealthAlertBadgeColor(alertObj.label)}
-                      className={`health-alert-badge me-1 mb-1 ${getHealthAlertBadgeColor(alertObj.label) === "purple" ? "bg-purple" : ""}`}
-                      style={getHealthAlertBadgeColor(alertObj.label) === "purple" ? { backgroundColor: "#a259d9", color: "#fff" } : {}}
-                    >
-                      {alertObj.label}
-                    </Badge>
-                  ) : null
-                ))}
-              </div>
+              {/* Removed health alert badges from the top */}
               <Badge bg="primary" className="passport-badge">
                 Communication Passport
               </Badge>
