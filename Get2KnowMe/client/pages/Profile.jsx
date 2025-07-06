@@ -62,7 +62,7 @@ const Profile = () => {
                   {isLoading
                     ? "Loading your passport status..."
                     : hasPassport
-                    ? "This is where you can manage your Communication Passport and easily share it with others. Simply select Share My QR Code below and ask them to scan it with their smartphone camera and follow the link provided, or use the View Somebody's Passport option in this app to scan a QR code or enter your passcode." 
+                    ? "This is where you can manage your Communication Passport and easily share it with others. Simply select Share My QR Code below and ask them to scan it with their smartphone camera and follow the link provided, or use Communication Passport lookup tools at get2know.me/passport-lookup to scan your QR code or enter your passcode." 
                     : "Create your Communication Passport to help others understand your communication needs."}
                 </p>
               </div>

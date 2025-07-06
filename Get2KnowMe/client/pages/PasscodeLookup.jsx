@@ -106,7 +106,7 @@ const PasscodeLookup = () => {
                 </div>
                 <h2 className="lookup-title">Access Communication Passport</h2>
                 <p className="text-muted">
-                  Enter the passcode or scan a QR code to view someone's Communication Passport
+                  Enter the passcode or scan the QR code that has been provided to view someone's Communication Passport
                 </p>
               </div>
 
@@ -132,7 +132,7 @@ const PasscodeLookup = () => {
                       autoFocus
                     />
                     <Form.Text className="text-muted">
-                      Enter the alphanumeric code provided to you
+                      Enter the alphanumeric code provided to you here.
                     </Form.Text>
                   </Form.Group>
                 </div>
@@ -180,10 +180,7 @@ const PasscodeLookup = () => {
                   What is a Communication Passport?
                 </h6>
                 <p className="small text-muted">
-                  A Communication Passport provides important information about
-                  how to communicate effectively with neurodivergent
-                  individuals, including their preferred communication methods
-                  and accommodations.
+                  A Communication Passport provides important information about an individual including health alerts such as allergies or medical conditions, neurodivergent diagnoses, preferred communication methods or accommodations they may need in order to communicate effectively, potential triggers that may help avoid distress, and contact information for a trusted person who can assist them in difficult situations. This information can provide you with a better understanding of how to communicate with and support the individual, especially in emergency situations or when they are unable to communicate their needs themselves.
                 </p>
               </div>
 
@@ -204,7 +201,7 @@ const PasscodeLookup = () => {
           <div className="text-center mt-4">
             <p className="text-muted small">
               Don't have a passcode? Ask the individual to share their
-              Communication Passport passcode with you.
+              Communication Passport passcode with you by using the Share My QR Code button on the My Profile page.
             </p>
           </div>
         </Col>
