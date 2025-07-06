@@ -9,6 +9,7 @@ const AppearanceSettings = () => {
   const [colorblindMode, setColorblindMode] = useState(false);
   const [colorblindType, setColorblindType] = useState('protanopia');
   const [alert, setAlert] = useState({ show: false, message: '', variant: 'success' });
+  const [dyslexiaFont, setDyslexiaFont] = useState(localStorage.getItem('dyslexiaFont') === 'true');
 
   const applyTheme = useCallback((selectedTheme, selectedColorScheme, isColorblindMode = false, cbType = 'protanopia') => {
     applyColorScheme(selectedTheme, selectedColorScheme, isColorblindMode, cbType);
@@ -28,6 +29,14 @@ const AppearanceSettings = () => {
     setColorblindMode(savedColorblindMode);
     setColorblindType(savedColorblindType);
     applyTheme(savedTheme, savedColorScheme, savedColorblindMode, savedColorblindType);
+  }, [applyTheme]);
+
+  useEffect(() => {
+    if (localStorage.getItem('dyslexiaFont') === 'true') {
+      document.body.classList.add('dyslexia-font');
+    } else {
+      document.body.classList.remove('dyslexia-font');
+    }
   }, [applyTheme]);
 
   const showAlert = (message, variant = 'success') => {
@@ -72,6 +81,13 @@ const AppearanceSettings = () => {
     localStorage.setItem('colorblindType', newType);
     applyTheme(theme, colorScheme, colorblindMode, newType);
     showAlert(`Applied ${colorblindTypes[newType].name} settings!`);
+  };
+
+  const handleDyslexiaFontChange = (enabled) => {
+    setDyslexiaFont(enabled);
+    localStorage.setItem('dyslexiaFont', enabled.toString());
+    document.body.classList.toggle('dyslexia-font', enabled);
+    showAlert(enabled ? 'Dyslexia-friendly font enabled!' : 'Dyslexia-friendly font disabled!');
   };
 
   return (
@@ -232,13 +248,20 @@ const AppearanceSettings = () => {
           <p className="text-muted mb-4">
             Options to reduce visual stimuli and improve accessibility.
           </p>
-
           <Form.Check
             type="switch"
             id="colorblind-mode"
             label="Colorblind-Friendly Mode"
             checked={colorblindMode}
             onChange={(e) => handleColorblindModeChange(e.target.checked)}
+            className="mb-3"
+          />
+          <Form.Check
+            type="switch"
+            id="dyslexia-font"
+            label="Dyslexia-Friendly Font"
+            checked={dyslexiaFont}
+            onChange={(e) => handleDyslexiaFontChange(e.target.checked)}
             className="mb-3"
           />
           <Form.Text className="text-muted mb-4 d-block">

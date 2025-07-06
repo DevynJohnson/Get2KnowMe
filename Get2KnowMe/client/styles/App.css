@@ -1,5 +1,8 @@
 /* App.css - Main application styles */
 
+/* Import Dyslexia-friendly font */
+@import url('https://fonts.googleapis.com/css2?family=OpenDyslexic:wght@400;700&display=swap');
+
 /* App Container */
 .app-container {
   min-height: 100vh;
@@ -20,6 +23,21 @@ body {
   line-height: 1.6;
   color: var(--text-color);
   background: var(--bg-color);
+}
+
+/* Dyslexia-friendly font settings */
+body.dyslexia-font, body.dyslexia-font * {
+  font-family: 'OpenDyslexic', Arial, sans-serif !important;
+}
+
+/* Prevent dyslexia font from affecting FontAwesome icons */
+body.dyslexia-font .fa,
+body.dyslexia-font .fas,
+body.dyslexia-font .far,
+body.dyslexia-font .fal,
+body.dyslexia-font .fab {
+  font-family: var(--fa-style-family, "Font Awesome 6 Free") !important;
+  font-weight: var(--fa-style, 900) !important;
 }
 
 /* Utility classes */
