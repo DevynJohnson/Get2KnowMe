@@ -251,6 +251,7 @@ export const ADHDContent = () => {
   );
 };
 
+
 // Main educational sections component - now focused on autism and ADHD only
 export const DiagnosisEducationSection = () => (
   <Card className="home-card mb-4">

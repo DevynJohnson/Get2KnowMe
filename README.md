@@ -205,6 +205,7 @@ Devyn Johnson
 
 **Contributor**  
 Jake Barry
+- [GitHub Profile](https://www.github.com/jakeb1991)  
 
 
 ### Acknowledgments
