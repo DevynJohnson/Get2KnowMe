@@ -33,6 +33,7 @@
     "react-dom": "^19.1.0",
     "react-phone-number-input": "^3.4.12",
     "react-router-dom": "^7.6.3",
+    "resend": "^4.6.0",
     "vite": "^7.0.0"
   },
   "devDependencies": {

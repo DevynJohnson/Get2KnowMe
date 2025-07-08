@@ -143,6 +143,8 @@ const userSchema = new Schema({
     userAgent: { type: String },
   },
   communicationPassport: communicationPassportSchema,
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

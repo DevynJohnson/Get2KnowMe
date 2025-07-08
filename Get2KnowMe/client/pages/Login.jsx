@@ -131,6 +131,14 @@ const Login = () => {
                 </Button>
               </Form>
               <div className="mt-4 text-center">
+                <Button
+                  as={Link}
+                  to="/settings/security"
+                  variant="outline-secondary"
+                  className="mb-3 w-100"
+                >
+                  Reset Password
+                </Button>
                 <p className="mb-0">
                   Don't have an account?{" "}
                   <Link to="/register" className="register-link">
