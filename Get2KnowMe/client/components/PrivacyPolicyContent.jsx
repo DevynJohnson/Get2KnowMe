@@ -24,12 +24,16 @@ const PrivacyPolicy = () => (
         <strong>Account Information:</strong> Email, Username, Password (hashed)
       </li>
       <li>
-        <strong>Communication Passport:</strong> First/Last Name, Preferred
-        Name, Diagnosis, Communication Preferences, Trusted Contact Info,
-        Profile Passcode, Other Notes
+        <strong>Communication Passport:</strong> First Name, Last Name, Preferred Name, Diagnoses (including the option for users to enter a custom diagnosis), Health Alerts (including the option for users to enter a custom health condition) Allergies (as described by the user), Communication Preferences, Triggers, Likes, Dislikes, Trusted Contact Information (Name, Phone number, Email), Profile Passcode (which allows the user to share their Communication Passport with third parties), Other Information as provided by the user, account status (active/inactive), Created/Updated Timestamps
       </li>
       <li>
-        <strong>Metadata:</strong> Timestamps for creation and update
+        <strong>Consent:</strong> Confirmation of Terms, Age Confirmation, Consent Timestamp, IP Address at the time consent was given, User Agent
+      </li>
+      <li>
+        <strong>Metadata:</strong> Account and Passport creation/update timestamps
+      </li>
+      <li>
+        <strong>Password Reset:</strong> Reset token and expiry (if you request a password reset)
       </li>
     </ul>
 
@@ -60,7 +64,7 @@ const PrivacyPolicy = () => (
     </h2>
     <p className="mb-4">
       We keep your data while your account is active. You can delete your data
-      anytime.
+      anytime. If you choose to delete your account, your account data is immediately and permanently removed from our database.
     </p>
 
     <h2 className="text-2xl font-semibold mt-6 mb-2">6. Your Rights</h2>
@@ -73,8 +77,7 @@ const PrivacyPolicy = () => (
 
     <h2 className="text-2xl font-semibold mt-6 mb-2">7. Security</h2>
     <p className="mb-4">
-      Passwords are hashed. Data is encrypted in transit. Only you can share
-      your passcode or QR code.
+      Passwords are hashed. Data is encrypted in transit, and sensitive data stored in the database is encrypted at rest. Only you can share your passcode or QR code.
     </p>
 
     <h2 className="text-2xl font-semibold mt-6 mb-2">9. Children's Privacy</h2>
