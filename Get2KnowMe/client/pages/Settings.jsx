@@ -14,25 +14,25 @@ const Settings = () => {
       path: '/settings/profile',
       title: 'Profile Settings',
       icon: 'fas fa-user',
-      description: 'Edit your username and email'
+      description: 'Edit your username, email address, or export your data'
     },
     {
       path: '/settings/security',
       title: 'Security & Password',
       icon: 'fas fa-shield-alt',
-      description: 'Reset password and security settings'
+      description: 'Change or reset your password'
     },
     {
       path: '/settings/appearance',
       title: 'Appearance',
       icon: 'fas fa-palette',
-      description: 'Theme and display preferences'
+      description: 'Customize light mode/dark mode, choose a color theme, or adjust accessibility settings'
     },
     {
       path: '/settings/danger-zone',
       title: 'Danger Zone',
       icon: 'fas fa-exclamation-triangle',
-      description: 'Delete account and destructive actions'
+      description: 'Delete your account. This action is irreversible and will permanently remove all your data.'
     }
   ];
 

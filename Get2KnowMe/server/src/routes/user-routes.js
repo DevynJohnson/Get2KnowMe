@@ -1,4 +1,3 @@
-
 import express from 'express';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
@@ -356,6 +355,55 @@ router.delete('/delete-account', authenticate, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while deleting account' });
+  }
+});
+
+// POST Export user data (GDPR)
+router.post('/export-data', authenticate, async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password) {
+      return res.status(400).json({ message: 'Password is required' });
+    }
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const isValidPassword = await user.isCorrectPassword(password);
+    if (!isValidPassword) {
+      return res.status(400).json({ message: 'Password is incorrect' });
+    }
+    // Prepare export data (exclude sensitive fields like password hash)
+    // Remove mongoose-field-encryption metadata fields (robust version)
+    function removeEncryptionMeta(obj) {
+      if (Array.isArray(obj)) {
+        return obj.map(removeEncryptionMeta);
+      } else if (obj && typeof obj === 'object' && obj.constructor === Object) {
+        return Object.fromEntries(
+          Object.entries(obj)
+            .filter(([key]) => !key.startsWith('__enc_'))
+            .map(([key, value]) => [key, removeEncryptionMeta(value)])
+        );
+      }
+      return obj;
+    }
+    // Convert to plain objects before filtering
+    const passportObj = user.communicationPassport ? user.communicationPassport.toObject ? user.communicationPassport.toObject() : user.communicationPassport : undefined;
+    const exportData = {
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+      consent: user.consent,
+      communicationPassport: removeEncryptionMeta(passportObj),
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+    res.setHeader('Content-Disposition', 'attachment; filename="get2knowme_data_export.json"');
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).send(JSON.stringify(exportData, null, 2));
+  } catch (error) {
+    console.error('Error exporting user data:', error);
+    res.status(500).json({ message: 'An error occurred while exporting data' });
   }
 });
 
