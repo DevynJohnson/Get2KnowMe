@@ -121,6 +121,7 @@ const NavTabs = () => {
                 Settings
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="settings-dropdown">
+                {/* Always allow access to Security & Password and Appearance for all users */}
                 {user ? (
                   <>
                     <li><h6 className="dropdown-header"><i className="fas fa-user me-2"></i>Account Settings</h6></li>
@@ -140,11 +141,8 @@ const NavTabs = () => {
                   </>
                 ) : (
                   <>
-                    <li><h6 className="dropdown-header"><i className="fas fa-user-plus me-2"></i>Create Account to Access</h6></li>
-                    <li><Link className="dropdown-item" to="/register" onClick={closeNavbar}>
-                      <i className="fas fa-user me-2"></i>Profile Settings
-                    </Link></li>
-                    <li><Link className="dropdown-item" to="/register" onClick={closeNavbar}>
+                    <li><h6 className="dropdown-header"><i className="fas fa-user-plus me-2"></i>Settings</h6></li>
+                    <li><Link className="dropdown-item" to="/settings/security" onClick={closeNavbar}>
                       <i className="fas fa-shield-alt me-2"></i>Security & Password
                     </Link></li>
                     <li><Link className="dropdown-item" to="/settings/appearance" onClick={closeNavbar}>
@@ -152,7 +150,7 @@ const NavTabs = () => {
                     </Link></li>
                     <li><hr className="dropdown-divider" /></li>
                     <li><Link className="dropdown-item" to="/register" onClick={closeNavbar}>
-                      <i className="fas fa-rocket me-2"></i>Create Account
+                      <i className="fas fa-user-plus me-2"></i>Create Account
                     </Link></li>
                   </>
                 )}

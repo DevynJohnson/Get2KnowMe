@@ -4,7 +4,7 @@ import { Card, Form, Button, Alert, Modal, Spinner } from 'react-bootstrap';
 import { useAuth } from '../../utils/AuthContext';
 
 const SecuritySettings = () => {
-  const { token } = useAuth();
+  const { token, isAuthenticated } = useAuth();
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: '',
     newPassword: '',
@@ -36,17 +36,18 @@ const SecuritySettings = () => {
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-    
+    if (!isAuthenticated) {
+      showAlert('You must be logged in to change your password.', 'danger');
+      return;
+    }
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       showAlert('New passwords do not match', 'danger');
       return;
     }
-
     if (passwordForm.newPassword.length < 8) {
       showAlert('Password must be at least 8 characters long', 'danger');
       return;
     }
-
     setLoading(true);
     try {
       const response = await fetch('/api/users/change-password', {
@@ -60,20 +61,16 @@ const SecuritySettings = () => {
           newPassword: passwordForm.newPassword
         })
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message || 'Password change failed');
       }
-
       showAlert('Password changed successfully!');
       setPasswordForm({
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
       });
-      
     } catch (error) {
       showAlert(error.message, 'danger');
     } finally {
@@ -138,97 +135,100 @@ const SecuritySettings = () => {
         </Alert>
       )}
 
-      {/* Change Password Card */}
-      <Card className="mb-4">
-        <Card.Header>
-          <h5 className="mb-0">
-            <i className="fas fa-key me-2"></i>
-            Change Password
-          </h5>
-        </Card.Header>
-        <Card.Body>
-          <Form onSubmit={handlePasswordChange}>
-            <div className="row">
-              <div className="col-md-6">
-                <Form.Group className="mb-3">
-                  <Form.Label>Current Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="currentPassword"
-                    value={passwordForm.currentPassword}
-                    onChange={handlePasswordInputChange}
-                    placeholder="Enter current password"
-                    required
-                  />
-                </Form.Group>
+      {/* Change Password Card (only visible to authenticated users) */}
+      {isAuthenticated && (
+        <Card className="mb-4">
+          <Card.Header>
+            <h5 className="mb-0">
+              <i className="fas fa-key me-2"></i>
+              Change Password
+            </h5>
+          </Card.Header>
+          <Card.Body>
+            {/* ...existing code for change password form... */}
+            <Form onSubmit={handlePasswordChange}>
+              <div className="row">
+                <div className="col-md-6">
+                  <Form.Group className="mb-3">
+                    <Form.Label>Current Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="currentPassword"
+                      value={passwordForm.currentPassword}
+                      onChange={handlePasswordInputChange}
+                      placeholder="Enter current password"
+                      required
+                    />
+                  </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>New Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="newPassword"
-                    value={passwordForm.newPassword}
-                    onChange={handlePasswordInputChange}
-                    placeholder="Enter new password"
-                    required
-                  />
-                </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>New Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="newPassword"
+                      value={passwordForm.newPassword}
+                      onChange={handlePasswordInputChange}
+                      placeholder="Enter new password"
+                      required
+                    />
+                  </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Confirm New Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="confirmPassword"
-                    value={passwordForm.confirmPassword}
-                    onChange={handlePasswordInputChange}
-                    placeholder="Confirm new password"
-                    required
-                  />
-                </Form.Group>
-              </div>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Confirm New Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="confirmPassword"
+                      value={passwordForm.confirmPassword}
+                      onChange={handlePasswordInputChange}
+                      placeholder="Confirm new password"
+                      required
+                    />
+                  </Form.Group>
+                </div>
 
-              <div className="col-md-6">
-                <div className="password-requirements">
-                  <h6 className="mb-3">Password Requirements:</h6>
-                  <ul className="list-unstyled">
-                    <li className={passwordValidation.hasMinLength ? 'text-success' : 'text-muted'}>
-                      <i className={`fas ${passwordValidation.hasMinLength ? 'fa-check' : 'fa-times'} me-2`}></i>
-                      At least 8 characters long
-                    </li>
-                    <li className={passwordValidation.hasUpperCase ? 'text-success' : 'text-muted'}>
-                      <i className={`fas ${passwordValidation.hasUpperCase ? 'fa-check' : 'fa-times'} me-2`}></i>
-                      One uppercase letter
-                    </li>
-                    <li className={passwordValidation.hasLowerCase ? 'text-success' : 'text-muted'}>
-                      <i className={`fas ${passwordValidation.hasLowerCase ? 'fa-check' : 'fa-times'} me-2`}></i>
-                      One lowercase letter
-                    </li>
-                    <li className={passwordValidation.hasSpecialChar ? 'text-success' : 'text-muted'}>
-                      <i className={`fas ${passwordValidation.hasSpecialChar ? 'fa-check' : 'fa-times'} me-2`}></i>
-                      One special character
-                    </li>
-                  </ul>
+                <div className="col-md-6">
+                  <div className="password-requirements">
+                    <h6 className="mb-3">Password Requirements:</h6>
+                    <ul className="list-unstyled">
+                      <li className={passwordValidation.hasMinLength ? 'text-success' : 'text-muted'}>
+                        <i className={`fas ${passwordValidation.hasMinLength ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        At least 8 characters long
+                      </li>
+                      <li className={passwordValidation.hasUpperCase ? 'text-success' : 'text-muted'}>
+                        <i className={`fas ${passwordValidation.hasUpperCase ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        One uppercase letter
+                      </li>
+                      <li className={passwordValidation.hasLowerCase ? 'text-success' : 'text-muted'}>
+                        <i className={`fas ${passwordValidation.hasLowerCase ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        One lowercase letter
+                      </li>
+                      <li className={passwordValidation.hasSpecialChar ? 'text-success' : 'text-muted'}>
+                        <i className={`fas ${passwordValidation.hasSpecialChar ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        One special character
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <Button 
-              type="submit" 
-              className="btn-primary"
-              disabled={loading || !isPasswordValid || passwordForm.newPassword !== passwordForm.confirmPassword}
-            >
-              {loading ? (
-                <>
-                  <Spinner animation="border" size="sm" className="me-2" />
-                  Changing Password...
-                </>
-              ) : (
-                'Change Password'
-              )}
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
+              <Button 
+                type="submit" 
+                className="btn-primary"
+                disabled={loading || !isPasswordValid || passwordForm.newPassword !== passwordForm.confirmPassword}
+              >
+                {loading ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Changing Password...
+                  </>
+                ) : (
+                  'Change Password'
+                )}
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+      )}
 
       {/* Password Reset Card */}
       <Card>

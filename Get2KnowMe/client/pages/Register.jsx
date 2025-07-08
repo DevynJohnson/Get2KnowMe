@@ -179,7 +179,7 @@ try {
                 <Form.Group controlId="formAgeConfirmed" className="mb-3">
                   <Form.Check
                     type="checkbox"
-                    label="I hereby confirm that I am 16 years of age, or if I am under 16 years of age that I have explicit consent from my parent or guardian to use this application."
+                    label="I hereby confirm that I am at least 16 years of age (or at least 13 years of age in the UK), or if I am not that I have explicit consent from my parent or guardian to use this application."
                     checked={ageConfirmed}
                     onChange={(e) => setAgeConfirmed(e.target.checked)}
                     required

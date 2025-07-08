@@ -26,26 +26,23 @@ const CreatePassport = React.lazy(() => import("./pages/CreatePassport.jsx"));
 const ViewPassport = React.lazy(() => import("./pages/ViewPassport.jsx"));
 const PasscodeLookup = React.lazy(() => import("./pages/PasscodeLookup.jsx"));
 const LearnMore = React.lazy(() => import("./pages/LearnMore.jsx"));
-
-// Legal pages
-
-
-const TermsOfService = React.lazy(() =>
-  import("./pages/legal/TermsOfService.jsx")
+const ResetPassword = React.lazy(() => import("./pages/ResetPassword.jsx"));
+const TermsOfService = React.lazy(
+  () => import("./pages/legal/TermsOfService.jsx")
 );
 
 // Settings pages
-const SettingsOverview = React.lazy(() =>
-  import("./pages/settings/SettingsOverview.jsx")
+const SettingsOverview = React.lazy(
+  () => import("./pages/settings/SettingsOverview.jsx")
 );
-const ProfileSettings = React.lazy(() =>
-  import("./pages/settings/ProfileSettings.jsx")
+const ProfileSettings = React.lazy(
+  () => import("./pages/settings/ProfileSettings.jsx")
 );
-const SecuritySettings = React.lazy(() =>
-  import("./pages/settings/SecuritySettings.jsx")
+const SecuritySettings = React.lazy(
+  () => import("./pages/settings/SecuritySettings.jsx")
 );
-const AppearanceSettings = React.lazy(() =>
-  import("./pages/settings/AppearanceSettings.jsx")
+const AppearanceSettings = React.lazy(
+  () => import("./pages/settings/AppearanceSettings.jsx")
 );
 const DangerZone = React.lazy(() => import("./pages/settings/DangerZone.jsx"));
 
@@ -158,6 +155,20 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "reset-password",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <ResetPassword />
+          </Suspense>
+        ),
+      },
+      {
         path: "settings",
         element: <Settings />,
         children: [
@@ -191,6 +202,7 @@ const router = createBrowserRouter([
           },
           {
             path: "security",
+            // No auth guard: allow all users to access SecuritySettings
             element: (
               <Suspense
                 fallback={

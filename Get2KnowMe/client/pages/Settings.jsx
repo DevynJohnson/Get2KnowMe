@@ -1,11 +1,13 @@
 // client/pages/Settings.jsx
 import React from 'react';
+import { useAuth } from '../utils/AuthContext';
 import { Container, Row, Col, Card, Nav } from 'react-bootstrap';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import '../styles/Settings.css';
 
 const Settings = () => {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const settingsNavItems = [
     {
@@ -47,24 +49,61 @@ const Settings = () => {
             </Card.Header>
             <Card.Body className="p-0">
               <Nav className="flex-column">
-                {settingsNavItems.map((item) => (
-                  <Nav.Link
-                    key={item.path}
-                    as={Link}
-                    to={item.path}
-                    className={`settings-nav-item ${
-                      location.pathname === item.path ? 'active' : ''
-                    }`}
-                  >
-                    <div className="d-flex align-items-center">
-                      <i className={`${item.icon} me-3`}></i>
-                      <div>
-                        <div className="fw-bold">{item.title}</div>
-                        <small className="text-muted">{item.description}</small>
+                {settingsNavItems.map((item) => {
+                  // Special handling for Profile Settings
+                  if (item.path === '/settings/profile' && !isAuthenticated) {
+                    return (
+                      <div key={item.path} className="settings-nav-item disabled text-muted position-relative" style={{ cursor: 'not-allowed', opacity: 0.6 }}>
+                        <div className="d-flex align-items-center">
+                          <i className={`${item.icon} me-3`}></i>
+                          <div>
+                            <div className="fw-bold">{item.title}</div>
+                            <small className="text-muted">{item.description}</small>
+                          </div>
+                        </div>
+                        <div className="mt-1 small text-danger">
+                          Please login or create an account to edit Profile Settings
+                        </div>
                       </div>
-                    </div>
-                  </Nav.Link>
-                ))}
+                    );
+                  }
+                  // Special handling for Danger Zone
+                  if (item.path === '/settings/danger-zone' && !isAuthenticated) {
+                    return (
+                      <div key={item.path} className="settings-nav-item disabled text-muted position-relative" style={{ cursor: 'not-allowed', opacity: 0.6 }}>
+                        <div className="d-flex align-items-center">
+                          <i className={`${item.icon} me-3`}></i>
+                          <div>
+                            <div className="fw-bold">{item.title}</div>
+                            <small className="text-muted">{item.description}</small>
+                          </div>
+                        </div>
+                        <div className="mt-1 small text-danger">
+                          Please login to delete your account
+                        </div>
+                      </div>
+                    );
+                  }
+                  // Normal nav link for all other items
+                  return (
+                    <Nav.Link
+                      key={item.path}
+                      as={Link}
+                      to={item.path}
+                      className={`settings-nav-item ${
+                        location.pathname === item.path ? 'active' : ''
+                      }`}
+                    >
+                      <div className="d-flex align-items-center">
+                        <i className={`${item.icon} me-3`}></i>
+                        <div>
+                          <div className="fw-bold">{item.title}</div>
+                          <small className="text-muted">{item.description}</small>
+                        </div>
+                      </div>
+                    </Nav.Link>
+                  );
+                })}
               </Nav>
             </Card.Body>
           </Card>

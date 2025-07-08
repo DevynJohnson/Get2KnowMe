@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
   };
 
+  // isAuthenticated is true only if both user and token exist
   const value = {
     user,
     token,
@@ -98,6 +99,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user && !!token
   };
 
+  // No redirect logic here: do not block or redirect unauthenticated users
   return (
     <AuthContext.Provider value={value}>
       {children}
