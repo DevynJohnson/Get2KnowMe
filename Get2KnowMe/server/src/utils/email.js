@@ -11,7 +11,7 @@ export async function sendPasswordResetEmail(to, resetLink) {
       html: `
         <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:10px;padding:32px 24px 24px 24px;font-family:sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.07);text-align:center;">
           <div style="margin-bottom:24px;">
-            <img src="https://get2know.me/get2knowme_logo_png.png" alt="Get2KnowMe Logo" style="height:90px;margin-bottom:8px;" />
+            
             <h2 style="margin:0;font-size:1.6rem;color:#2a2a2a;">Get2KnowMe</h2>
           </div>
           <h3 style="color:#2a2a2a;font-size:1.2rem;margin-bottom:16px;">Password Reset Request</h3>
