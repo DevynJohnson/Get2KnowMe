@@ -20,6 +20,11 @@ const ViewPassport = () => {
   const { passcode } = useParams();
   const navigate = useNavigate();
 
+  // Ensure page is scrolled to top on load (especially for mobile)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [passcode]);
+
   const [passport, setPassport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
