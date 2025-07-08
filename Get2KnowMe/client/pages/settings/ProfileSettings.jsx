@@ -86,6 +86,45 @@ const ProfileSettings = () => {
     }
   };
 
+  // Add export handler
+  async function handleExport() {
+    if (!formData.currentPassword) {
+      showAlert('Please enter your current password to export your data', 'danger');
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch('/api/users/export-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ password: formData.currentPassword })
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Export failed');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'get2knowme_data_export.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      showAlert('Your data has been exported successfully!');
+      setShowModal(false);
+      setFormData(prev => ({ ...prev, currentPassword: '' }));
+    } catch (error) {
+      showAlert(error.message, 'danger');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -162,43 +201,79 @@ const ProfileSettings = () => {
         </Card.Body>
       </Card>
 
-      {/* Confirmation Modal */}
+      {/* Data Export Section */}
+      <Card className="mb-4">
+        <Card.Header>
+          <h5 className="mb-0">
+            <i className="fas fa-download me-2"></i>
+            Export My Data
+          </h5>
+        </Card.Header>
+        <Card.Body>
+          <p>You can export all data stored about your account and communication passport. For your security, please verify your password before exporting.</p>
+          <Button className="btn-primary" onClick={() => { setModalAction('export'); setShowModal(true); }}>
+            <i className="fas fa-file-export me-2"></i>
+            Export My Data
+          </Button>
+        </Card.Body>
+      </Card>
+
+      {/* Confirmation & Export Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Changes</Modal.Title>
+          <Modal.Title>{modalAction === 'export' ? 'Export My Data' : 'Confirm Changes'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>
-            You are about to update your {modalAction}. Please enter your current password to confirm this change.
-          </p>
-          <Form.Group>
-            <Form.Label>Current Password</Form.Label>
-            <Form.Control
-              type="password"
-              name="currentPassword"
-              value={formData.currentPassword}
-              onChange={handleInputChange}
-              placeholder="Enter your current password"
-              autoFocus
-            />
-          </Form.Group>
+          {modalAction === 'export' ? (
+            <>
+              <p>Enter your current password to export your data.</p>
+              <Form.Group>
+                <Form.Label>Current Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="currentPassword"
+                  value={formData.currentPassword}
+                  onChange={handleInputChange}
+                  placeholder="Enter your current password"
+                  autoFocus
+                />
+              </Form.Group>
+            </>
+          ) : (
+            <>
+              <p>
+                You are about to update your {modalAction}. Please enter your current password to confirm this change.
+              </p>
+              <Form.Group>
+                <Form.Label>Current Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="currentPassword"
+                  value={formData.currentPassword}
+                  onChange={handleInputChange}
+                  placeholder="Enter your current password"
+                  autoFocus
+                />
+              </Form.Group>
+            </>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
-          <Button 
-            className="btn-primary" 
-            onClick={confirmAction}
+          <Button
+            className="btn-primary"
+            onClick={modalAction === 'export' ? handleExport : confirmAction}
             disabled={loading || !formData.currentPassword}
           >
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" className="me-2" />
-                Updating...
+                {modalAction === 'export' ? 'Exporting...' : 'Updating...'}
               </>
             ) : (
-              'Confirm Update'
+              modalAction === 'export' ? 'Export My Data' : 'Confirm Update'
             )}
           </Button>
         </Modal.Footer>
