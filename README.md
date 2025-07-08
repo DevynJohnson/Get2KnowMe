@@ -233,6 +233,9 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
 - [React Router](https://reactrouter.com) - Client-side routing
 - [Mongoose](https://mongoosejs.com) - MongoDB object modeling
 
+#### Email & Transactional Messaging
+- [Resend](https://resend.com/) - Transactional email delivery service (used for password reset and notifications)
+
 #### Security & Authentication
 - [JSON Web Tokens](https://jwt.io) - Secure token-based authentication
 - [bcrypt](https://www.npmjs.com/package/bcrypt) - Password hashing
