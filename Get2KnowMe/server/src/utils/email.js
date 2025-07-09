@@ -46,11 +46,11 @@ export async function sendParentalConsentEmail(childEmail, childUsername, parent
 
   const consentHtml = `
    <div style="width:100%;background:#f4f4f4;padding:32px 0;text-align:center;">
-    <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:10px;padding:32px 24px 24px 24px;font-family:sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.07);text-align:center;">
-      <div style="margin-bottom:24px;text-align:center;">
-        <img src="https://get2knowme/get2knowme_logo_png.png" alt="Get2KnowMe Logo" style="height:90px;margin-bottom:8px;" />
-        <h2 style="margin:0;font-size:1.6rem;color:#2a2a2a;text-align:center;">Get2KnowMe</h2>
-      </div>
+          <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:10px;padding:32px 24px 24px 24px;font-family:sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.07);text-align:center;">
+            <div style="margin-bottom:24px;">
+              <img src="https://get2know.me/get2knowme_logo_png.png" alt="Get2KnowMe Logo" style="height:90px;margin-bottom:8px;" />
+              <h2 style="margin:0;font-size:1.6rem;color:#2a2a2a;">Get2KnowMe</h2>
+            </div>
       <h3 style="color:#2a2a2a;font-size:1.2rem;margin-bottom:16px;text-align:center;">Parental Consent Request for Creating An Account on Get2KnowMe</h3>
       <p style="text-align:center;">A new user has indicated that you are their parent or guardian and is requesting your consent to use Get2KnowMe. We have put their account creation on hold until you have provided your consent using the button at the bottom of this email message. Please read the following information carefully. The new user indicating that you are their parent or guardian is attempting to sign up using the following username and password:</p>
       <ul style="display:inline-block;text-align:left;margin:auto;">
