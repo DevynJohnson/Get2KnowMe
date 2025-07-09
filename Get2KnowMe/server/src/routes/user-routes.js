@@ -1,8 +1,11 @@
 import express from 'express';
 import User from '../models/User.js';
+import PendingUser from '../models/PendingUser.js';
 import jwt from 'jsonwebtoken';
 import { authenticateToken } from '../utils/auth.js';
-import { sendPasswordResetEmail } from '../utils/email.js';
+import { sendPasswordResetEmail, sendParentalConsentEmail } from '../utils/email.js';
+import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 
 const router = express.Router();
 
@@ -404,6 +407,116 @@ router.post('/export-data', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error exporting user data:', error);
     res.status(500).json({ message: 'An error occurred while exporting data' });
+  }
+});
+
+// POST Send parental consent email (for legacy/manual use only)
+router.post('/send-parental-consent', async (req, res) => {
+  try {
+    const { childEmail, childUsername, parentEmail, consentToken } = req.body;
+    if (!childEmail || !childUsername || !parentEmail || !consentToken) {
+      return res.status(400).json({ message: 'Missing required fields.' });
+    }
+    try {
+      const response = await sendParentalConsentEmail(childEmail, childUsername, parentEmail, consentToken);
+      if (response.error) {
+        console.error('Resend API error:', response.error);
+        return res.status(500).json({ message: response.error.message || 'Failed to send email.' });
+      }
+      res.json({ message: 'Consent email sent successfully.' });
+    } catch (error) {
+      console.error('Resend API error (parental consent):', error);
+      return res.status(500).json({ message: error.message || 'Failed to send email.' });
+    }
+  } catch (error) {
+    console.error('Error sending parental consent email:', error);
+    res.status(500).json({ message: 'An error occurred while sending consent email.' });
+  }
+});
+
+// POST Start parental consent registration (store pending user)
+router.post('/start-parental-consent', async (req, res) => {
+  try {
+    const { childEmail, childUsername, password, parentEmail } = req.body;
+    if (!childEmail || !childUsername || !password || !parentEmail) {
+      return res.status(400).json({ message: 'Missing required fields.' });
+    }
+    // Check for existing pending or real user
+    const existingUser = await User.findOne({ $or: [ { email: childEmail }, { username: childUsername } ] });
+    const existingPending = await PendingUser.findOne({ $or: [ { childEmail }, { childUsername } ] });
+    if (existingUser || existingPending) {
+      return res.status(400).json({ message: 'A user with this email or username already exists or is pending.' });
+    }
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 12);
+    // Generate secure consent token
+    const consentToken = crypto.randomBytes(32).toString('hex');
+    // Set expiry (e.g., 24 hours)
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    // Store pending user
+    await PendingUser.create({
+      childEmail,
+      childUsername,
+      passwordHash,
+      parentEmail,
+      consentToken,
+      expiresAt
+    });
+    // Send consent email (include token in link)
+    await sendParentalConsentEmail(childEmail, childUsername, parentEmail, consentToken);
+    res.json({ message: 'Parental consent request sent.' });
+  } catch (error) {
+    console.error('Error starting parental consent:', error);
+    res.status(500).json({ message: 'An error occurred while starting parental consent.' });
+  }
+});
+
+// GET Parental consent confirmation (activate or delete pending user)
+router.get('/consent', async (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.status(400).send('Missing consent token.');
+  try {
+    const pending = await PendingUser.findOne({ consentToken: token });
+    if (!pending) return res.status(404).send('Consent request not found or already processed.');
+    // Create real user
+    const { childEmail, childUsername, passwordHash, parentEmail } = pending;
+    // Double-check for existing user
+    const existingUser = await User.findOne({ $or: [ { email: childEmail }, { username: childUsername } ] });
+    if (existingUser) {
+      await PendingUser.deleteOne({ _id: pending._id });
+      return res.status(409).send('A user with this email or username already exists.');
+    }
+    await User.create({
+      email: childEmail,
+      username: childUsername,
+      password: passwordHash,
+      consent: {
+        agreedToTerms: true,
+        ageConfirmed: true
+      }
+    });
+    await PendingUser.deleteOne({ _id: pending._id });
+    // Redirect to thank you page
+    return res.redirect('/consent');
+  } catch (error) {
+    console.error('Error processing consent:', error);
+    return res.status(500).send('An error occurred while processing consent.');
+  }
+});
+
+// GET Parental consent declined (delete pending user)
+router.get('/consent/declined', async (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.status(400).send('Missing consent token.');
+  try {
+    const pending = await PendingUser.findOne({ consentToken: token });
+    if (!pending) return res.status(404).send('Consent request not found or already processed.');
+    await PendingUser.deleteOne({ _id: pending._id });
+    // Redirect to declined page
+    return res.redirect('/consent/declined');
+  } catch (error) {
+    console.error('Error processing declined consent:', error);
+    return res.status(500).send('An error occurred while processing declined consent.');
   }
 });
 

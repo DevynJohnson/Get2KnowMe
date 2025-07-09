@@ -6,6 +6,7 @@ import LogoutNotification from "./components/LogoutNotification.jsx";
 import { useColorScheme } from "./hooks/useColorScheme.js";
 import { useTokenExpiration } from "./hooks/useTokenExpiration.js";
 import Footer from "./components/Footer.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 function App() {
   // Apply color scheme on every page load
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <div className="app-container">
+      <ScrollToTop />
       <LogoutNotification />
       <NavTabs />
       <main className="main-content">
