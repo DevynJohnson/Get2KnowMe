@@ -151,11 +151,22 @@ To run Get2KnowMe locally for development or contribution:
 - `POST /api/users/register` - User registration
 - `POST /api/users/login` - User authentication
 - `GET /api/users/me` - Get current user profile
+- `PUT /api/users/update-username` - Update username
+- `PUT /api/users/update-email` - Update email
+- `PUT /api/users/change-password` - Change password
+- `POST /api/users/request-password-reset` - Request password reset email
+- `POST /api/users/reset-password` - Reset password using token
+- `DELETE /api/users/delete-account` - Delete user account
+- `POST /api/users/export-data` - Export user data (GDPR)
+- `POST /api/users/start-parental-consent` - Start parental consent workflow (underage registration)
+- `GET /api/users/consent` - Parental consent approval (tokenized link)
+- `GET /api/users/consent/declined` - Parental consent declined (tokenized link)
 
 ### Passport Endpoints
-- `POST /api/passport/create` - Create communication passport
-- `PUT /api/passport/update` - Update existing passport
-- `GET /api/passport/:passcode` - Retrieve passport by passcode
+- `GET /api/passport/generate-passcode` - Generate a new passcode
+- `POST /api/passport/create` - Create or update communication passport
+- `GET /api/passport/my-passport` - Get current user's passport
+- `GET /api/passport/public/:passcode` - Retrieve passport by passcode (public)
 - `DELETE /api/passport/delete` - Delete user's passport
 
 ## Contributing
@@ -191,20 +202,20 @@ If you experience any issues with the application, please:
 1. Check existing issues on GitHub
 2. Provide detailed steps to reproduce the problem
 3. Include error messages and browser information
-4. Contact [dljohnson1313@gmail.com](mailto:dljohnson1313@gmail.com) for urgent issues
+4. Contact [jake@get2knowme.co.uk](mailto:jake@get2knowme.co.uk) for urgent issues
 
 ## Credits
 
 ### Development Team
 
 **Lead Developer**  
-Devyn Johnson
+Devyn Johnson - Frontend/Backend Engineer
 - [GitHub Profile](https://www.github.com/DevynJohnson)  
 - [Portfolio](https://devynjohnson.me)  
 - [LinkedIn](https://www.linkedin.com/in/devyn-johnson-a5259213b/)
 
 **Contributor**  
-Jake Barry
+Jake Barry - Conception, Content Creation
 - [GitHub Profile](https://www.github.com/jakeb1991)  
 
 
@@ -245,6 +256,12 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
 #### Development Tools
 - [ESLint](https://eslint.org) - JavaScript linting
 - [Concurrently](https://www.npmjs.com/package/concurrently) - Parallel script execution
+- [Vite React Plugin](https://www.npmjs.com/package/@vitejs/plugin-react) - Vite plugin for React
+- [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks) - ESLint plugin for React hooks
+- [eslint-plugin-react-refresh](https://www.npmjs.com/package/eslint-plugin-react-refresh) - ESLint plugin for React Fast Refresh
+- [@types/react](https://www.npmjs.com/package/@types/react) - TypeScript type definitions for React
+- [@types/react-dom](https://www.npmjs.com/package/@types/react-dom) - TypeScript type definitions for ReactDOM
+- [globals](https://www.npmjs.com/package/globals) - List of global identifiers
 
 #### Testing Tools
 - [Jest](https://jestjs.io) - JavaScript testing framework
@@ -260,13 +277,13 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
 - **Data Security**: Passwords are securely hashed (bcrypt). All data is encrypted in transit (HTTPS). Passport data is only visible when a user chooses to share their passcode or QR code.
 - **Database Encryption**: Personally identifiable information (PII) is encrypted at the field level in MongoDB using [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption), ensuring sensitive data is protected at rest.
-- **Children’s Privacy**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements.
+- **Children’s Privacy & Parental Consent**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements. For underage users, no personal data is stored until a parent or guardian provides explicit consent via a secure, tokenized email workflow. All pending registration data is encrypted at rest using field-level encryption. The parent receives a unique consent link, and only upon their approval is the child's account created and data stored. If consent is declined, all pending data is securely deleted. The consent request email and the registration interface both make it clear that sending the request to anyone other than a parent or guardian is a violation of the Terms of Service, and that accounts found to be created without proper consent will be immediately deactivated and all user data permanently deleted. This ensures full compliance with GDPR Article 8 and COPPA/UK GDPR standards for children’s data processing.
 - **Data Hosting**: Data is stored securely using Render and MongoDB Atlas, both of which provide strong security and compliance features.
 - **Breach Notification**: Users will be notified promptly in the event of a data breach affecting their personal data.
 - **Third-Party Processors**: Only reputable, GDPR-compliant third-party services are used for hosting and infrastructure. No user data is sold or shared for marketing purposes.
 - **Privacy Policy & Terms**: Full Privacy Policy and Terms of Service are available in the app and repository, outlining user rights and data practices.
 
-For any privacy-related requests or questions, users can contact the team at [jwbarry@outlook.com] or [dljohnson1313@gmail.com].
+For any privacy-related requests or questions, users can contact the team at [jake@get2knowme.co.uk].
 
 ---
 
@@ -283,4 +300,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---
 
-*Get2KnowMe - Empowering communication through technology*
+*Get2KnowMe - Empowering neurodivergent individuals through digital Communication Passports*
