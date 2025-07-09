@@ -59,7 +59,6 @@ describe('Passport Routes', () => {
         firstName: 'Test',
         lastName: 'User',
         preferredName: 'T',
-        diagnosis: 'ADHD',
         diagnoses: ['ADHD'],
         customDiagnosis: '',
         healthAlert: ['None'],

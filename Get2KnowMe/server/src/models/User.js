@@ -7,27 +7,12 @@ const communicationPassportSchema = new Schema({
   firstName: { type: String, trim: true },
   lastName: { type: String, trim: true },
   preferredName: { type: String, trim: true },
-  diagnosis: {
-    type: String,
-    enum: [
-      'ASD (Autism Spectrum Disorder)',
-      'ADHD',
-      'OCD',
-      'Dyslexia',
-      'Dyscalculia',
-      'Tourette\'s Syndrome',
-      'C-PTSD (Complex PTSD)',
-      'Anxiety',
-      'No Diagnosis',
-      'Other'
-    ]
-  },
   diagnoses: [{
     type: String,
     enum: [
       'ASD (Autism Spectrum Disorder)',
-      'ADHD',
-      'OCD',
+      'Attention Deficit Hyperactivity Disorder (ADHD)',
+      'Obsessive-Compulsive Disorder (OCD)',
       'Dyslexia',
       'Dyscalculia',
       'Tourette\'s Syndrome',
