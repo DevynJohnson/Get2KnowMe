@@ -6,6 +6,7 @@ const diagnosisOptions = [
   "ADHD",
   "OCD",
   "Dyslexia",
+  "Dyscalculia",
   "Tourette's Syndrome",
   "C-PTSD (Complex PTSD)",
   "Anxiety",
