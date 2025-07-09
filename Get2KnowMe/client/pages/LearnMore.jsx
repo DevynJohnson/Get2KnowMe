@@ -11,14 +11,13 @@ const LearnMore = () => {
           {/* Page Header */}
           <div className="text-center mb-5">
             <h1 className="display-4 home-title mb-4">
-              Learn More About Neurodifferences
+              Learn More About Neurodivergence
             </h1>
             <p className="lead">
-              Educational resources to help build understanding and awareness, and ways in which Get2KnowMe can help support them
+              Educational resources to help build understanding and awareness, and ways in which Get2KnowMe can help support neurodivergent individuals.
             </p>
           </div>
 
-          {/* Educational Content About Diagnoses */}
           <DiagnosisEducationSection />
         </Col>
       </Row>
