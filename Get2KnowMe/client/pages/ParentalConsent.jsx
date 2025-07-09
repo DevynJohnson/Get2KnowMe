@@ -1,4 +1,4 @@
-// client/pages/Register.jsx
+// client/pages/ParentalConsent.jsx
 import React, { useState } from "react";
 import {
   Form,
@@ -8,13 +8,13 @@ import {
   Col,
   Alert,
   Card,
+  Modal
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import auth from "../utils/auth.js";
 import "../styles/Register.css";
+import "../styles/ParentalConsent.css";
 
-const Register = () => {
-  // State variables for form fields and errors
+const ParentalConsent = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,9 +23,12 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [consentError, setConsentError] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [parentEmail, setParentEmail] = useState("");
+  const [confirmParentEmail, setConfirmParentEmail] = useState("");
+  const [modalError, setModalError] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
 
-  // Password validation function
   const validatePassword = (password) => {
     if (password.length < 8)
       return "Password must be at least 8 characters long";
@@ -38,33 +41,10 @@ const Register = () => {
     return null;
   };
 
-  // Handler for form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
-    // Get the actual values from the form elements (handles autofill)
-    const formData = new FormData(e.target);
-    const emailValue = formData.get("email") || email;
-    const usernameValue = formData.get("username") || username;
-    const passwordValue = formData.get("password") || password;
-    const confirmPasswordValue = formData.get("confirmPassword") || confirmPassword;
-
-    // Update state with actual values if they were autofilled
-    if (emailValue !== email) {
-      setEmail(emailValue);
-    }
-    if (usernameValue !== username) {
-      setUsername(usernameValue);
-    }
-    if (passwordValue !== password) {
-      setPassword(passwordValue);
-    }
-    if (confirmPasswordValue !== confirmPassword) {
-      setConfirmPassword(confirmPasswordValue);
-    }
-
     if (!ageConfirmed || !agreedToTerms) {
       setError(
         "You must confirm age eligibility and agree to the Privacy Policy and Terms of Service."
@@ -72,54 +52,62 @@ const Register = () => {
       setIsLoading(false);
       return;
     }
-
-    if (!emailValue || !usernameValue || !passwordValue) {
+    if (!email || !username || !password || !confirmPassword) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
-
-    // Validate password strength
-    const passwordError = validatePassword(passwordValue);
+    const passwordError = validatePassword(password);
     if (passwordError) {
       setError(passwordError);
       setIsLoading(false);
       return;
     }
-
-    if (passwordValue !== confirmPasswordValue) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match");
       setIsLoading(false);
       return;
     }
+    setShowModal(true);
+    setIsLoading(false);
+  };
 
+  const handleSendConsentEmail = async () => {
+    setModalError("");
+    if (!parentEmail) {
+      setModalError("Please enter a parent or guardian's email address.");
+      return;
+    }
+    if (parentEmail !== confirmParentEmail) {
+      setModalError("Parent/guardian email addresses do not match.");
+      return;
+    }
+    if (parentEmail === email) {
+      setModalError("Your email address and your parent/guardian's email address cannot be the same.");
+      return;
+    }
     try {
-      const response = await fetch("/api/users/signup", {
+      setIsLoading(true);
+      // Call backend endpoint to start parental consent flow
+      const response = await fetch("http://localhost:3001/api/users/start-parental-consent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: emailValue,
-          username: usernameValue,
-          password: passwordValue,
-          consent: {
-            ageConfirmed: ageConfirmed,
-            agreedToTerms: agreedToTerms,
-          },
-        }),
+          childEmail: email,
+          childUsername: username,
+          password,
+          parentEmail
+        })
       });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (response.ok) {
-        // Use auth service for better token management
-        auth.login(data.token);
-        console.log("Signup successful", data);
-      } else {
-        setError(data.message || "Signup failed. Please try again.");
+      if (!response.ok) {
+        const data = await response.json();
+        setModalError(data.message || "Failed to send email");
+        setIsLoading(false);
+        return;
       }
+      setEmailSent(true);
     } catch (err) {
-      console.error("Signup error:", err);
-      setError("Server is unreachable. Please try again later.");
+      setModalError("Server error. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -127,20 +115,21 @@ const Register = () => {
 
   return (
     <Container
-      className="d-flex justify-content-center align-items-center register-container"
-      style={{ minHeight: "100vh" }}
+      className="parental-consent-container"
     >
       <Row className="w-100">
         <Col md={6} lg={5} className="mx-auto">
-          <Card className="register-card p-4">
+          <Card className="parental-consent-card">
             <Card.Body>
-              <h2 className="text-center register-title">Create Account</h2>
+              <h2 className="parental-consent-title">Parental Consent</h2>
+              <p>This form will allow you to request consent from your parent or guardian to create an account with Get2KnowMe under the age of 16 (or 13 in the UK). If you are over the age of 16 (or 13 in the UK), please return to the <a href="/register">main registration page</a> and create an account.</p>
+              <p> Please enter the information you want to use for your account below, followed by your parent or guardian's email address, and click "Submit and Send Request" below. This will send an email to your parent or guardian, and your account registration will be complete once they have provided their consent.</p>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
                 {/* Email Section */}
                 <div className="form-section mb-3">
                   <Form.Group controlId="formEmail">
-                    <Form.Label>Email Address</Form.Label>
+                    <Form.Label>Your Email Address</Form.Label>
                     <Form.Control
                       type="email"
                       name="email"
@@ -152,11 +141,10 @@ const Register = () => {
                     />
                   </Form.Group>
                 </div>
-
                 {/* Username Section */}
                 <div className="form-section mb-3">
                   <Form.Group controlId="formUsername">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label>Your Username</Form.Label>
                     <Form.Control
                       type="text"
                       name="username"
@@ -168,11 +156,10 @@ const Register = () => {
                     />
                   </Form.Group>
                 </div>
-
                 {/* Password Section */}
                 <div className="form-section mb-4">
                   <Form.Group controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>Your Password</Form.Label>
                     <Form.Control
                       type="password"
                       name="password"
@@ -183,8 +170,7 @@ const Register = () => {
                       required
                     />
                     <div className="helper-text">
-                      💡 Must be 8+ characters with uppercase, lowercase, and
-                      special character
+                      💡 Must be 8+ characters with uppercase, lowercase, and special character
                     </div>
                   </Form.Group>
                 </div>
@@ -210,23 +196,20 @@ const Register = () => {
                 <Form.Group controlId="formAgeConfirmed" className="mb-3">
                   <Form.Check
                     type="checkbox"
-                    label="I hereby confirm that I am at least 16 years of age (or at least 13 years of age in the UK)."
+                    label="I hereby confirm that I am under 16 years of age (or under 13 in the UK) and require parental or guardian consent to use this application."
                     checked={ageConfirmed}
                     onChange={(e) => setAgeConfirmed(e.target.checked)}
                     required
                   />
                 </Form.Group>
-
                 <Form.Group controlId="formAgreedToTerms" className="mb-3">
                   <Form.Check
                     type="checkbox"
                     label={
                       <>
-                        I agree to the{" "}
-                        <Link to="/legal/terms-of-service">
-                          Terms of Service
-                        </Link>{" "}
-                        and{" "}
+                        I agree to the {" "}
+                        <Link to="/legal/terms-of-service">Terms of Service</Link>{" "}
+                        and {" "}
                         <Link to="/legal/privacy-policy">Privacy Policy</Link>.
                       </>
                     }
@@ -235,40 +218,73 @@ const Register = () => {
                     required
                   />
                 </Form.Group>
-
-                {consentError && <Alert variant="danger">{consentError}</Alert>}
-
                 <Button
                   variant="primary"
                   type="submit"
                   disabled={isLoading}
-                  className="w-100 register-btn"
+                  className="w-100 parental-consent-btn"
                 >
-                  {isLoading ? "Creating Account..." : "Sign Up"}
+                  {isLoading ? "Processing..." : "Request Parental Consent"}
                 </Button>
               </Form>
-              <div className="mt-4 text-center">
-                <p className="mb-0">
-                  Already have an account?{" "}
-                  <Link to="/login" className="login-link">
-                    Login here
-                  </Link>
-                </p>
-              </div>
-              <div className="mt-4 text-center">
-                <p className="mb-0">
-                  Under 16 (or 13 in the UK) but want to create an account?{" "}
-                  <Link to="/parental-consent" className="login-link">
-                   Verify parental/guardian consent here
-                  </Link>
-                </p>
-              </div>
             </Card.Body>
           </Card>
         </Col>
       </Row>
+      {/* Modal for parent/guardian email */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered dialogClassName="parental-consent-modal">
+        <Modal.Header closeButton>
+          <Modal.Title className="modal-title">Parent/Guardian Consent Required</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {emailSent ? (
+            <div className="text-center">
+              <h5>Consent Request Sent!</h5>
+              <p>
+                An email has been sent to <strong>{parentEmail}</strong> with instructions for providing consent. Please note that misrepresentation of your parent or guardian's email address is a violation of our Terms of Service, and accounts found to be created without proper consent will immediately be deactivated and all user data for that account will be permanently deleted.
+              </p>
+            </div>
+          ) : (
+            <>
+              <Form.Group className="mb-3">
+                <Form.Label>Parent or Guardian's Email Address</Form.Label>
+                <Form.Control
+                  type="email"
+                  value={parentEmail}
+                  onChange={(e) => setParentEmail(e.target.value)}
+                  placeholder="Enter parent or guardian's email"
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Confirm Parent or Guardian's Email Address</Form.Label>
+                <Form.Control
+                  type="email"
+                  value={confirmParentEmail}
+                  onChange={(e) => setConfirmParentEmail(e.target.value)}
+                  placeholder="Re-enter parent or guardian's email"
+                  required
+                  isInvalid={confirmParentEmail && parentEmail !== confirmParentEmail}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Email addresses do not match
+                </Form.Control.Feedback>
+              </Form.Group>
+              {modalError && <Alert variant="danger">{modalError}</Alert>}
+              <Button
+                variant="primary"
+                className="w-100 parental-consent-btn mb-3"
+                onClick={handleSendConsentEmail}
+                disabled={isLoading}
+              >
+                {isLoading ? "Sending..." : "Send Consent Request"}
+              </Button>
+            </>
+          )}
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };
 
-export default Register;
+export default ParentalConsent;

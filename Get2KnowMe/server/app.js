@@ -21,7 +21,12 @@ const corsOptions = {
       ? process.env.CORS_ORIGIN
         ? [process.env.CORS_ORIGIN]
         : true
-      : ['https://get2knowme.co.uk', 'https://get2know.me', 'https://get2knowme.onrender.com'],
+      : [
+          'https://get2knowme.co.uk',
+          'https://get2know.me',
+          'https://get2knowme.onrender.com',
+          'http://localhost:5173'
+        ],
   credentials: true,
 };
 app.use(cors(corsOptions));

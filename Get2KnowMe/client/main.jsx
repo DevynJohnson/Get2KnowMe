@@ -19,6 +19,7 @@ import ErrorPage from "./pages/Error.jsx";
 import Settings from "./pages/Settings.jsx";
 import PrivacyPolicy from "./pages/legal/UserInfo.jsx";
 import { AuthProvider } from "./utils/AuthContext.jsx";
+import ParentalConsent from "./pages/ParentalConsent.jsx";
 
 // Lazy load less critical pages
 const Profile = React.lazy(() => import("./pages/Profile.jsx"));
@@ -30,6 +31,8 @@ const ResetPassword = React.lazy(() => import("./pages/ResetPassword.jsx"));
 const TermsOfService = React.lazy(
   () => import("./pages/legal/TermsOfService.jsx")
 );
+const ConsentThankYou = React.lazy(() => import("./pages/ConsentThankYou.jsx"));
+const ConsentDeclined = React.lazy(() => import("./pages/ConsentDeclined.jsx"));
 
 // Settings pages
 const SettingsOverview = React.lazy(
@@ -244,6 +247,38 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "parental-consent",
+        element: <ParentalConsent />,
+      },
+      {
+        path: "consent",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <ConsentThankYou />
+          </Suspense>
+        ),
+      },
+      {
+        path: "consent/declined",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <ConsentDeclined />
+          </Suspense>
+        ),
       },
     ],
   },

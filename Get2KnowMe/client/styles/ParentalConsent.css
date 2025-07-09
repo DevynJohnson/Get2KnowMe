@@ -1,0 +1,60 @@
+/* ParentalConsent.css - Consistent with homepage styling */
+
+.parental-consent-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f4f8fb 0%, #e9f0fa 100%);
+}
+
+.parental-consent-card {
+  max-width: 480px;
+  width: 100%;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Center all text by default, but left-align form labels and inputs */
+.parental-consent-card label,
+.parental-consent-card input,
+.parental-consent-card .form-control {
+  text-align: left;
+}
+
+.parental-consent-card .form-section {
+  text-align: left;
+}
+
+.parental-consent-card .helper-text {
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+  text-align: left;
+}
+
+.parental-consent-card .alert {
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+
+.parental-consent-modal .modal-content {
+  border-radius: 16px;
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+}
+
+.parental-consent-modal .modal-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.parental-consent-modal .btn-primary {
+  background: linear-gradient(90deg, #4f46e5 0%, #007bff 100%);
+  border: none;
+}
