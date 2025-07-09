@@ -88,8 +88,8 @@ const ParentalConsent = () => {
     }
     try {
       setIsLoading(true);
-      // Call backend endpoint to start parental consent flow
-      const response = await fetch("http://localhost:3001/api/users/start-parental-consent", {
+      
+      const response = await fetch("http://get2know.me/api/users/start-parental-consent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
