@@ -336,6 +336,8 @@ const CreatePassport = () => {
         <Col lg={8} xl={6}>
           <Card className="passport-card">
             <Card.Body className="p-4">
+              {/* Ref moved to very top of Card.Body for better scroll-to-alert UX */}
+              <div ref={alertRef}></div>
               <h2 className="passport-title text-center mb-4">
                 {isEditing ? "Update" : "Create"} Your Communication Passport
               </h2>
@@ -345,12 +347,9 @@ const CreatePassport = () => {
                 with you effectively.
               </p>
 
-              {/* Alert container with ref for scrolling */}
-              <div ref={alertRef}>
-                {error && <Alert variant="danger">{error}</Alert>}
-                {success && <Alert variant="success">{success}</Alert>}
-              </div>
-
+              {/* Alert container (no ref here) */}
+              {error && <Alert variant="danger">{error}</Alert>}
+              {success && <Alert variant="success">{success}</Alert>}
               <Form onSubmit={handleSubmit}>
                 {/* Name Fields */}
                 <div className="form-section mb-3">
