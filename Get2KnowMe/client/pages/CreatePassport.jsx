@@ -28,7 +28,7 @@ const CreatePassport = () => {
     firstName: "",
     lastName: "",
     preferredName: "",
-    diagnoses: [], // Changed from single diagnosis to multiple diagnoses
+    diagnoses: [],
     customDiagnosis: "",
     healthAlert: [],
     communicationPreferences: [],
@@ -58,8 +58,8 @@ const CreatePassport = () => {
   // Diagnosis options
   const diagnosisOptions = [
     "ASD (Autism Spectrum Disorder)",
-    "ADHD",
-    "OCD",
+    "Attention Deficit Hyperactivity Disorder (ADHD)",
+    "Obsessive-Compulsive Disorder (OCD)",
     "Dyslexia",
     "Dyscalculia",
     "Tourette's Syndrome",

@@ -119,7 +119,6 @@ router.get('/public/:passcode', async (req, res) => {
       firstName: user.communicationPassport.firstName,
       lastName: user.communicationPassport.lastName,
       preferredName: user.communicationPassport.preferredName,
-      diagnosis: user.communicationPassport.diagnosis,
       diagnoses: user.communicationPassport.diagnoses,
       customDiagnosis: user.communicationPassport.customDiagnosis,
       healthAlert: user.communicationPassport.healthAlert,

@@ -3,8 +3,8 @@ import { validateInternationalPhone } from '../utils/phoneValidation.js';
 
 const diagnosisOptions = [
   "ASD (Autism Spectrum Disorder)",
-  "ADHD",
-  "OCD",
+  "Attention Deficit Hyperactivity Disorder (ADHD)",
+  "Obsessive-Compulsive Disorder (OCD)",
   "Dyslexia",
   "Dyscalculia",
   "Tourette's Syndrome",
