@@ -223,11 +223,11 @@ const Register = () => {
                     label={
                       <>
                         I agree to the{" "}
-                        <Link to="/legal/terms-of-service">
+                        <Link to="/policy/terms-of-service">
                           Terms of Service
                         </Link>{" "}
                         and{" "}
-                        <Link to="/legal/privacy-policy">Privacy Policy</Link>.
+                        <Link to="/policy/UserInfo">Privacy Policy</Link>.
                       </>
                     }
                     checked={agreedToTerms}
