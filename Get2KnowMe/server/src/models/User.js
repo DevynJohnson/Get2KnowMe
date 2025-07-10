@@ -10,7 +10,7 @@ const communicationPassportSchema = new Schema({
   diagnoses: [{
     type: String,
     enum: [
-      'Austism Spectrum Disorder (ASD)',
+      'Autism Spectrum Disorder (ASD)',
       'Attention Deficit Hyperactivity Disorder (ADHD)',
       'Obsessive-Compulsive Disorder (OCD)',
       'Dyslexia',
