@@ -236,7 +236,7 @@ const ViewPassport = () => {
                   <h4 className="section-title">Diagnosis</h4>
                 </div>
                 <div className="section-content">
-                  <div className="d-flex flex-wrap gap-2">
+                  <div className="diagnosis-badge-list">
                     {getDisplayDiagnosis().map((diagnosis, index) => (
                       <Badge key={index} bg="info" className="diagnosis-badge">
                         {diagnosis}

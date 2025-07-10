@@ -73,6 +73,13 @@
   font-size: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 20px;
+  display: block;
+  width: fit-content;
+  margin-bottom: 0.5rem;
+}
+
+.diagnosis-badge-list {
+  display: block;
 }
 
 /* Preferences List */
