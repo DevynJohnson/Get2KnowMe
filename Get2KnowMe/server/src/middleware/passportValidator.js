@@ -2,7 +2,7 @@ import { validatePasscode } from '../utils/passcodeGenerator.js';
 import { validateInternationalPhone } from '../utils/phoneValidation.js';
 
 const diagnosisOptions = [
-  "ASD (Autism Spectrum Disorder)",
+  "Autism Spectrum Disorder (ASD)",
   "Attention Deficit Hyperactivity Disorder (ADHD)",
   "Obsessive-Compulsive Disorder (OCD)",
   "Dyslexia",

@@ -57,7 +57,7 @@ const CreatePassport = () => {
 
   // Diagnosis options
   const diagnosisOptions = [
-    "ASD (Autism Spectrum Disorder)",
+    "Austism Spectrum Disorder (ASD)",
     "Attention Deficit Hyperactivity Disorder (ADHD)",
     "Obsessive-Compulsive Disorder (OCD)",
     "Dyslexia",
