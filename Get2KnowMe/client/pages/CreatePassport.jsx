@@ -28,6 +28,8 @@ const CreatePassport = () => {
     firstName: "",
     lastName: "",
     preferredName: "",
+    preferredPronouns: "",
+    customPronouns: "",
     diagnoses: [],
     customDiagnosis: "",
     healthAlert: [],
@@ -141,6 +143,15 @@ const CreatePassport = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
+    if (name === "preferredPronouns") {
+      setFormData((prev) => ({
+        ...prev,
+        preferredPronouns: value,
+        customPronouns: value === "Other" ? prev.customPronouns : "",
+      }));
+      return;
+    }
+
     if (name.startsWith("trustedContact.")) {
       const field = name.split(".")[1];
       setFormData((prev) => ({
@@ -246,6 +257,13 @@ const CreatePassport = () => {
     setSuccess("");
     setIsLoading(true);
 
+    // Prepare a copy of formData for submission
+    const submissionData = { ...formData };
+    // If preferredPronouns is empty, remove it from the payload
+    if (!submissionData.preferredPronouns) {
+      delete submissionData.preferredPronouns;
+    }
+
     // Validation
     if (!formData.firstName.trim()) {
       setError("First name is required");
@@ -292,7 +310,7 @@ const CreatePassport = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
 
       const data = await response.json();
@@ -394,9 +412,40 @@ const CreatePassport = () => {
                       placeholder="What would you like to be called? (e.g., nickname, chosen name)"
                     />
                     <Form.Text className="text-muted">
-                      If provided, this is how others will address you
+                      If provided, this is how others should address you
                     </Form.Text>
                   </Form.Group>
+                  <Form.Group className="mt-3">
+                    <Form.Label>Preferred Pronouns (Optional)</Form.Label>
+                    <Form.Select
+                      name="preferredPronouns"
+                      value={formData.preferredPronouns}
+                      onChange={handleInputChange}
+                      required={false}
+                    >
+                      <option value="">No Preference</option>
+                      <option value="He/Him">He/Him</option>
+                      <option value="She/Her">She/Her</option>
+                      <option value="They/Them">They/Them</option>
+                      <option value="Other">Other</option>
+                    </Form.Select>
+                    <Form.Text className="text-muted">
+                      If provided, this is how others should address you
+                    </Form.Text>
+                  </Form.Group>
+                  {formData.preferredPronouns === "Other" && (
+                    <Form.Group className="mt-3">
+                      <Form.Label>Custom Pronouns</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="customPronouns"
+                        value={formData.customPronouns}
+                        onChange={handleInputChange}
+                        placeholder="Enter your custom pronouns"
+                        required
+                      />
+                    </Form.Group>
+                  )}
                 </div>
 
                 {/* Health Alerts Field */}

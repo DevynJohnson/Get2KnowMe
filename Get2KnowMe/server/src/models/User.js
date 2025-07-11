@@ -7,6 +7,19 @@ const communicationPassportSchema = new Schema({
   firstName: { type: String, trim: true },
   lastName: { type: String, trim: true },
   preferredName: { type: String, trim: true },
+  preferredPronouns: {
+    type: String,
+    enum: [
+      'He/Him',
+      'She/Her',
+      'They/Them',
+      'Other'
+    ]
+  },
+  customPronouns: { type: String, trim: true,
+  required: function () {
+    return this.preferredPronouns === 'Other' || this.preferredPronouns === 'Custom';
+  }},
   diagnoses: [{
     type: String,
     enum: [
@@ -81,6 +94,8 @@ communicationPassportSchema.plugin(fieldEncryption, {
     'firstName',
     'lastName',
     'preferredName',
+    'preferredPronouns',
+    'customPronouns',
     'diagnosis',
     'diagnoses',
     'customDiagnosis',
