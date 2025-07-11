@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 // Components and Pages
+
 import App from "./App.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
@@ -20,6 +21,9 @@ import Settings from "./pages/Settings.jsx";
 import PrivacyPolicy from "./pages/legal/UserInfo.jsx";
 import { AuthProvider } from "./utils/AuthContext.jsx";
 import ParentalConsent from "./pages/ParentalConsent.jsx";
+
+// Lazy load MyPassport page
+const MyPassport = React.lazy(() => import("./pages/MyPassport.jsx"));
 
 // Lazy load less critical pages
 const Profile = React.lazy(() => import("./pages/Profile.jsx"));
@@ -112,6 +116,20 @@ const router = createBrowserRouter([
             }
           >
             <Profile />
+          </Suspense>
+        ),
+      },
+      {
+        path: "my-passport",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <MyPassport />
           </Suspense>
         ),
       },

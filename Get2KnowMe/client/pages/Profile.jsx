@@ -102,7 +102,7 @@ const Profile = () => {
                 </h5>
                 <Row className="mt-3">
                   <Col md={6} className="mb-3">
-                    <Link to={`/passport/view/${passportCode}`} className="quick-action-link">
+                    <Link to="/my-passport" className="quick-action-link">
                       <div className="quick-action-card">
                         <i className="fas fa-eye"></i>
                         <span>View My Passport</span>
