@@ -184,8 +184,12 @@ const ViewPassport = () => {
                 <img src={get2knowmeLogo} alt="Get2KnowMe Logo" className="get2knowme-logo" />
               </div>
               <h2 className="passport-name">
-                {passport.preferredName || passport.firstName}{" "}
-                {passport.lastName}
+                {passport.preferredName || passport.firstName} {passport.lastName}
+                {passport.preferredPronouns === "Other" && passport.customPronouns && passport.customPronouns.trim() !== "" ? (
+                  <span> ({passport.customPronouns})</span>
+                ) : passport.preferredPronouns && passport.preferredPronouns !== "" && passport.preferredPronouns !== "Other" ? (
+                  <span> ({passport.preferredPronouns})</span>
+                ) : null}
               </h2>
               {/* Removed health alert badges from the top */}
               <Badge bg="primary" className="passport-badge">
