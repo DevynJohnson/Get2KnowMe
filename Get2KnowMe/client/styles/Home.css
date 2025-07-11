@@ -40,7 +40,8 @@
 }
 
 .home-logo {
-  max-width: 200px;
+  max-width: 290px;
+  max-height: 400px;
   width: 100%;
   height: auto;
   display: block;

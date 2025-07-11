@@ -23,7 +23,7 @@ const Home = () => {
               {/* <h1 className="display-4 home-title mb-4">
                 Welcome to Get2KnowMe
               </h1> */}
-              <img src="/get2knowme_logo_svg.svg" alt="Get2KnowMe Logo" className="home-logo mb-4" />
+              <img src="/get2knowme_logo_png.png" alt="Get2KnowMe Logo" className="home-logo mb-4" />
               <p className="lead mb-4">
                 Empowering neurodivergent individuals through digital
                 Communication Passports

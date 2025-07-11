@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { DiagnosisEducationSection } from "../components/EducationContent/EducationSection";
-import '../styles/Home.css';
+import '../styles/LearnMore.css';
 import AuthService from "../utils/auth.js";
 
 const LearnMore = () => {

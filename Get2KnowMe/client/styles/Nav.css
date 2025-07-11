@@ -10,10 +10,30 @@
 .navbar-brand,
 .brand-link {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   color: var(--primary-color) !important;
   text-decoration: none;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
   transition: color 0.3s ease;
+}
+
+.nav-logo {
+  width: 100px; /* Adjust as needed */
+  height: auto;
+  margin-left: 0.5rem;
+  vertical-align: middle; /* Align with text */
+}
+
+@media (max-width: 768px) {
+  .nav-logo {
+    width: 80px; /* Smaller logo on mobile */
+  }
+}
+
+@media (max-width: 576px) {
+  .nav-logo {
+    width: 60px; /* Even smaller on very small screens */
+  }
 }
 
 .brand-link:hover {
