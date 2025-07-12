@@ -38,6 +38,7 @@ const TermsOfService = React.lazy(
 const ConsentThankYou = React.lazy(() => import("./pages/ConsentThankYou.jsx"));
 const ConsentDeclined = React.lazy(() => import("./pages/ConsentDeclined.jsx"));
 const Stories = React.lazy(() => import("./pages/Stories.jsx"));
+const EmailConfirmed = React.lazy(() => import("./pages/emailConfirmed.jsx"));
 
 // Settings pages
 const SettingsOverview = React.lazy(
@@ -62,6 +63,20 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />, // Global error boundary
     children: [
       { index: true, element: <Home /> }, // Default route: /
+      {
+        path: "email-confirmed",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <EmailConfirmed />
+          </Suspense>
+        ),
+      },
       { path: "login", element: <Login /> }, // Route: /login
       { path: "register", element: <Register /> }, // Route: /register
       {
