@@ -124,7 +124,7 @@ const ParentalConsent = () => {
             <Card.Body>
               <h2 className="parental-consent-title">Parental Consent</h2>
               <p>This form will allow you to request consent from your parent or guardian to create an account with Get2KnowMe under the age of 16 (or 13 in the UK). If you are over the age of 16 (or 13 in the UK), please return to the <a href="/register">main registration page</a> and create an account.</p>
-              <p> Please enter the information you want to use for your account below, followed by your parent or guardian's email address, and click "Submit and Send Request" below. This will send an email to your parent or guardian, and your account registration will be complete once they have provided their consent.</p>
+              <p> Please enter the information you want to use for your account below and click "Submit and Send Request" below to enter your parent or guardian's email address. The email will contain a link for them to provide their consent which expires after 24 hours, after which your pending account information will be automatically deleted.</p>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleSubmit}>
                 {/* Email Section */}

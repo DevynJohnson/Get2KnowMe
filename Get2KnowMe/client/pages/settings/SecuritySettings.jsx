@@ -125,7 +125,7 @@ const SecuritySettings = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="settings-title d-flex justify-content-between align-items-center mb-4">
         <h4>Security & Password</h4>
       </div>
 

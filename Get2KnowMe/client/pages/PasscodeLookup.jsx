@@ -104,7 +104,7 @@ const PasscodeLookup = () => {
                 <div className="lookup-icon mb-3">
                   <i className="fas fa-search"></i>
                 </div>
-                <h2 className="lookup-title">Access Communication Passport</h2>
+                <h2 className="lookup-title">Passport Lookup</h2>
                 <p className="text-muted">
                   Enter the passcode or scan the QR code that has been provided to view someone's Communication Passport
                 </p>

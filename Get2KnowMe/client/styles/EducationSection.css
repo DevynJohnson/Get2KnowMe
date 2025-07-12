@@ -1,5 +1,5 @@
-.home-title {
-     color: var(--primary-color);
+.Accordion.Header {
+  color: var(--primary-color);
   font-weight: 700;
   margin-bottom: 1.5rem;
   text-align: center;
@@ -7,4 +7,3 @@
   letter-spacing: -1px;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
 }
-
