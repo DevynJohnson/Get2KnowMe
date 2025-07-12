@@ -42,6 +42,7 @@ const EmailConfirmed = React.lazy(() => import("./pages/emailConfirmed.jsx"));
 const RegistrationPending = React.lazy(
   () => import("./pages/RegistrationPending.jsx")
 );
+const SubmitStory = React.lazy(() => import("./pages/SubmitStory.jsx"));
 
 // Settings pages
 const SettingsOverview = React.lazy(
@@ -342,6 +343,20 @@ const router = createBrowserRouter([
             }
           >
             <RegistrationPending />
+          </Suspense>
+        ),
+      },
+      {
+        path: "submit-story",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <SubmitStory />
           </Suspense>
         ),
       },
