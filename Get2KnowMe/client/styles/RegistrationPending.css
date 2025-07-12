@@ -1,0 +1,43 @@
+.registration-pending-container {
+  max-width: 480px;
+  margin: 60px auto 0 auto;
+  padding: 2.5rem 2rem 2rem 2rem;
+  background: var(--color-bg, #fff);
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+  text-align: center;
+  color: var(--color-text, #222);
+}
+
+.registration-pending-title {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 2.2rem;
+  letter-spacing: -1px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.registration-pending-message {
+  font-size: 1.1rem;
+  margin-bottom: 1.1rem;
+  line-height: 1.6;
+}
+
+.registration-pending-container strong {
+  color: var(--color-accent, #d2691e);
+}
+
+@media (max-width: 600px) {
+  .registration-pending-container {
+    padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+    max-width: 98vw;
+  }
+  .registration-pending-container h1 {
+    font-size: 1.3rem;
+  }
+  .registration-pending-container p {
+    font-size: 1rem;
+  }
+}

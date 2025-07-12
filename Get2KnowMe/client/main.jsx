@@ -39,6 +39,9 @@ const ConsentThankYou = React.lazy(() => import("./pages/ConsentThankYou.jsx"));
 const ConsentDeclined = React.lazy(() => import("./pages/ConsentDeclined.jsx"));
 const Stories = React.lazy(() => import("./pages/Stories.jsx"));
 const EmailConfirmed = React.lazy(() => import("./pages/emailConfirmed.jsx"));
+const RegistrationPending = React.lazy(
+  () => import("./pages/RegistrationPending.jsx")
+);
 
 // Settings pages
 const SettingsOverview = React.lazy(
@@ -325,6 +328,20 @@ const router = createBrowserRouter([
             }
           >
             <ConsentDeclined />
+          </Suspense>
+        ),
+      },
+      {
+        path: "registration-pending",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <RegistrationPending />
           </Suspense>
         ),
       },
