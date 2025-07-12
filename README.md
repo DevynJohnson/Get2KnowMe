@@ -27,7 +27,7 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 
 ## Screenshots
 
-![Home Page](Get2KnowMe/client/public/assets/screenshots/get2knowme_homescreen_screenshot.png)
+![Home Page](Get2KnowMe/client/public/assets/screenshots/get2knowme_homepage_screenshot.png)
 <p align="center"><em><strong>Main landing page with navigation to key features</strong></em></p>
 
 ![Profile Page](Get2KnowMe/client/public/assets/screenshots/get2knowme_myProfile_screenshot.png)
