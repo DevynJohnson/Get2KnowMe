@@ -124,6 +124,7 @@ To run Get2KnowMe locally for development or contribution:
 - **Mongoose 8.16.1** - MongoDB object modeling library
 
 ### Authentication & Security
+- **Email Confirmation Required**: All new users must confirm their email address via a secure, expiring link before their account is activated. Confirmation links are single-use and expire after 24 hours for security.
 - **JSON Web Tokens 9.0.2** - Secure authentication mechanism
 - **bcrypt 6.0.0** - Password hashing library
 - **JWT Decode 4.0.0** - JWT token decoding utility
@@ -144,8 +145,9 @@ To run Get2KnowMe locally for development or contribution:
 
 ## API Documentation
 
-### Authentication Endpoints
-- `POST /api/users/register` - User registration
+### Authentication & User Management Endpoints
+- `POST /api/users/signup` - User registration (sends confirmation email; user must confirm before account is activated)
+- `GET /api/users/confirm-email` - Confirm user email address via token (activates account)
 - `POST /api/users/login` - User authentication
 - `GET /api/users/me` - Get current user profile
 - `PUT /api/users/update-username` - Update username
@@ -155,9 +157,10 @@ To run Get2KnowMe locally for development or contribution:
 - `POST /api/users/reset-password` - Reset password using token
 - `DELETE /api/users/delete-account` - Delete user account
 - `POST /api/users/export-data` - Export user data (GDPR)
-- `POST /api/users/start-parental-consent` - Start parental consent workflow (underage registration)
-- `GET /api/users/consent` - Parental consent approval (tokenized link)
-- `GET /api/users/consent/declined` - Parental consent declined (tokenized link)
+- `POST /api/users/start-parental-consent` - Start parental consent workflow (underage registration; expires and deletes after 24 hours if not confirmed)
+- `POST /api/users/send-parental-consent` - Send parental consent email (manual/legacy use)
+- `GET /api/users/consent` - Parental consent approval (tokenized link; creates account if approved)
+- `GET /api/users/consent/declined` - Parental consent declined (tokenized link; deletes pending user)
 
 ### Passport Endpoints
 - `GET /api/passport/generate-passcode` - Generate a new passcode
@@ -274,7 +277,7 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
 - **Data Security**: Passwords are securely hashed (bcrypt). All data is encrypted in transit (HTTPS). Passport data is only visible when a user chooses to share their passcode or QR code.
 - **Database Encryption**: Personally identifiable information (PII) is encrypted at the field level in MongoDB using [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption), ensuring sensitive data is protected at rest.
-- **Children’s Privacy & Parental Consent**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements. For underage users, no personal data is stored until a parent or guardian provides explicit consent via a secure, tokenized email workflow. All pending registration data is encrypted at rest using field-level encryption. The parent receives a unique consent link, and only upon their approval is the child's account created and data stored. If consent is declined, all pending data is securely deleted. The consent request email and the registration interface both make it clear that sending the request to anyone other than a parent or guardian is a violation of the Terms of Service, and that accounts found to be created without proper consent will be immediately deactivated and all user data permanently deleted. This ensures full compliance with GDPR Article 8 and COPPA/UK GDPR standards for children’s data processing.
+- **Children’s Privacy & Parental Consent**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements. For underage users, no personal data is stored until a parent or guardian provides explicit consent via a secure, tokenized email workflow. All pending registration data is encrypted at rest using field-level encryption (email, username, and password). The parent receives a unique consent link, and only upon their approval is the child's account created and data stored. If consent is declined, all pending data is securely deleted. If consent is neither granted or denied, temporary registration data is automatically deleted after 24 hours.
 - **Data Hosting**: Data is stored securely using Render and MongoDB Atlas, both of which provide strong security and compliance features.
 - **Breach Notification**: Users will be notified promptly in the event of a data breach affecting their personal data.
 - **Third-Party Processors**: Only reputable, GDPR-compliant third-party services are used for hosting and infrastructure. No user data is sold or shared for marketing purposes.
