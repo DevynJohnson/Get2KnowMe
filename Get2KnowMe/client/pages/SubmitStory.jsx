@@ -3,7 +3,7 @@ import { useAuth } from '../utils/AuthContext';
 import auth from '../utils/auth.js';
 import '../styles/Stories.css';
 
-const ADMIN_EMAILS = ['dljohnson1313@gmail.com', 'jwbarry@outlook.com'];
+const ADMIN_EMAILS = ['dljohnson1313@gmail.com', 'jwbarry@outlook.com', 'jake@get2knowme.co.uk', 'jake.w.barry@gmail.com'];
 
 export default function SubmitStory() {
   const [form, setForm] = useState({ name: '', story: '' });

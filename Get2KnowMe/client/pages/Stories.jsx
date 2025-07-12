@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../utils/AuthContext";
 import "../styles/Stories.css";
 
 export default function Stories() {
