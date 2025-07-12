@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Row, Col, Accordion, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import AuthService from "../utils/auth.js";
+import "../styles/EducationContent.css";
 
 // Educational content about autism
 export const AutismContent = () => {

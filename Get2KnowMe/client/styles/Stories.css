@@ -3,7 +3,7 @@
   --stories-bg: var(--bg-color, #f7f8fa);
   --stories-card-bg: var(--card-bg, #fff);
   --stories-border: var(--border-color, #e3e6ed);
-  --stories-primary: var(--primary-color, #4f8cff);
+  --primary-color: var(--primary-color, #4f8cff);
   --stories-muted: var(--text-muted, #6c757d);
   --stories-gradient: var(--secondary-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
 }
@@ -19,7 +19,7 @@
 }
 
 .stories-title {
-  color: var(--stories-primary);
+  color: var(--primary-color);
   font-weight: 700;
   margin-bottom: 1.5rem;
   text-align: center;
@@ -65,7 +65,7 @@
   display: block;
   font-weight: 600;
   margin-bottom: 6px;
-  color: var(--stories-primary);
+  color: var(--primary-color);
   text-align: center;
 }
 
@@ -82,7 +82,7 @@
 }
 .stories-form-input:focus,
 .stories-form-textarea:focus {
-  border: 1.5px solid var(--stories-primary);
+  border: 1.5px solid var(--primary-color);
   outline: none;
 }
 .stories-form-input[disabled] {
@@ -154,7 +154,7 @@
 
 .stories-community-title {
   margin-bottom: 1.5rem;
-  color: var(--stories-primary);
+  color: var(--primary-color);
   font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
@@ -185,7 +185,7 @@
 .stories-card-title {
   font-weight: 700;
   margin-bottom: 4px;
-  color: var(--stories-primary);
+  color: var(--primary-color);
   font-size: 1.1rem;
 }
 
