@@ -202,7 +202,7 @@ If you experience any issues with the application, please:
 1. Check existing issues on GitHub
 2. Provide detailed steps to reproduce the problem
 3. Include error messages and browser information
-4. Contact [jake@get2knowme.co.uk](mailto:jake@get2knowme.co.uk) for urgent issues
+4. Contact [inquiries@get2knowme.co.uk](mailto:inquiries@get2knowme.co.uk) for urgent issues
 
 ## Credits
 
@@ -283,7 +283,7 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **Third-Party Processors**: Only reputable, GDPR-compliant third-party services are used for hosting and infrastructure. No user data is sold or shared for marketing purposes.
 - **Privacy Policy & Terms**: Full Privacy Policy and Terms of Service are available in the app and repository, outlining user rights and data practices.
 
-For any privacy-related requests or questions, users can contact the team at [jake@get2knowme.co.uk].
+For any privacy-related requests or questions, users can contact the team at [inquiries@get2knowme.co.uk].
 
 ---
 
