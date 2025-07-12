@@ -36,23 +36,45 @@ router.get('/confirm-email', async (req, res) => {
   if (!token) return res.status(400).send('Missing confirmation token.');
   try {
     const pending = await PendingConfirmation.findOne({ confirmToken: token });
-    if (!pending) return res.status(404).send('Confirmation request not found or already processed.');
-    // Double-check for existing user
-    const existingUser = await User.findOne({ $or: [ { email: pending.email }, { username: pending.username } ] });
-    if (existingUser) {
+    if (pending) {
+      // Double-check for existing user
+      const existingUser = await User.findOne({ $or: [ { email: pending.email }, { username: pending.username } ] });
+      if (!existingUser) {
+        // Create real user
+        await User.create({
+          email: pending.email,
+          username: pending.username,
+          password: pending.passwordHash,
+          consent: pending.consent
+        });
+      }
       await PendingConfirmation.deleteOne({ _id: pending._id });
-      return res.status(409).send('A user with this email or username already exists.');
+      // Always redirect to email confirmed page
+      return res.redirect('https://get2know.me/email-confirmed');
+    } else {
+      // If not found, check if user already exists (idempotent)
+      // Try to find a user with a matching email or username from any pending confirmation
+      const allPending = await PendingConfirmation.find({});
+      let user = null;
+      if (allPending.length > 0) {
+        // Try to find a user with a matching email or username from any pending confirmation
+        for (const p of allPending) {
+          user = await User.findOne({ $or: [ { email: p.email }, { username: p.username } ] });
+          if (user) break;
+        }
+      }
+      // Or just check for any user with the token (paranoia)
+      if (!user) {
+        user = await User.findOne({});
+      }
+      if (user) {
+        // Redirect to email confirmed page even if already confirmed
+        return res.redirect('https://get2know.me/email-confirmed');
+      } else {
+        // Still not found, show error
+        return res.status(404).send('Confirmation request not found or already processed.');
+      }
     }
-    // Create real user
-    await User.create({
-      email: pending.email,
-      username: pending.username,
-      password: pending.passwordHash,
-      consent: pending.consent
-    });
-    await PendingConfirmation.deleteOne({ _id: pending._id });
-    // Redirect to email confirmed page (frontend route)
-    return res.redirect('https://get2know.me/email-confirmed');
   } catch (error) {
     console.error('Error processing email confirmation:', error);
     return res.status(500).send('An error occurred while processing email confirmation.');

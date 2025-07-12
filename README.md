@@ -27,16 +27,13 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 
 ## Screenshots
 
-![Home Page](Get2KnowMe/client/public/assets/screenshots/get2knowme_screenshot.png)
-<p align="center"><em><strong>Main landing page with navigation to key features in Light Mode</strong></em></p>
+![Home Page](Get2KnowMe/client/public/assets/screenshots/get2knowme_homescreen_screenshot.png)
+<p align="center"><em><strong>Main landing page with navigation to key features</strong></em></p>
 
-![Home Page](Get2KnowMe/client/public/assets/screenshots/dark_mode.png)
-<p align="center"><em><strong>Main landing page with navigation to key features in Dark Mode</strong></em></p>
-
-![Profile Page](Get2KnowMe/client/public/assets/screenshots/profile_example.png)
+![Profile Page](Get2KnowMe/client/public/assets/screenshots/get2knowme_myProfile_screenshot.png)
 <p align="center"><em><strong>User profile page with Quick Action panel, allowing easy access to profile customization options</strong></em></p>
 
-![Educational Tools](Get2KnowMe/client/public/assets/screenshots/learn_more.png)
+![Educational Tools](Get2KnowMe/client/public/assets/screenshots/get2knowme_learnMore_screenshot.png)
 <p align="center"><em><strong>Educational information about various neurodivergent conditions and how Get2KnowMe can offer support</strong></em></p>
 
 ![Appearance Customization](Get2KnowMe/client/public/assets/screenshots/appearance_settings.png)
