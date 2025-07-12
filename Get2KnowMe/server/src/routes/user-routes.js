@@ -1,9 +1,12 @@
 import express from 'express';
 import User from '../models/User.js';
 import PendingUser from '../models/PendingUser.js';
+import PendingConfirmation from '../models/PendingConfirmation.js';
 import jwt from 'jsonwebtoken';
 import { authenticateToken } from '../utils/auth.js';
-import { sendPasswordResetEmail, sendParentalConsentEmail } from '../utils/email.js';
+import { sendPasswordResetEmail } from '../utils/emailTemplates/passwordReset.js';
+import { sendParentalConsentEmail } from '../utils/emailTemplates/parentalConsent.js';
+import { sendConfirmationEmail } from '../utils/emailTemplates/confirmEmail.js';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 
@@ -27,6 +30,34 @@ const authenticate = (req, res, next) => {
   req.user = authResult.user;
   next();
 };
+// GET Email confirmation (activate pending user)
+router.get('/confirm-email', async (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.status(400).send('Missing confirmation token.');
+  try {
+    const pending = await PendingConfirmation.findOne({ confirmToken: token });
+    if (!pending) return res.status(404).send('Confirmation request not found or already processed.');
+    // Double-check for existing user
+    const existingUser = await User.findOne({ $or: [ { email: pending.email }, { username: pending.username } ] });
+    if (existingUser) {
+      await PendingConfirmation.deleteOne({ _id: pending._id });
+      return res.status(409).send('A user with this email or username already exists.');
+    }
+    // Create real user
+    await User.create({
+      email: pending.email,
+      username: pending.username,
+      password: pending.passwordHash,
+      consent: pending.consent
+    });
+    await PendingConfirmation.deleteOne({ _id: pending._id });
+    // Redirect to email confirmed page (frontend route)
+    return res.redirect('https://get2know.me/email-confirmed');
+  } catch (error) {
+    console.error('Error processing email confirmation:', error);
+    return res.status(500).send('An error occurred while processing email confirmation.');
+  }
+});
 
 // POST Login route - login existing user
 router.post('/login', async (req, res) => {
@@ -83,28 +114,43 @@ router.post('/signup', async (req, res) => {
     }
 
     // Normalize
-    req.body.email = email.trim().toLowerCase();
-    req.body.username = username.trim().toLowerCase();
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedUsername = username.trim().toLowerCase();
 
-    const ip =
-      req.headers['x-forwarded-for']?.split(',')[0] ||
-      req.socket.remoteAddress;
-    const userAgent = req.headers['user-agent'];
+    // Check for existing user or pending confirmation
+    const existingUser = await User.findOne({ $or: [ { email: normalizedEmail }, { username: normalizedUsername } ] });
+    const existingPending = await PendingConfirmation.findOne({ $or: [ { email: normalizedEmail }, { username: normalizedUsername } ] });
+    if (existingUser || existingPending) {
+      return res.status(400).json({ message: 'A user with this email or username already exists or is pending.' });
+    }
 
-    const user = await User.create({
-      email,
-      username,
-      password,
-      consent: {
-        ...consent,
-        ipAddress: ip,
-        userAgent: userAgent,
-        timestamp: new Date(),
-      },
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    // Generate secure confirmation token
+    const confirmToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    // Store pending confirmation
+    await PendingConfirmation.create({
+      email: normalizedEmail,
+      username: normalizedUsername,
+      passwordHash,
+      consent,
+      confirmToken,
+      expiresAt
     });
 
-    const token = signToken(user);
-    res.json({ token, user });
+    // Send confirmation email
+    const confirmUrl = `https://get2know.me/api/users/confirm-email?token=${confirmToken}`;
+    try {
+      await sendConfirmationEmail(normalizedEmail, confirmUrl, normalizedUsername);
+    } catch (emailError) {
+      console.error('Failed to send confirmation email:', emailError);
+      // Optionally, you can still return success for security
+    }
+
+    res.json({ message: 'Registration received. Please check your email to confirm your address.' });
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {

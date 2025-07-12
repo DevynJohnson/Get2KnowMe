@@ -107,7 +107,7 @@ const ParentalConsent = () => {
         return;
       }
       setEmailSent(true);
-    } catch (err) {
+    } catch {
       setModalError("Server error. Please try again later.");
     } finally {
       setIsLoading(false);
