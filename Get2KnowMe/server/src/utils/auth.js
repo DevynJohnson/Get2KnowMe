@@ -34,7 +34,7 @@ export const signToken = ({ email, _id, username }) => {
     return jwt.sign(
         { id: _id, email, username },
         secret,
-        { expiresIn: '1h' }
+        { expiresIn: '7d' }
     );
 }
 
