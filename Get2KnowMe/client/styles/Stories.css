@@ -1,0 +1,262 @@
+/* --- Stories.css --- */
+:root {
+  --stories-bg: var(--bg-color, #f7f8fa);
+  --stories-card-bg: var(--card-bg, #fff);
+  --stories-border: var(--border-color, #e3e6ed);
+  --stories-primary: var(--primary-color, #4f8cff);
+  --stories-muted: var(--text-muted, #6c757d);
+  --stories-gradient: var(--secondary-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+}
+
+.stories-container {
+  background: var(--stories-bg);
+  min-height: 100vh;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.stories-title {
+  color: var(--stories-primary);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 2.2rem;
+  letter-spacing: -1px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.stories-subtitle {
+  color: var(--stories-muted);
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  max-width: 600px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.stories-desc {
+  color: var(--stories-muted);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 2.2rem;
+  text-align: center;
+  max-width: 600px;
+}
+
+.stories-form {
+  background: var(--stories-card-bg);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  border: 1px solid var(--stories-border);
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  max-width: 520px;
+  transition: box-shadow 0.2s;
+}
+.stories-form:focus-within {
+  box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+}
+
+.stories-form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--stories-primary);
+  text-align: center;
+}
+
+.stories-form-input,
+.stories-form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  background: #fafdff;
+  transition: border 0.2s;
+}
+.stories-form-input:focus,
+.stories-form-textarea:focus {
+  border: 1.5px solid var(--stories-primary);
+  outline: none;
+}
+.stories-form-input[disabled] {
+  background: #f3f3f3;
+  color: #aaa;
+}
+
+.stories-form-error {
+  color: #e83e8c;
+  background: #fff0f6;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 10px;
+  font-weight: 500;
+  border: 1px solid #ffd6e6;
+}
+
+.stories-form-btn {
+  background: var(--stories-gradient);
+  color: #fff;
+  padding: 0.6rem 2rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.2s, box-shadow 0.2s;
+  margin: 0.5rem auto 0 auto;
+  display: block;
+  box-shadow: 0 2px 8px #eee;
+}
+.stories-form-btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.stories-form-cancel-btn {
+  margin-left: 16px;
+  background: #eee;
+  color: #333;
+  padding: 0.6rem 2rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.stories-form-cancel-btn:hover {
+  background: #e3e6ed;
+}
+
+.stories-signin-box {
+  margin-bottom: 2.5rem;
+  background: var(--stories-gradient);
+  color: #fff;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  text-align: center;
+}
+.stories-signin-link {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.stories-community-title {
+  margin-bottom: 1.5rem;
+  color: var(--stories-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.stories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 2rem auto;
+}
+
+.stories-card {
+  background: var(--stories-card-bg);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  border: 1px solid var(--stories-border);
+  padding: 1.5rem 2rem 1.2rem 2rem;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+.stories-card:hover {
+  box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+}
+
+.stories-card-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--stories-primary);
+  font-size: 1.1rem;
+}
+
+.stories-card-date {
+  color: var(--stories-muted);
+  font-size: 0.98rem;
+  margin-bottom: 8px;
+}
+
+.stories-card-content {
+  white-space: pre-line;
+  margin-bottom: 8px;
+  color: #222;
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.stories-card-actions {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 10px;
+}
+
+.stories-card-edit-btn {
+  background: #e0eaff;
+  color: #2a4d8f;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.stories-card-edit-btn:hover {
+  background: #c7d8ff;
+}
+
+.stories-card-delete-btn {
+  background: #ffe0e0;
+  color: #a33;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.stories-card-delete-btn:hover {
+  background: #ffd6d6;
+}
+
+@media (max-width: 700px) {
+  .stories-form, .stories-list {
+    max-width: 98vw;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .stories-card {
+    padding: 1.2rem 1rem 1rem 1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .stories-form {
+    padding: 1rem 0.5rem;
+  }
+  .stories-card {
+    padding: 1rem 0.5rem 0.8rem 0.5rem;
+  }
+}

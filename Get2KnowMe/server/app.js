@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import userRoutes from './src/routes/user-routes.js';
 import passportRoutes from './src/routes/passport-routes.js';
+import storiesRoutes from './src/routes/stories.js';
 
 // Define __filename and __dirname variables for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +35,7 @@ app.use(cors(corsOptions));
 // API routes
 app.use('/api/users', userRoutes);
 app.use('/api/passport', passportRoutes);
+app.use('/api/stories', storiesRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

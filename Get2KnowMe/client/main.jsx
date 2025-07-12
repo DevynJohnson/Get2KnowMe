@@ -37,6 +37,7 @@ const TermsOfService = React.lazy(
 );
 const ConsentThankYou = React.lazy(() => import("./pages/ConsentThankYou.jsx"));
 const ConsentDeclined = React.lazy(() => import("./pages/ConsentDeclined.jsx"));
+const Stories = React.lazy(() => import("./pages/Stories.jsx"));
 
 // Settings pages
 const SettingsOverview = React.lazy(
@@ -74,6 +75,20 @@ const router = createBrowserRouter([
             }
           >
             <LearnMore />
+          </Suspense>
+        ),
+      },
+      {
+        path: "stories",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <Stories />
           </Suspense>
         ),
       },
