@@ -94,6 +94,17 @@ const NavTabs = () => {
             >
               Educational Resources
             </BsNav.Link>
+
+            {/* Stories link - visible to all users */}
+            <BsNav.Link
+              as={Link}
+              to="/stories"
+              active={currentPage === "/stories"}
+              className="nav-item-custom"
+              onClick={closeNavbar}
+            >
+              Stories
+            </BsNav.Link>
           </BsNav>
 
           {/* Right side navigation - Settings and Login/Logout */}
