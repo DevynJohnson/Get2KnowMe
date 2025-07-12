@@ -13,7 +13,7 @@ const ConsentDeclined = () => (
           Their registration request has been deleted and no information has been stored.
         </p>
         <p className="text-center mb-0">
-          If you have questions, please contact us at <a href="mailto:jake@get2knowme.co.uk">jake@get2knowme.co.uk</a>.
+          If you have questions, please contact us at <a href="mailto:inquiries@get2knowme.co.uk">inquiries@get2knowme.co.uk</a>.
         </p>
       </Card.Body>
     </Card>
