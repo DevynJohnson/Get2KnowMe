@@ -9,8 +9,7 @@ import {
   Alert,
   Card,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import auth from "../utils/auth.js";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 
 const Register = () => {
@@ -24,6 +23,8 @@ const Register = () => {
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [consentError, setConsentError] = useState("");
+
+  const navigate = useNavigate();
 
   // Password validation function
   const validatePassword = (password) => {
@@ -111,9 +112,9 @@ const Register = () => {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        // Use auth service for better token management
-        auth.login(data.token);
-        console.log("Signup successful", data);
+        // Redirect to registration pending page
+        navigate("/registration-pending");
+        return;
       } else {
         setError(data.message || "Signup failed. Please try again.");
       }
