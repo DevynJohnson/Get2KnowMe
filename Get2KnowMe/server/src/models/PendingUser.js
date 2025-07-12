@@ -9,7 +9,12 @@ const PendingUserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   consentToken: { type: String, required: true, unique: true }, // For secure consent link
   expiresAt: { type: Date, required: true }, // For auto-expiry
+}, {
+  timestamps: false,
 });
+
+// TTL index for expiresAt (auto-remove after 24h)
+PendingUserSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 PendingUserSchema.plugin(fieldEncryption.fieldEncryption, {
   fields: ["childEmail", "childUsername", "parentEmail", "passwordHash"],
