@@ -4,7 +4,7 @@ import { Card, Form, Button, Alert, Modal, Spinner } from 'react-bootstrap';
 import { useAuth } from '../../utils/AuthContext';
 
 const ProfileSettings = () => {
-  const { user, token } = useAuth();
+  const { user, token, updateUser } = useAuth(); // Added updateUser if available
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -13,6 +13,12 @@ const ProfileSettings = () => {
   
   // Privacy settings state
   const [privacySettings, setPrivacySettings] = useState({
+    allowFollowRequests: true,
+    showInSearch: true
+  });
+  
+  // Track original privacy settings to detect changes
+  const [originalPrivacySettings, setOriginalPrivacySettings] = useState({
     allowFollowRequests: true,
     showInSearch: true
   });
@@ -31,13 +37,14 @@ const ProfileSettings = () => {
         currentPassword: ''
       });
       
-      // Set privacy settings from user data
-      if (user.privacySettings) {
-        setPrivacySettings({
-          allowFollowRequests: user.privacySettings.allowFollowRequests ?? true,
-          showInSearch: user.privacySettings.showInSearch ?? true
-        });
-      }
+      // Set privacy settings from user data and track original values
+      const userPrivacySettings = {
+        allowFollowRequests: user.privacySettings?.allowFollowRequests ?? true,
+        showInSearch: user.privacySettings?.showInSearch ?? true
+      };
+      
+      setPrivacySettings(userPrivacySettings);
+      setOriginalPrivacySettings(userPrivacySettings);
     }
   }, [user]);
 
@@ -100,8 +107,10 @@ const ProfileSettings = () => {
       setShowModal(false);
       setFormData(prev => ({ ...prev, currentPassword: '' }));
       
-      // Update the user context with new data
-      // You may need to refresh the token or update the user context here
+      // Update the user context with new data if updateUser function is available
+      if (updateUser && data.user) {
+        updateUser(data.user);
+      }
       
     } catch (error) {
       showAlert(error.message, 'danger');
@@ -111,7 +120,7 @@ const ProfileSettings = () => {
   };
 
   // Privacy settings update handler
-  const updatePrivacySettings = async () => {
+  const savePrivacySettings = async () => {
     setPrivacyLoading(true);
     try {
       const response = await fetch('/api/users/update-privacy', {
@@ -129,20 +138,30 @@ const ProfileSettings = () => {
         throw new Error(data.message || 'Privacy settings update failed');
       }
 
-      showAlert('Privacy settings updated successfully!');
+      // Update original settings to match current settings
+      setOriginalPrivacySettings(privacySettings);
       
+      // Update user context if available
+      if (updateUser) {
+        updateUser({
+          ...user,
+          privacySettings: data.privacySettings
+        });
+      }
+      
+      showAlert('Privacy settings updated successfully!');
     } catch (error) {
       showAlert(error.message, 'danger');
       // Revert changes on error
-      if (user?.privacySettings) {
-        setPrivacySettings({
-          allowFollowRequests: user.privacySettings.allowFollowRequests ?? true,
-          showInSearch: user.privacySettings.showInSearch ?? true
-        });
-      }
+      setPrivacySettings(originalPrivacySettings);
     } finally {
       setPrivacyLoading(false);
     }
+  };
+
+  // Reset privacy settings to original values
+  const resetPrivacySettings = () => {
+    setPrivacySettings(originalPrivacySettings);
   };
 
   // Add export handler
@@ -185,10 +204,9 @@ const ProfileSettings = () => {
   };
 
   // Check if privacy settings have changed
-  const privacySettingsChanged = user?.privacySettings ? (
-    privacySettings.allowFollowRequests !== (user.privacySettings.allowFollowRequests ?? true) ||
-    privacySettings.showInSearch !== (user.privacySettings.showInSearch ?? true)
-  ) : false;
+  const privacySettingsChanged = 
+    privacySettings.allowFollowRequests !== originalPrivacySettings.allowFollowRequests ||
+    privacySettings.showInSearch !== originalPrivacySettings.showInSearch;
 
   return (
     <>
@@ -307,24 +325,39 @@ const ProfileSettings = () => {
                 </Form.Group>
 
                 {privacySettingsChanged && (
-                  <div className="d-flex justify-content-end">
-                    <Button
-                      variant="primary"
-                      onClick={updatePrivacySettings}
-                      disabled={privacyLoading}
-                    >
-                      {privacyLoading ? (
-                        <>
-                          <Spinner animation="border" size="sm" className="me-2" />
-                          Updating...
-                        </>
-                      ) : (
-                        <>
-                          <i className="fas fa-save me-2"></i>
-                          Save Privacy Settings
-                        </>
-                      )}
-                    </Button>
+                  <div className="d-flex justify-content-between align-items-center mt-4 p-3 bg-light rounded">
+                    <div className="text-muted">
+                      <i className="fas fa-info-circle me-2"></i>
+                      You have unsaved privacy setting changes
+                    </div>
+                    <div className="d-flex gap-2">
+                      <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={resetPrivacySettings}
+                        disabled={privacyLoading}
+                      >
+                        Reset
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={savePrivacySettings}
+                        disabled={privacyLoading}
+                      >
+                        {privacyLoading ? (
+                          <>
+                            <Spinner animation="border" size="sm" className="me-2" />
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <i className="fas fa-save me-2"></i>
+                            Save Changes
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
