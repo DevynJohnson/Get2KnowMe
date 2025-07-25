@@ -98,6 +98,38 @@
   color: var(--text-color, #495057) !important;
 }
 
+/* Dark mode form controls styling */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+  background-color: var(--bs-body-bg, #212529) !important;
+  border-color: var(--bs-border-color, #495057) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+  background-color: var(--bs-body-bg, #212529) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent) !important;
+}
+
+/* Fix dropdown options in dark mode */
+[data-bs-theme="dark"] .form-select option {
+  background-color: var(--bs-body-bg, #212529) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+/* Ensure dropdown arrow is visible in dark mode */
+[data-bs-theme="dark"] .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+}
+
+/* Light mode dropdown arrow (default Bootstrap) */
+[data-bs-theme="light"] .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+}
+
 /* Ensure preferences container matches theme */
 [data-bs-theme="dark"] .preferences-container {
   background: transparent !important;
@@ -109,7 +141,15 @@
   border-color: var(--border-color, #e9ecef) !important;
 }
 
-/* Removed trusted contact section styling since we're using form-section now */
+/* Dark mode passport card styling */
+[data-bs-theme="dark"] .passport-card {
+  background: rgba(33, 37, 41, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme="dark"] .passport-title {
+  color: var(--bs-body-color, #ffffff) !important;
+}
 
 /* Character counter styling */
 .text-muted {
@@ -236,4 +276,24 @@
 .passport-submit-btn:focus {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
+}
+
+/* Additional dark mode fixes for form elements */
+[data-bs-theme="dark"] .form-check-input {
+  background-color: var(--bs-body-bg, #212529) !important;
+  border-color: var(--bs-border-color, #495057) !important;
+}
+
+[data-bs-theme="dark"] .form-check-input:checked {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+[data-bs-theme="dark"] .form-check-label {
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+/* Dark mode text muted styling */
+[data-bs-theme="dark"] .text-muted {
+  color: var(--bs-secondary, #6c757d) !important;
 }

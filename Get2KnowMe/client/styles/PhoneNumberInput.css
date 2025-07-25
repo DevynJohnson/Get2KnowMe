@@ -1,90 +1,174 @@
-/* PhoneNumberInput.css - Custom styling for international phone input */
+/* PhoneNumberInput.css - Custom styling for react-phone-number-input */
 
+/* Base phone input styling */
 .phone-input {
   display: flex;
   align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 0;
+  background-color: #fff;
+  transition: all 0.3s ease;
 }
 
-.phone-input .PhoneInputCountry {
-  border: 1px solid var(--border-color);
-  border-radius: 0.375rem 0 0 0.375rem;
-  padding: 0.375rem 0.5rem;
-  background-color: var(--neutral-bg);
-  display: flex;
-  align-items: center;
-  min-width: 4rem;
+.phone-input:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
 }
 
+.phone-input.is-invalid {
+  border-color: #dc3545;
+}
+
+.phone-input.is-invalid:focus-within {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Country select dropdown styling */
 .phone-input .PhoneInputCountrySelect {
   border: none;
-  background: none;
+  background: transparent;
+  padding: 0.75rem 0.5rem;
   font-size: 1rem;
+  color: inherit;
   cursor: pointer;
-  padding: 0;
-  margin: 0;
-  outline: none;
 }
 
 .phone-input .PhoneInputCountrySelect:focus {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: none;
 }
 
+/* Number input styling */
+.phone-input .PhoneInputInput {
+  border: none;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background: transparent;
+  flex: 1;
+  color: inherit;
+}
+
+.phone-input .PhoneInputInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Country flag styling */
 .phone-input .PhoneInputCountryIcon {
   margin-right: 0.5rem;
-  width: 1.25rem;
-  height: auto;
 }
 
-.phone-input .PhoneInputInput {
-  border-left: none !important;
-  border-radius: 0 0.375rem 0.375rem 0 !important;
-  flex: 1;
+/* Light mode specific styles */
+[data-bs-theme="light"] .phone-input {
+  background-color: #fff;
+  border-color: #ced4da;
+  color: #495057;
 }
 
-.phone-input.is-invalid .PhoneInputCountry {
-  border-color: var(--danger-color, #dc3545);
+[data-bs-theme="light"] .phone-input .PhoneInputCountrySelect {
+  color: #495057;
 }
 
-.phone-input.is-invalid .PhoneInputInput {
-  border-color: var(--danger-color, #dc3545);
+[data-bs-theme="light"] .phone-input .PhoneInputInput {
+  color: #495057;
 }
 
-/* Focus state */
-.phone-input:focus-within .PhoneInputCountry {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
+/* Dark mode specific styles */
+[data-bs-theme="dark"] .phone-input {
+  background-color: var(--bs-body-bg, #212529) !important;
+  border-color: var(--bs-border-color, #495057) !important;
+  color: var(--bs-body-color, #ffffff) !important;
 }
 
-.phone-input:focus-within .PhoneInputInput {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
+[data-bs-theme="dark"] .phone-input .PhoneInputCountrySelect {
+  background-color: var(--bs-body-bg, #212529) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+[data-bs-theme="dark"] .phone-input .PhoneInputInput {
+  background-color: transparent !important;
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+[data-bs-theme="dark"] .phone-input .PhoneInputInput::placeholder {
+  color: var(--bs-secondary-color, #6c757d) !important;
+}
+
+/* Critical: Fix the dropdown menu itself in dark mode */
+[data-bs-theme="dark"] .PhoneInputCountrySelect__option {
+  background-color: var(--bs-body-bg, #212529) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+[data-bs-theme="dark"] .PhoneInputCountrySelect__option:hover,
+[data-bs-theme="dark"] .PhoneInputCountrySelect__option:focus {
+  background-color: var(--bs-secondary-bg, #343a40) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+[data-bs-theme="dark"] .PhoneInputCountrySelect__option--selected {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+/* Fix the dropdown container in dark mode */
+[data-bs-theme="dark"] .PhoneInputCountrySelectArrow {
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+/* If the library uses a different class structure, these are alternatives */
+[data-bs-theme="dark"] select.PhoneInputCountrySelect {
+  background-color: var(--bs-body-bg, #212529) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+  border-color: var(--bs-border-color, #495057) !important;
+}
+
+[data-bs-theme="dark"] select.PhoneInputCountrySelect option {
+  background-color: var(--bs-body-bg, #212529) !important;
+  color: var(--bs-body-color, #ffffff) !important;
+}
+
+/* Focus states for dark mode */
+[data-bs-theme="dark"] .phone-input:focus-within {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent) !important;
+}
+
+/* Ensure the country select dropdown arrow is visible */
+[data-bs-theme="dark"] .phone-input .PhoneInputCountrySelect {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+  padding-right: 2.25rem !important;
+}
+
+[data-bs-theme="light"] .phone-input .PhoneInputCountrySelect {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+  padding-right: 2.25rem !important;
 }
 
 /* Responsive adjustments */
-@media (max-width: 576px) {
-  .phone-input .PhoneInputCountry {
-    min-width: 3.5rem;
-    padding: 0.375rem 0.25rem;
-  }
-  
-  .phone-input .PhoneInputCountryIcon {
-    margin-right: 0.25rem;
-    width: 1rem;
+@media (max-width: 768px) {
+  .phone-input .PhoneInputCountrySelect,
+  .phone-input .PhoneInputInput {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.875rem 0.75rem;
   }
 }
 
 /* Accessibility improvements */
 .phone-input .PhoneInputCountrySelect:focus {
   outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
+  outline-offset: -2px;
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .phone-input .PhoneInputCountry {
-    background-color: var(--neutral-bg);
-    border-color: var(--border-color);
-    color: var(--text-color);
-  }
+.phone-input .PhoneInputInput:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
 }
