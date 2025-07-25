@@ -1,0 +1,51 @@
+/* Custom styles for footer - most styling handled by Bootstrap classes */
+
+.footer-title {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.footer-link {
+  color: #6c757d;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #495057; /* Darker shade for hover */
+  text-decoration: underline !important;
+}
+
+.footer-logo {
+  height: 90px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-title {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.footer-link {
+  color: #6c757d; /* Bootstrap's text-muted color */
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #495057; /* Darker shade for hover */
+  text-decoration: underline !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer-logo {
+    height: 50px;
+  }
+  
+  .row > .col-md-6:first-child {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}

@@ -1,0 +1,182 @@
+/* Style for follow request card */
+.follow-request-card {
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.social-dashboard-search-input {
+  display: block;
+  width: 20rem;
+  min-width: 0;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  margin: 1rem auto;
+  text-align: center;
+  box-sizing: border-box;
+}
+.social-dashboard-card.find-people {
+  max-width: 900px;
+  min-height: 100px;
+}
+/* Center the search bar row horizontally */
+.search-bar-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search-divider {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.social-dashboard-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  margin: 1rem;
+  text-align: center;
+}
+
+/* Button style for both Search and Scan QR buttons in SocialDashboard */
+.social-dashboard-action-btn {
+  background: #fff;
+  color: var(--primary-color, #4f8cff);
+  border: 2px solid var(--primary-color, #4f8cff);
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.social-dashboard-action-btn:hover,
+.social-dashboard-action-btn:focus {
+  background: var(--primary-color, #4f8cff);
+  color: #fff;
+  border: 2px solid var(--primary-color, #4f8cff);
+}
+
+/* Match input and select styles to CreatePassport.css */
+.social-dashboard-card .form-label {
+  font-weight: 500;
+  color: var(--text-color, #495057);
+  margin-bottom: 0.5rem;
+}
+
+.social-dashboard-card .form-control,
+.social-dashboard-card .form-select {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.social-dashboard-card .form-control:focus,
+.social-dashboard-card .form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
+}
+
+.social-dashboard-card .form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.social-dashboard-card .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 25%, transparent);
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+.social-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "find find find"
+    "requests notifications following";
+  gap: 2rem;
+  justify-items: center;
+  align-items: flex-start;
+  margin-top: 2.5rem;
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
+.social-dashboard-card.find-people {
+  grid-area: find;
+}
+.social-dashboard-card.requests {
+  grid-area: requests;
+}
+.social-dashboard-card.notifications {
+  grid-area: notifications;
+}
+.social-dashboard-card.following {
+  grid-area: following;
+}
+
+.social-dashboard-card {
+  width: 100%;
+  max-width: 420px;
+  min-width: 280px;
+  min-height: 260px;
+  background: var(--primary-color, #4f8cff);
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeInUp 0.6s ease-out;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  color: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center card titles and add text shadow for depth */
+.social-dashboard-card h2, h4 {
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.25), 0 1px 0 #000;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1100px) {
+  .social-dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "find"
+      "requests"
+      "notifications"
+      "following";
+  }
+}
+
+@media (max-width: 700px) {
+  .social-dashboard-grid {
+    grid-template-columns: 1fr;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  .social-dashboard-card {
+    max-width: 100vw;
+    border-radius: 0.5rem;
+    padding: 1.25rem 0.5rem;
+  }
+}

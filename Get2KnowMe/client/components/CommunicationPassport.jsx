@@ -8,7 +8,7 @@ import {
   Button
 } from "react-bootstrap";
 import QRCodeGenerator from "./QRCodeGenerator.jsx";
-import get2knowmeLogo from "/get2knowme_logo_svg.svg";
+import get2knowmeLogo from "/get2knowme_logo_png.png";
 import { formatPhoneForDisplay, createPhoneLink } from "../utils/phoneUtils.js";
 import "../styles/ViewPassport.css";
 

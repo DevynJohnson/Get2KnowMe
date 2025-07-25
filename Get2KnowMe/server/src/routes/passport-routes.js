@@ -4,7 +4,8 @@ import { validatePassportData } from '../middleware/passportValidator.js';
 import { normalizePhoneNumber } from '../utils/phoneNormalization.js';
 import User from '../models/User.js';
 import { generateFriendlyPasscode, validatePasscode } from '../utils/passcodeGenerator.js';
-import authenticateTokenMiddleware from '../middleware/authenticateTokenMiddleware.js';
+import { authenticateToken } from '../utils/auth.js';
+import { passportUpdateMiddleware } from '../middleware/passportTracking.js';
 
 const router = express.Router();
 
@@ -20,7 +21,8 @@ router.get('/generate-passcode', (req, res) => {
 });
 
 // POST /api/passport/create - Create or update communication passport (protected route)
-router.post('/create', authenticateTokenMiddleware, validatePassportData, async (req, res) => {
+// Added passportUpdateMiddleware to track changes and notify followers
+router.post('/create', authenticateToken, passportUpdateMiddleware, validatePassportData, async (req, res) => {
   try {
     const userId = req.user._id; // Assuming authenticateTokenMiddleware sets req.user
 
@@ -66,6 +68,38 @@ router.post('/create', authenticateTokenMiddleware, validatePassportData, async 
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // Notify all followers of passport update
+    try {
+      const userWithFollowers = await User.findById(userId).select('followers username communicationPassport.profilePasscode');
+      const passcode = updatedUser.communicationPassport?.profilePasscode;
+      console.log('[Passport Update] Notifying followers:', {
+        userId,
+        username: updatedUser.username,
+        passcode,
+        followers: userWithFollowers?.followers?.length
+      });
+      if (userWithFollowers && userWithFollowers.followers && userWithFollowers.followers.length > 0 && passcode) {
+        const Notification = (await import('../models/Notification.js')).default;
+        const notifications = userWithFollowers.followers.map(followerObj => ({
+          recipient: followerObj.user,
+          sender: userId,
+          type: 'passport_update',
+          title: 'Communication Passport Updated',
+          message: `${updatedUser.username} has updated their Communication Passport.`,
+          data: { passcode },
+          createdAt: new Date()
+        }));
+        console.log('[Passport Update] Creating notifications:', notifications);
+        await Notification.insertMany(notifications);
+        console.log('[Passport Update] Notifications inserted successfully');
+      } else {
+        console.warn('[Passport Update] No followers to notify or missing passcode.');
+      }
+    } catch (notifyErr) {
+      console.error('Error sending passport update notifications:', notifyErr);
+      // Don't block user update on notification failure
+    }
+
     return res.json({
       message: 'Communication passport saved successfully',
       passport: updatedUser.communicationPassport
@@ -78,7 +112,7 @@ router.post('/create', authenticateTokenMiddleware, validatePassportData, async 
 });
 
 // GET /api/passport/my-passport - Get current user's communication passport (protected route)
-router.get('/my-passport', authenticateTokenMiddleware, async (req, res) => {
+router.get('/my-passport', authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
     const foundUser = await User.findById(userId);
@@ -145,7 +179,7 @@ router.get('/public/:passcode', async (req, res) => {
 });
 
 // DELETE /api/passport/delete - Delete communication passport (protected route)
-router.delete('/delete', authenticateTokenMiddleware, async (req, res) => {
+router.delete('/delete', authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
     const updatedUser = await User.findByIdAndUpdate(
