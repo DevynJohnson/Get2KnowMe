@@ -5,6 +5,17 @@
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
+/* Custom switch color for Bootstrap switches in settings */
+.form-switch .form-check-input:checked {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* For better contrast, also update the switch handle (thumb) if needed */
+.form-switch .form-check-input:checked::before {
+  background-color: #fff;
+}
+
 /* Gradient header for section cards */
 .gradient-header {
   background: var(--gradient-bg) !important;

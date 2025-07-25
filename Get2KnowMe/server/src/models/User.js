@@ -148,7 +148,6 @@ const userSchema = new Schema({
   // Privacy settings for social features (moved to root)
   privacySettings: {
     allowFollowRequests: { type: Boolean, default: true },
-    publicProfile: { type: Boolean, default: false },
     showInSearch: { type: Boolean, default: true }
   },
   // Social network features

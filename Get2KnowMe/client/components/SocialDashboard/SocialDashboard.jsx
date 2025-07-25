@@ -542,18 +542,6 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
     }
   };
 
-  const getNotificationIcon = (type) => {
-    switch (type) {
-      case 'follow_request':
-        return <FontAwesomeIcon icon={faUserPlus} className="h-5 w-5 text-blue-500" />;
-      case 'follow_accepted':
-        return <FontAwesomeIcon icon={faUserCheck} className="h-5 w-5 text-green-500" />;
-      case 'passport_update':
-        return <FontAwesomeIcon icon={faBell} className="h-5 w-5 text-purple-500" />;
-      default:
-        return <FontAwesomeIcon icon={faBell} className="h-5 w-5 text-gray-500" />;
-    }
-  };
 
   if (loading) {
     return <div className="text-center py-4">Loading notifications...</div>;
