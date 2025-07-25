@@ -145,6 +145,33 @@ const userSchema = new Schema({
     userAgent: { type: String },
   },
   communicationPassport: communicationPassportSchema,
+  // Privacy settings for social features (moved to root)
+  privacySettings: {
+    allowFollowRequests: { type: Boolean, default: true },
+    showInSearch: { type: Boolean, default: true }
+  },
+  // Social network features
+  followers: [{
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    followedAt: { type: Date, default: Date.now }
+  }],
+  following: [{
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    followedAt: { type: Date, default: Date.now }
+  }],
+  pendingFollowRequests: [{
+    from: { type: Schema.Types.ObjectId, ref: 'User' },
+    requestedAt: { type: Date, default: Date.now }
+  }],
+  sentFollowRequests: [{
+    to: { type: Schema.Types.ObjectId, ref: 'User' },
+    requestedAt: { type: Date, default: Date.now }
+  }],
+  // NEW: Hidden notifications feature
+  hiddenNotifications: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
   createdAt: { type: Date, default: Date.now },
@@ -178,6 +205,127 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+// Social network methods
+userSchema.methods.sendFollowRequest = async function (targetUserId) {
+  if (this._id.equals(targetUserId)) {
+    throw new Error('Cannot follow yourself');
+  }
+
+  const targetUser = await this.constructor.findById(targetUserId);
+  if (!targetUser) {
+    throw new Error('User not found');
+  }
+
+  // Check if already following
+  const alreadyFollowing = this.following.some(f => f.user.equals(targetUserId));
+  if (alreadyFollowing) {
+    throw new Error('Already following this user');
+  }
+
+  // Check if request already sent
+  const requestAlreadySent = this.sentFollowRequests.some(r => r.to.equals(targetUserId));
+  if (requestAlreadySent) {
+    throw new Error('Follow request already sent');
+  }
+
+  // Add to pending requests
+  this.sentFollowRequests.push({ to: targetUserId });
+  targetUser.pendingFollowRequests.push({ from: this._id });
+
+  await this.save();
+  await targetUser.save();
+
+  return true;
+};
+
+userSchema.methods.acceptFollowRequest = async function (fromUserId) {
+  const requestIndex = this.pendingFollowRequests.findIndex(r => r.from.equals(fromUserId));
+  if (requestIndex === -1) {
+    throw new Error('Follow request not found');
+  }
+
+  const requester = await this.constructor.findById(fromUserId);
+  if (!requester) {
+    throw new Error('Requester not found');
+  }
+
+  // Remove from pending requests
+  this.pendingFollowRequests.splice(requestIndex, 1);
+  const sentRequestIndex = requester.sentFollowRequests.findIndex(r => r.to.equals(this._id));
+  if (sentRequestIndex !== -1) {
+    requester.sentFollowRequests.splice(sentRequestIndex, 1);
+  }
+
+  // Add to followers/following
+  this.followers.push({ user: fromUserId });
+  requester.following.push({ user: this._id });
+
+  await this.save();
+  await requester.save();
+
+  return true;
+};
+
+userSchema.methods.rejectFollowRequest = async function (fromUserId) {
+  const requestIndex = this.pendingFollowRequests.findIndex(r => r.from.equals(fromUserId));
+  if (requestIndex === -1) {
+    throw new Error('Follow request not found');
+  }
+
+  const requester = await this.constructor.findById(fromUserId);
+  if (requester) {
+    const sentRequestIndex = requester.sentFollowRequests.findIndex(r => r.to.equals(this._id));
+    if (sentRequestIndex !== -1) {
+      requester.sentFollowRequests.splice(sentRequestIndex, 1);
+      await requester.save();
+    }
+  }
+
+  this.pendingFollowRequests.splice(requestIndex, 1);
+  await this.save();
+
+  return true;
+};
+
+userSchema.methods.unfollowUser = async function (targetUserId) {
+  const followingIndex = this.following.findIndex(f => f.user.equals(targetUserId));
+  if (followingIndex === -1) {
+    throw new Error('Not following this user');
+  }
+
+  const targetUser = await this.constructor.findById(targetUserId);
+  if (targetUser) {
+    const followerIndex = targetUser.followers.findIndex(f => f.user.equals(this._id));
+    if (followerIndex !== -1) {
+      targetUser.followers.splice(followerIndex, 1);
+      await targetUser.save();
+    }
+  }
+
+  this.following.splice(followingIndex, 1);
+  await this.save();
+
+  return true;
+};
+
+// NEW: Hidden notifications methods
+userSchema.methods.hideNotificationsFrom = async function (userId) {
+  if (!this.hiddenNotifications.includes(userId)) {
+    this.hiddenNotifications.push(userId);
+    await this.save();
+  }
+  return true;
+};
+
+userSchema.methods.unhideNotificationsFrom = async function (userId) {
+  const index = this.hiddenNotifications.indexOf(userId);
+  if (index !== -1) {
+    this.hiddenNotifications.splice(index, 1);
+    await this.save();
+  }
+  return true;
+};
+
 userSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: new Date() });
   next();
@@ -187,6 +335,13 @@ userSchema.index(
   { 'communicationPassport.profilePasscode': 1 },
   { unique: true, sparse: true }
 );
+
+// Indexes for social features
+userSchema.index({ 'followers.user': 1 });
+userSchema.index({ 'following.user': 1 });
+userSchema.index({ 'pendingFollowRequests.from': 1 });
+userSchema.index({ hiddenNotifications: 1 }); // NEW: Index for hidden notifications
+userSchema.index({ username: 'text', 'communicationPassport.profilePasscode': 'text' });
 
 const User = model("User", userSchema);
 

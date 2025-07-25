@@ -10,9 +10,17 @@ const ProfileSettings = () => {
     email: '',
     currentPassword: ''
   });
+  
+  // Privacy settings state
+  const [privacySettings, setPrivacySettings] = useState({
+    allowFollowRequests: true,
+    showInSearch: true
+  });
+  
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState('');
   const [loading, setLoading] = useState(false);
+  const [privacyLoading, setPrivacyLoading] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', variant: 'success' });
 
   useEffect(() => {
@@ -22,6 +30,14 @@ const ProfileSettings = () => {
         email: user.email || '',
         currentPassword: ''
       });
+      
+      // Set privacy settings from user data
+      if (user.privacySettings) {
+        setPrivacySettings({
+          allowFollowRequests: user.privacySettings.allowFollowRequests ?? true,
+          showInSearch: user.privacySettings.showInSearch ?? true
+        });
+      }
     }
   }, [user]);
 
@@ -30,6 +46,14 @@ const ProfileSettings = () => {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handlePrivacyChange = (e) => {
+    const { name, checked } = e.target;
+    setPrivacySettings(prev => ({
+      ...prev,
+      [name]: checked
     }));
   };
 
@@ -86,6 +110,41 @@ const ProfileSettings = () => {
     }
   };
 
+  // Privacy settings update handler
+  const updatePrivacySettings = async () => {
+    setPrivacyLoading(true);
+    try {
+      const response = await fetch('/api/users/update-privacy', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ privacySettings })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Privacy settings update failed');
+      }
+
+      showAlert('Privacy settings updated successfully!');
+      
+    } catch (error) {
+      showAlert(error.message, 'danger');
+      // Revert changes on error
+      if (user?.privacySettings) {
+        setPrivacySettings({
+          allowFollowRequests: user.privacySettings.allowFollowRequests ?? true,
+          showInSearch: user.privacySettings.showInSearch ?? true
+        });
+      }
+    } finally {
+      setPrivacyLoading(false);
+    }
+  };
+
   // Add export handler
   async function handleExport() {
     if (!formData.currentPassword) {
@@ -124,6 +183,12 @@ const ProfileSettings = () => {
       setLoading(false);
     }
   };
+
+  // Check if privacy settings have changed
+  const privacySettingsChanged = user?.privacySettings ? (
+    privacySettings.allowFollowRequests !== (user.privacySettings.allowFollowRequests ?? true) ||
+    privacySettings.showInSearch !== (user.privacySettings.showInSearch ?? true)
+  ) : false;
 
   return (
     <>
@@ -195,6 +260,73 @@ const ProfileSettings = () => {
                     Your email is used for login and account recovery.
                   </Form.Text>
                 </Form.Group>
+              </div>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+
+      {/* Privacy Settings Section */}
+      <Card className="mb-4">
+        <Card.Header>
+          <h5 className="mb-0">
+            <i className="fas fa-shield-alt me-2"></i>
+            Privacy Settings
+          </h5>
+        </Card.Header>
+        <Card.Body>
+          <Form>
+            <div className="row">
+              <div className="col-12">
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="switch"
+                    id="allowFollowRequests"
+                    name="allowFollowRequests"
+                    label="Allow follow requests"
+                    checked={privacySettings.allowFollowRequests}
+                    onChange={handlePrivacyChange}
+                  />
+                  <Form.Text className="text-muted d-block mt-1">
+                    When enabled, other users can send you follow requests to connect with you.
+                  </Form.Text>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="switch"
+                    id="showInSearch"
+                    name="showInSearch"
+                    label="Show in search results"
+                    checked={privacySettings.showInSearch}
+                    onChange={handlePrivacyChange}
+                  />
+                  <Form.Text className="text-muted d-block mt-1">
+                    When enabled, other users will be able to find your profile when searching for users.
+                  </Form.Text>
+                </Form.Group>
+
+                {privacySettingsChanged && (
+                  <div className="d-flex justify-content-end">
+                    <Button
+                      variant="primary"
+                      onClick={updatePrivacySettings}
+                      disabled={privacyLoading}
+                    >
+                      {privacyLoading ? (
+                        <>
+                          <Spinner animation="border" size="sm" className="me-2" />
+                          Updating...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-save me-2"></i>
+                          Save Privacy Settings
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </Form>

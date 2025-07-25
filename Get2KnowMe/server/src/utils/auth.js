@@ -2,31 +2,24 @@ import jwt from 'jsonwebtoken';
 
 const secret = process.env.JWT_SECRET_KEY
 
-export const authenticateToken = (req) => {
-    // Handle both { req } and direct req parameter
-    const requestObj = req.req || req;
+export const authenticateToken = (req, res, next) => {
     
-    if (!requestObj) {
-        console.log('No request object provided');
-        return { user: null };
-    }
-    
-    let token = requestObj.body?.token || requestObj.query?.token || requestObj.headers?.authorization;
-    if (requestObj.headers?.authorization) {
+    let token = req.body?.token || req.query?.token || req.headers?.authorization;
+    if (req.headers?.authorization) {
         token = token.split(' ').pop().trim();
     }
     if (!token) {
-        return { user: null };  
+        return res.status(401).json({ error: 'No token provided' });
     }
 
     try {
         const decoded = jwt.verify(token, secret || '');
-        // Handle token structure from user-routes.js (id, email, username)
-        return { user: {_id: decoded.id, email: decoded.email, username: decoded.username } };
+        req.user = { _id: decoded.id, email: decoded.email, username: decoded.username };
+        next();
     }
     catch (error) {
         console.log('Token verification error:', error.message);
-        return { user: null };
+        return res.status(401).json({ error: 'Invalid or expired token' });
     }
 };
 

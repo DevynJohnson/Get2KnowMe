@@ -21,15 +21,6 @@ const signToken = (user) => {
   );
 };
 
-// Middleware to authenticate and extract user from token
-const authenticate = (req, res, next) => {
-  const authResult = authenticateToken(req);
-  if (!authResult.user) {
-    return res.status(401).json({ message: 'Authentication required' });
-  }
-  req.user = authResult.user;
-  next();
-};
 // GET Email confirmation (activate pending user)
 router.get('/confirm-email', async (req, res) => {
   const { token } = req.query;
@@ -137,7 +128,7 @@ router.post('/signup', async (req, res) => {
 
     // Normalize
     const normalizedEmail = email.trim().toLowerCase();
-    const normalizedUsername = username.trim().toLowerCase();
+    const normalizedUsername = username.trim();
 
     // Check for existing user or pending confirmation
     const existingUser = await User.findOne({ $or: [ { email: normalizedEmail }, { username: normalizedUsername } ] });
@@ -196,7 +187,7 @@ router.post('/signup', async (req, res) => {
 });
 
 // PUT Update username route
-router.put('/update-username', authenticate, async (req, res) => {
+router.put('/update-username', authenticateToken, async (req, res) => {
   try {
     const { currentPassword, username } = req.body;
     
@@ -240,7 +231,7 @@ router.put('/update-username', authenticate, async (req, res) => {
 });
 
 // PUT Update email route
-router.put('/update-email', authenticate, async (req, res) => {
+router.put('/update-email', authenticateToken, async (req, res) => {
   try {
     const { currentPassword, email } = req.body;
     
@@ -284,7 +275,7 @@ router.put('/update-email', authenticate, async (req, res) => {
 });
 
 // PUT Change password route
-router.put('/change-password', authenticate, async (req, res) => {
+router.put('/change-password', authenticateToken, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     
@@ -400,7 +391,7 @@ router.post('/reset-password', async (req, res) => {
 });
 
 // DELETE Account deletion route
-router.delete('/delete-account', authenticate, async (req, res) => {
+router.delete('/delete-account', authenticateToken, async (req, res) => {
   try {
     const { password, confirmText } = req.body;
     
@@ -430,7 +421,7 @@ router.delete('/delete-account', authenticate, async (req, res) => {
 });
 
 // POST Export user data (GDPR)
-router.post('/export-data', authenticate, async (req, res) => {
+router.post('/export-data', authenticateToken, async (req, res) => {
   try {
     const { password } = req.body;
     if (!password) {

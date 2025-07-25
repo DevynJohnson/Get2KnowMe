@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url';
 import userRoutes from './src/routes/user-routes.js';
 import passportRoutes from './src/routes/passport-routes.js';
 import storiesRoutes from './src/routes/stories.js';
+import followRoutes from './src/routes/follow-routes.js';
+import notificationRoutes from './src/routes/notification-routes.js';
 
 // Define __filename and __dirname variables for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -29,13 +31,20 @@ const corsOptions = {
           'http://localhost:5173'
         ],
   credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  next();
+});
 
 // API routes
 app.use('/api/users', userRoutes);
 app.use('/api/passport', passportRoutes);
 app.use('/api/stories', storiesRoutes);
+app.use('/api/follow', followRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
