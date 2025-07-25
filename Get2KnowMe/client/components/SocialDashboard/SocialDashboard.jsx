@@ -12,12 +12,10 @@ import {
 import { Card } from 'react-bootstrap';
 import '../../styles/SocialDashboard.css';
 
-
 // Followed Users Component
-function FollowedUsers() {
+function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNotificationsChange }) {
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [hiddenNotifications, setHiddenNotifications] = useState([]); // user IDs for which notifications are hidden
 
   useEffect(() => {
     fetchFollowing();
@@ -72,13 +70,38 @@ function FollowedUsers() {
     }
   };
 
-  // Toggle hide notifications for a user
-  const handleToggleHideNotifications = (userId) => {
-    setHiddenNotifications(prev =>
-      prev.includes(userId)
-        ? prev.filter(id => id !== userId)
-        : [...prev, userId]
-    );
+  // Toggle hide notifications for a user - now persists to backend
+  const handleToggleHideNotifications = async (userId) => {
+    const isCurrentlyHidden = hiddenNotifications.includes(userId);
+    const action = isCurrentlyHidden ? 'unhide' : 'hide';
+    
+    try {
+      const response = await fetch(`/api/notifications/${action}/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        // Update local state
+        setHiddenNotifications(prev =>
+          isCurrentlyHidden
+            ? prev.filter(id => id !== userId)
+            : [...prev, userId]
+        );
+        
+        // Trigger a refresh of the notifications to update the count
+        if (onHiddenNotificationsChange) {
+          onHiddenNotificationsChange();
+        }
+      } else {
+        console.error('Failed to update notification preferences');
+      }
+    } catch (error) {
+      console.error('Toggle hide notifications error:', error);
+    }
   };
 
   return (
@@ -118,7 +141,7 @@ function FollowedUsers() {
   );
 }
 
-// User Search Component
+// User Search Component (unchanged)
 const UserSearch = ({ onFollowUser }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -147,6 +170,7 @@ const UserSearch = ({ onFollowUser }) => {
         setLoading(false);
     }
 };
+
 useEffect(() => {
     const delayedSearch = setTimeout(() => {
       searchUsers(searchQuery);
@@ -330,7 +354,7 @@ return {
   );
 };
 
-// Follow Requests Component
+// Follow Requests Component (unchanged)
 const FollowRequests = ({ onRequestHandled }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -419,38 +443,15 @@ const FollowRequests = ({ onRequestHandled }) => {
   );
 };
 
-// Notifications Component
-const NotificationsList = () => {
-  // Dismiss notification handler
-  const handleDismiss = async (notificationId) => {
-    try {
-      const response = await fetch(`/api/notifications/${notificationId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
-      });
-      if (response.ok) {
-        const updatedNotifications = notifications.filter(n => n._id !== notificationId);
-        setNotifications(updatedNotifications);
-        setUnreadCount(updatedNotifications.filter(n => !n.read).length);
-      }
-    } catch (error) {
-      console.error('Dismiss notification error:', error);
-    }
-  };
-
-  // Get hidden notification user IDs from FollowedUsers (lift state up if needed)
-  // For now, check localStorage for demo (not persistent across reloads)
-  const [hiddenUserIds, setHiddenUserIds] = useState([]); // Placeholder for integration
-
+// Notifications Component - now expects backend to handle filtering
+const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [refreshTrigger]);
 
   const fetchNotifications = async () => {
     try {
@@ -461,9 +462,15 @@ const NotificationsList = () => {
       });
       if (response.ok) {
         const data = await response.json();
+        // Backend now handles filtering hidden notifications
         setNotifications(data.notifications);
         setUnreadCount(data.unreadCount);
-        // Debug: log notifications to verify passcode presence
+        
+        // Notify parent component of count change
+        if (onNotificationCountChange) {
+          onNotificationCountChange(data.unreadCount);
+        }
+        
         console.log('[Notifications Debug] Raw notifications:', data.notifications);
         data.notifications.forEach(n => {
           if (n.type === 'passport_update') {
@@ -483,6 +490,31 @@ const NotificationsList = () => {
     }
   };
 
+  // Dismiss notification handler
+  const handleDismiss = async (notificationId) => {
+    try {
+      const response = await fetch(`/api/notifications/${notificationId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+        }
+      });
+      if (response.ok) {
+        const updatedNotifications = notifications.filter(n => n._id !== notificationId);
+        setNotifications(updatedNotifications);
+        const newUnreadCount = updatedNotifications.filter(n => !n.read).length;
+        setUnreadCount(newUnreadCount);
+        
+        // Notify parent component of count change
+        if (onNotificationCountChange) {
+          onNotificationCountChange(newUnreadCount);
+        }
+      }
+    } catch (error) {
+      console.error('Dismiss notification error:', error);
+    }
+  };
+
   const markAsRead = async (notificationId) => {
     try {
       const response = await fetch(`/api/notifications/${notificationId}/read`, {
@@ -497,7 +529,13 @@ const NotificationsList = () => {
             ? { ...notif, read: true }
             : notif
         ));
-        setUnreadCount(Math.max(0, unreadCount - 1));
+        const newUnreadCount = Math.max(0, unreadCount - 1);
+        setUnreadCount(newUnreadCount);
+        
+        // Notify parent component of count change
+        if (onNotificationCountChange) {
+          onNotificationCountChange(newUnreadCount);
+        }
       }
     } catch (error) {
       console.error('Mark as read error:', error);
@@ -521,12 +559,6 @@ const NotificationsList = () => {
     return <div className="text-center py-4">Loading notifications...</div>;
   }
 
-  // Filter notifications if sender is hidden
-  const visibleNotifications = notifications.filter(n => {
-    if (!n.sender || !n.sender._id) return true;
-    return !hiddenUserIds.includes(n.sender._id);
-  });
-
   return (
     <div className="max-w-2xl mx-auto">
       {unreadCount > 0 && (
@@ -536,14 +568,14 @@ const NotificationsList = () => {
           </span>
         </div>
       )}
-      {visibleNotifications.length === 0 ? (
+      {notifications.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
           <FontAwesomeIcon icon={faBell} className="h-12 w-12 mx-auto mb-2 text-gray-300" />
           <p>No notifications yet</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {visibleNotifications.map((notification) => {
+          {notifications.map((notification) => {
             let message = '';
             const username = notification.data && notification.data.username ? notification.data.username : notification.sender.username;
             if (notification.type === 'follow_request') {
@@ -609,14 +641,52 @@ const NotificationsList = () => {
   );
 };
 
-
-// Main Social Dashboard Component
+// Main Social Dashboard Component - now fetches hidden notifications from backend
 const SocialDashboard = () => {
   const [refreshKey, setRefreshKey] = useState(0);
+  const [hiddenNotifications, setHiddenNotifications] = useState([]); // user IDs for which notifications are hidden
+  const [loading, setLoading] = useState(true);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const handleRefresh = () => {
     setRefreshKey(prev => prev + 1);
   };
+
+  const handleHiddenNotificationsChange = () => {
+    // Force refresh of notifications to get updated count
+    setRefreshKey(prev => prev + 1);
+  };
+
+  const handleNotificationCountChange = (newCount) => {
+    setNotificationCount(newCount);
+  };
+
+  // Fetch hidden notifications from backend on component mount
+  useEffect(() => {
+    const fetchHiddenNotifications = async () => {
+      try {
+        const response = await fetch('/api/notifications/hidden', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setHiddenNotifications(data.hiddenUserIds || []);
+        }
+      } catch (error) {
+        console.error('Fetch hidden notifications error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHiddenNotifications();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-4">Loading...</div>;
+  }
 
   return (
     <div className="social-dashboard-grid p-6">
@@ -629,12 +699,27 @@ const SocialDashboard = () => {
         <FollowRequests key={refreshKey} onRequestHandled={handleRefresh} />
       </div>
       <div className="social-dashboard-card notifications">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><FontAwesomeIcon icon={faBell} /> Notifications</h2>
-        <NotificationsList key={refreshKey} />
+        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+          <FontAwesomeIcon icon={faBell} /> 
+          Notifications
+          {notificationCount > 0 && (
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-2">
+              {notificationCount}
+            </span>
+          )}
+        </h2>
+        <NotificationsList 
+          refreshTrigger={refreshKey} 
+          onNotificationCountChange={handleNotificationCountChange}
+        />
       </div>
       <div className="social-dashboard-card following">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><FontAwesomeIcon icon={faUsers} /> Following</h2>
-        <FollowedUsers />
+        <FollowedUsers 
+          hiddenNotifications={hiddenNotifications} 
+          setHiddenNotifications={setHiddenNotifications} 
+          onHiddenNotificationsChange={handleHiddenNotificationsChange}
+        />
       </div>
     </div>
   );

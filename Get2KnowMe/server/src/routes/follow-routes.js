@@ -138,8 +138,8 @@ router.post('/reject/:fromUserId', authenticateToken, async (req, res) => {
   }
 });
 
-// Unfollow user
-router.delete('/unfollow/:userId', authenticateToken, async (req, res) => {
+// Unfollow user - FIXED: Changed from DELETE to POST to match frontend
+router.post('/unfollow/:userId', authenticateToken, async (req, res) => {
   try {
     const targetUserId = req.params.userId;
     const currentUser = await User.findById(req.user._id);

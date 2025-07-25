@@ -1,17 +1,25 @@
 import express from 'express';
 import Notification from '../models/Notification.js';
+import User from '../models/User.js';
 import { authenticateToken } from '../utils/auth.js'; // Assuming you have auth middleware
 
 const router = express.Router();
 
-// Get user's notifications
+// Get user's notifications (now filters out hidden users)
 router.get('/', authenticateToken, async (req, res) => {
   try {
     const { page = 1, limit = 20, type, unreadOnly = false } = req.query;
     const skip = (page - 1) * limit;
 
-    // Build query
-    const query = { recipient: req.user._id };
+    // Get user's hidden notifications list
+    const currentUser = await User.findById(req.user._id).select('hiddenNotifications');
+    const hiddenUserIds = currentUser.hiddenNotifications || [];
+
+    // Build query - exclude notifications from hidden users
+    const query = { 
+      recipient: req.user._id,
+      sender: { $nin: hiddenUserIds } // Exclude hidden users
+    };
     
     if (type && ['follow_request', 'follow_accepted', 'passport_update'].includes(type)) {
       query.type = type;
@@ -28,9 +36,12 @@ router.get('/', authenticateToken, async (req, res) => {
       .limit(parseInt(limit));
 
     const totalCount = await Notification.countDocuments(query);
+    
+    // Unread count also excludes hidden users
     const unreadCount = await Notification.countDocuments({ 
       recipient: req.user._id, 
-      read: false 
+      read: false,
+      sender: { $nin: hiddenUserIds }
     });
 
     const formattedNotifications = notifications.map(notification => ({
@@ -68,6 +79,49 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
+// Get user's hidden notification preferences
+router.get('/hidden', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('hiddenNotifications');
+    res.json({ 
+      hiddenUserIds: user.hiddenNotifications.map(id => id.toString()) 
+    });
+  } catch (error) {
+    console.error('Get hidden notifications error:', error);
+    res.status(500).json({ error: 'Failed to get hidden notifications' });
+  }
+});
+
+// Hide notifications from a specific user
+router.post('/hide/:userId', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const currentUser = await User.findById(req.user._id);
+    
+    await currentUser.hideNotificationsFrom(userId);
+    
+    res.json({ message: 'Notifications hidden successfully' });
+  } catch (error) {
+    console.error('Hide notifications error:', error);
+    res.status(500).json({ error: 'Failed to hide notifications' });
+  }
+});
+
+// Unhide notifications from a specific user
+router.post('/unhide/:userId', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const currentUser = await User.findById(req.user._id);
+    
+    await currentUser.unhideNotificationsFrom(userId);
+    
+    res.json({ message: 'Notifications unhidden successfully' });
+  } catch (error) {
+    console.error('Unhide notifications error:', error);
+    res.status(500).json({ error: 'Failed to unhide notifications' });
+  }
+});
+
 // Mark notification as read
 router.patch('/:notificationId/read', authenticateToken, async (req, res) => {
   try {
@@ -89,18 +143,26 @@ router.patch('/:notificationId/read', authenticateToken, async (req, res) => {
   }
 });
 
-// Mark all notifications as read
+// Mark all notifications as read (excludes hidden users)
 router.patch('/mark-all-read', authenticateToken, async (req, res) => {
   try {
+    // Get user's hidden notifications list
+    const currentUser = await User.findById(req.user._id).select('hiddenNotifications');
+    const hiddenUserIds = currentUser.hiddenNotifications || [];
+
     await Notification.updateMany(
-      { recipient: req.user._id, read: false },
+      { 
+        recipient: req.user._id, 
+        read: false,
+        sender: { $nin: hiddenUserIds } // Only mark non-hidden notifications as read
+      },
       { 
         read: true, 
         readAt: new Date() 
       }
     );
 
-    res.json({ message: 'All notifications marked as read' });
+    res.json({ message: 'All visible notifications marked as read' });
   } catch (error) {
     console.error('Mark all notifications read error:', error);
     res.status(500).json({ error: 'Failed to mark all notifications as read' });
@@ -126,11 +188,20 @@ router.delete('/:notificationId', authenticateToken, async (req, res) => {
   }
 });
 
-// Get notification counts by type
+// Get notification counts by type (excludes hidden users)
 router.get('/counts', authenticateToken, async (req, res) => {
   try {
+    // Get user's hidden notifications list
+    const currentUser = await User.findById(req.user._id).select('hiddenNotifications');
+    const hiddenUserIds = currentUser.hiddenNotifications || [];
+
     const counts = await Notification.aggregate([
-      { $match: { recipient: req.user._id } },
+      { 
+        $match: { 
+          recipient: req.user._id,
+          sender: { $nin: hiddenUserIds } // Exclude hidden users
+        } 
+      },
       {
         $group: {
           _id: '$type',
@@ -146,7 +217,8 @@ router.get('/counts', authenticateToken, async (req, res) => {
 
     const totalUnread = await Notification.countDocuments({
       recipient: req.user._id,
-      read: false
+      read: false,
+      sender: { $nin: hiddenUserIds } // Exclude hidden users
     });
 
     const formattedCounts = counts.reduce((acc, count) => {

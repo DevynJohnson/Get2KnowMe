@@ -168,6 +168,11 @@ const userSchema = new Schema({
     to: { type: Schema.Types.ObjectId, ref: 'User' },
     requestedAt: { type: Date, default: Date.now }
   }],
+  // NEW: Hidden notifications feature
+  hiddenNotifications: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
   createdAt: { type: Date, default: Date.now },
@@ -304,6 +309,24 @@ userSchema.methods.unfollowUser = async function (targetUserId) {
   return true;
 };
 
+// NEW: Hidden notifications methods
+userSchema.methods.hideNotificationsFrom = async function (userId) {
+  if (!this.hiddenNotifications.includes(userId)) {
+    this.hiddenNotifications.push(userId);
+    await this.save();
+  }
+  return true;
+};
+
+userSchema.methods.unhideNotificationsFrom = async function (userId) {
+  const index = this.hiddenNotifications.indexOf(userId);
+  if (index !== -1) {
+    this.hiddenNotifications.splice(index, 1);
+    await this.save();
+  }
+  return true;
+};
+
 userSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: new Date() });
   next();
@@ -318,6 +341,7 @@ userSchema.index(
 userSchema.index({ 'followers.user': 1 });
 userSchema.index({ 'following.user': 1 });
 userSchema.index({ 'pendingFollowRequests.from': 1 });
+userSchema.index({ hiddenNotifications: 1 }); // NEW: Index for hidden notifications
 userSchema.index({ username: 'text', 'communicationPassport.profilePasscode': 'text' });
 
 const User = model("User", userSchema);
