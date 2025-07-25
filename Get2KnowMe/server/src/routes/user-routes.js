@@ -83,13 +83,13 @@ router.post('/login', async (req, res) => {
       ? { email: emailOrUsername }
       : { username: emailOrUsername };
     
-    const user = await User.findOne(query);
+      const user = await User.findOne(query);
     if (!user) {
       return res.status(400).json({ 
         message: isEmail ? 'Email not found' : 'Username not found' 
       });
     }
-
+    
     const correctPw = await user.isCorrectPassword(password);
     if (!correctPw) {
       return res.status(400).json({ message: 'Incorrect password' });
@@ -111,8 +111,8 @@ router.post('/signup', async (req, res) => {
 
     if (!email || !username || !password) {
       return res
-        .status(400)
-        .json({ message: 'Email, username, and password are required.' });
+      .status(400)
+      .json({ message: 'Email, username, and password are required.' });
     }
 
     if (
@@ -125,11 +125,11 @@ router.post('/signup', async (req, res) => {
           'You must confirm age eligibility and agree to the Terms and Privacy Policy.',
       });
     }
-
+    
     // Normalize
     const normalizedEmail = email.trim().toLowerCase();
     const normalizedUsername = username.trim();
-
+    
     // Check for existing user or pending confirmation
     const existingUser = await User.findOne({ $or: [ { email: normalizedEmail }, { username: normalizedUsername } ] });
     const existingPending = await PendingConfirmation.findOne({ $or: [ { email: normalizedEmail }, { username: normalizedUsername } ] });
@@ -143,7 +143,7 @@ router.post('/signup', async (req, res) => {
     // Generate secure confirmation token
     const confirmToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
+    
     // Store pending confirmation
     await PendingConfirmation.create({
       email: normalizedEmail,
@@ -153,7 +153,7 @@ router.post('/signup', async (req, res) => {
       confirmToken,
       expiresAt
     });
-
+    
     // Send confirmation email
     const confirmUrl = `https://get2know.me/api/users/confirm-email?token=${confirmToken}`;
     try {
@@ -162,7 +162,7 @@ router.post('/signup', async (req, res) => {
       console.error('Failed to send confirmation email:', emailError);
       // Optionally, you can still return success for security
     }
-
+    
     res.json({ message: 'Registration received. Please check your email to confirm your address.' });
   } catch (error) {
     console.error(error);
@@ -170,12 +170,12 @@ router.post('/signup', async (req, res) => {
       const field = Object.keys(error.keyPattern)[0];
       const message =
         field === 'email'
-          ? 'This email address is already registered'
-          : field === 'username'
+        ? 'This email address is already registered'
+        : field === 'username'
           ? 'This username is already taken'
           : 'There was an error creating your account';
-      return res.status(400).json({ message });
-    }
+          return res.status(400).json({ message });
+        }
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map((err) => err.message);
       return res.status(400).json({ message: messages.join('. ') });
@@ -183,7 +183,7 @@ router.post('/signup', async (req, res) => {
     res
       .status(500)
       .json({ message: 'An error occurred while creating your account' });
-  }
+    }
 });
 
 // PUT Update username route
@@ -200,7 +200,7 @@ router.put('/update-username', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
+    
     const isValidPassword = await user.isCorrectPassword(currentPassword);
     if (!isValidPassword) {
       return res.status(400).json({ message: 'Current password is incorrect' });
@@ -215,10 +215,10 @@ router.put('/update-username', authenticateToken, async (req, res) => {
     // Update username
     user.username = username;
     await user.save();
-
+    
     // Create new token with updated username
     const token = signToken(user);
-
+    
     res.json({ 
       message: 'Username updated successfully',
       token,
@@ -238,13 +238,13 @@ router.put('/update-email', authenticateToken, async (req, res) => {
     if (!currentPassword || !email) {
       return res.status(400).json({ message: 'Current password and new email are required' });
     }
-
+    
     // Find the user and verify password
     const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
+    
     const isValidPassword = await user.isCorrectPassword(currentPassword);
     if (!isValidPassword) {
       return res.status(400).json({ message: 'Current password is incorrect' });
@@ -259,10 +259,10 @@ router.put('/update-email', authenticateToken, async (req, res) => {
     // Update email
     user.email = email;
     await user.save();
-
+    
     // Create new token with updated email
     const token = signToken(user);
-
+    
     res.json({ 
       message: 'Email updated successfully',
       token,
@@ -297,7 +297,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
     // Update password (will be hashed by pre-save middleware)
     user.password = newPassword;
     await user.save();
-
+    
     res.json({ message: 'Password changed successfully' });
   } catch (error) {
     console.error(error);
@@ -323,7 +323,7 @@ router.post('/request-password-reset', async (req, res) => {
       // Don't reveal if email exists or not for security
       return res.json({ message: 'If an account with this email exists, a password reset link has been sent' });
     }
-
+    
     // 1. Generate a secure reset token
     const crypto = await import('crypto');
     const resetToken = crypto.randomBytes(32).toString('hex');
@@ -334,7 +334,7 @@ router.post('/request-password-reset', async (req, res) => {
 
     // 2. Construct reset link (update to your frontend URL)
     const resetLink = `https://get2know.me/reset-password?token=${resetToken}`;
-
+    
     // 3. Send email using Resend
     try {
       const emailResult = await sendPasswordResetEmail(email, resetLink);
@@ -343,12 +343,38 @@ router.post('/request-password-reset', async (req, res) => {
       console.error('Failed to send password reset email:', emailError);
       // Optionally, you can still return success for security
     }
-
+    
     console.log(`Password reset requested for: ${email}`);
     res.json({ message: 'If an account with this email exists, a password reset link has been sent' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while processing password reset request' });
+  }
+});
+
+// PUT Update privacy settings route
+router.put('/update-privacy', authenticateToken, async (req, res) => {
+  try {
+    const { privacySettings } = req.body;
+    if (!privacySettings || typeof privacySettings !== 'object') {
+      return res.status(400).json({ message: 'Missing or invalid privacySettings object.' });
+    }
+    // Find the user
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    // Update privacy settings fields
+    user.privacySettings = {
+      ...user.privacySettings,
+      allowFollowRequests: privacySettings.allowFollowRequests ?? user.privacySettings?.allowFollowRequests ?? true,
+      showInSearch: privacySettings.showInSearch ?? user.privacySettings?.showInSearch ?? true
+    };
+    await user.save();
+    res.json({ message: 'Privacy settings updated successfully', privacySettings: user.privacySettings });
+  } catch (error) {
+    console.error('Error updating privacy settings:', error);
+    res.status(500).json({ message: 'An error occurred while updating privacy settings.' });
   }
 });
 
