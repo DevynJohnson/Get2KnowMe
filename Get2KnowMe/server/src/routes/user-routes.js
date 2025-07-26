@@ -31,9 +31,16 @@ router.get('/confirm-email', async (req, res) => {
       // Double-check for existing user
       const existingUser = await User.findOne({ $or: [ { email: pending.email }, { username: pending.username } ] });
       if (!existingUser) {
-        // Create real user
         await User.create({
           email: pending.email,
+          username: pending.username,
+          password: pending.password, // use password, not passwordHash
+          consent: pending.consent
+        });
+      }
+      await PendingConfirmation.deleteOne({ _id: pending._id });
+      // Always redirect to email confirmed page
+      return res.redirect('https://get2know.me/email-confirmed');
           username: pending.username,
           password: pending.passwordHash,
           consent: pending.consent
@@ -145,7 +152,7 @@ router.post('/signup', async (req, res) => {
     await PendingConfirmation.create({
       email: normalizedEmail,
       username: normalizedUsername,
-      password, // raw password
+      password,
       consent,
       confirmToken,
       expiresAt
@@ -561,7 +568,7 @@ router.get('/consent', async (req, res) => {
     const pending = await PendingUser.findOne({ consentToken: token });
     if (!pending) return res.status(404).send('Consent request not found or already processed.');
     // Create real user
-    const { childEmail, childUsername, passwordHash, parentEmail } = pending;
+    const { childEmail, childUsername, password, parentEmail } = pending;
     // Double-check for existing user
     const existingUser = await User.findOne({ $or: [ { email: childEmail }, { username: childUsername } ] });
     if (existingUser) {
@@ -571,7 +578,7 @@ router.get('/consent', async (req, res) => {
     await User.create({
       email: childEmail,
       username: childUsername,
-      password: passwordHash,
+      password: password,
       consent: {
         agreedToTerms: true,
         ageConfirmed: true
