@@ -137,18 +137,15 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'A user with this email or username already exists or is pending.' });
     }
 
-    // Hash password
-    const passwordHash = await bcrypt.hash(password, 12);
-
     // Generate secure confirmation token
     const confirmToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    
-    // Store pending confirmation
+
+    // Store pending confirmation (save raw password, let pre-save hook hash it)
     await PendingConfirmation.create({
       email: normalizedEmail,
       username: normalizedUsername,
-      passwordHash,
+      password, // raw password
       consent,
       confirmToken,
       expiresAt

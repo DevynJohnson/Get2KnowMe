@@ -116,8 +116,14 @@ router.get('/my-passport', authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
     const foundUser = await User.findById(userId);
+    
     if (!foundUser) return res.status(404).json({ message: 'User not found' });
-    if (!foundUser.communicationPassport) return res.status(404).json({ message: 'Communication passport not found' });
+    
+    if (!foundUser.communicationPassport || 
+        Object.keys(foundUser.communicationPassport).length === 0) {
+      return res.status(404).json({ message: 'Communication passport not found' });
+    }
+    
     return res.json({ passport: foundUser.communicationPassport });
   } catch (error) {
     console.error('Error fetching communication passport:', error);
