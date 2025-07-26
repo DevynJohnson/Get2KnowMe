@@ -181,7 +181,10 @@ const userSchema = new Schema({
 userSchema.pre("save", async function (next) {
   if (this.isNew || this.isModified("password")) {
     try {
-      this.password = await bcrypt.hash(this.password, 10);
+      // Only hash if not already a bcrypt hash
+      if (!/^\$2[aby]\$\d{2}\$/.test(this.password)) {
+        this.password = await bcrypt.hash(this.password, 10);
+      }
       next();
     } catch (error) {
       next(error);
