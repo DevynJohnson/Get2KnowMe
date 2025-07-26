@@ -14,7 +14,7 @@ const pendingConfirmationSchema = new Schema({
     unique: true,
     trim: true
   },
-  passwordHash: {
+  password: {
     type: String,
     required: true
   },
@@ -34,6 +34,22 @@ const pendingConfirmationSchema = new Schema({
     type: Date,
     required: true,
     index: { expires: 0 }
+  }
+});
+
+
+// Add pre-save hook for password hashing (same as User.js)
+import bcrypt from "bcrypt";
+pendingConfirmationSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("password")) {
+    try {
+      this.password = await bcrypt.hash(this.password, 10);
+      next();
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    next();
   }
 });
 
