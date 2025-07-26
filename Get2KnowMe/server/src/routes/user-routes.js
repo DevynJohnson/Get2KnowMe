@@ -41,14 +41,6 @@ router.get('/confirm-email', async (req, res) => {
       await PendingConfirmation.deleteOne({ _id: pending._id });
       // Always redirect to email confirmed page
       return res.redirect('https://get2know.me/email-confirmed');
-          username: pending.username,
-          password: pending.passwordHash,
-          consent: pending.consent
-        });
-      }
-      await PendingConfirmation.deleteOne({ _id: pending._id });
-      // Always redirect to email confirmed page
-      return res.redirect('https://get2know.me/email-confirmed');
     } else {
       // If not found, check if user already exists (idempotent)
       // Try to find a user with a matching email or username from any pending confirmation
