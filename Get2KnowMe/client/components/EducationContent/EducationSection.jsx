@@ -4,6 +4,8 @@ import AutismContent from "./AutismContent";
 import ADHDContent from "./ADHDContent";
 import DyslexiaContent from "./DyslexiaContent";
 import DyscalculiaContent from "./DyscalculiaContent";
+import PTSDContent from "./PTSDContent";
+import CPTSDContent from "./C-PTSDContent";
 
 export const DiagnosisEducationSection = ({ isLoggedIn }) => (
   <Card className="home-card mb-4">
@@ -18,6 +20,8 @@ export const DiagnosisEducationSection = ({ isLoggedIn }) => (
         <ADHDContent isLoggedIn={isLoggedIn} />
         <DyslexiaContent isLoggedIn={isLoggedIn} />
         <DyscalculiaContent isLoggedIn={isLoggedIn} />
+        <PTSDContent isLoggedIn={isLoggedIn} />
+        <CPTSDContent isLoggedIn={isLoggedIn} />
       </Accordion>
     </Card.Body>
   </Card>
