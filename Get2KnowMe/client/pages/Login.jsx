@@ -47,11 +47,16 @@ const Login = () => {
     }
 
     try {
+      // Lowercase if input is a valid email, else leave as-is for username
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isEmail = emailRegex.test(emailOrUsernameValue);
+      const loginIdentifier = isEmail ? emailOrUsernameValue.toLowerCase() : emailOrUsernameValue;
+
       const response = await fetch("/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          emailOrUsername: emailOrUsernameValue, 
+          emailOrUsername: loginIdentifier, 
           password: passwordValue 
         }),
       });
