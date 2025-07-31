@@ -75,9 +75,28 @@ const PrivacyPolicy = () => (
       <li>File complaints with the ICO or your local authority</li>
     </ul>
 
-    <h2 className="text-2xl font-semibold mt-6 mb-2">7. Security</h2>
+
+    <h2 className="text-2xl font-semibold mt-6 mb-2">7. Social Features & Data Transparency</h2>
+    <p className="mb-2">
+      <strong>Get2KnowMe</strong> includes social features that allow users to follow each other, send and receive follow requests, and receive notifications about updates. To support these features, we collect and store the following additional data:
+    </p>
+    <ul className="list-disc list-inside mb-4">
+      <li><strong>Followers & Following:</strong> Lists of users you follow and who follow you, including timestamps of when these relationships were created.</li>
+      <li><strong>Follow Requests:</strong> Records of sent and received follow requests, including user IDs and request timestamps.</li>
+      <li><strong>Notifications:</strong> Notifications you receive (e.g., follow requests, passport updates), including sender/recipient, type, message, and read status. Notifications are automatically deleted after 30 days.</li>
+      <li><strong>Privacy Settings:</strong> Your preferences for whether you appear in search results and whether you can receive follow requests. You can change these settings at any time in your Profile Settings.</li>
+      <li><strong>Hidden Notifications:</strong> List of users whose notifications you have chosen to hide.</li>
+    </ul>
+    <p className="mb-2">
+      <strong>How We Use This Data:</strong> Social data is used solely to enable social features (following, notifications, privacy controls) within the app. It is never sold or shared with third parties. You have full control over your social data and can opt out of being searchable or receiving follow requests at any time.
+    </p>
     <p className="mb-4">
-      Passwords are hashed. Data is encrypted in transit, and sensitive data stored in the database is encrypted at rest. Only you can share your passcode or QR code.
+      <strong>Data Retention:</strong> Social data (such as notifications) is retained only as long as necessary to provide the service. For example, notifications are deleted after 30 days. You can remove followers, unfollow users, or delete your account at any time to remove your social data.
+    </p>
+
+    <h2 className="text-2xl font-semibold mt-6 mb-2">8. Security</h2>
+    <p className="mb-4">
+      Passwords are hashed. Data is encrypted in transit, and sensitive data stored in the database is encrypted at rest. Only you can share your passcode or QR code. Social data is protected by the same security measures as all other personal data.
     </p>
 
     <h2 className="text-2xl font-semibold mt-6 mb-2">9. Children's Privacy</h2>
@@ -90,8 +109,8 @@ const PrivacyPolicy = () => (
       will delete it as soon as possible.
     </p>
 
-    <h2 className="text-2xl font-semibold mt-6 mb-2">8. Contact</h2>
-    <p>Email us at: dljohnson1313@gmail.com</p>
+    <h2 className="text-2xl font-semibold mt-6 mb-2">10. Contact</h2>
+    <p>Email us at: <a href="mailto:enquiries@get2knowme.co.uk">enquiries@get2knowme.co.uk</a></p>
   </div>
 );
 
