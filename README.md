@@ -14,12 +14,15 @@ With Get2KnowMe, you can create a Digital Communication Passport: a personalized
 
 Each passport comes with a unique QR code, allowing you to easily share your information with teachers, healthcare workers, emergency workers, employers, caregivers, friends, or anyone you meet.
 
+
 ## Key Features
 
 - **Digital Communication Passport Creation**: Personalized profiles with communication preferences and support needs
 - **QR Code Generation**: Instant sharing capabilities through scannable QR codes
 - **Secure Passcode System**: Alternative sharing method using unique alphanumeric codes
 - **Trusted Contact Integration**: Emergency contact information with privacy controls
+- **Follow & Notification System**: Users can follow others to receive notifications when a communication passport is updated—ideal for caregivers, educators, or support teams who need to stay informed about changes.
+- **Privacy Controls for Social Features**: Users can toggle their ability to receive follow requests and choose to be excluded from search results for added privacy and security. These options are available in Profile Settings.
 - **Responsive Design**: Optimized for mobile devices and various screen sizes
 - **Print-Friendly Format**: Clean, professional printing capabilities for physical copies
 - **Accessibility Options**: Accessibility customization options including toggle on/off options for colorblindness and dyslexia-friendly fonts
@@ -78,9 +81,13 @@ To run Get2KnowMe locally for development or contribution:
    ```
 3. **Set up environment variables**
    - Copy `.env.example` to `.env` in the project root:
+Get2KnowMe is committed to protecting user privacy and complying with the General Data Protection Regulation (GDPR) and other relevant privacy laws. Key measures include:
+
      ```bash
      cp .env.example .env
      ```
+- **User Search Privacy**: User Search is designed for privacy—searching for users requires a full username, a valid passcode, or scanning a QR code. Partial matches are not allowed, and users can opt out of appearing in search results entirely. This helps ensure that only those with explicit information can find a user profile.
+- **Social Privacy Controls**: Users can toggle on/off their ability to appear in search results and whether they can receive follow requests, directly from their Profile Settings. This gives users full control over their discoverability and social interactions.
    - Fill in the required values in your `.env` file. Do not commit your actual secrets or production credentials.
    - If you are contributing, use placeholder/test values as provided in `.env.example`.
 4. **Start the development server**
@@ -112,16 +119,29 @@ To run Get2KnowMe locally for development or contribution:
 
 ### Frontend
 - **React 19.1.0** - Modern JavaScript library for building user interfaces
+- **React DOM 19.1.0** - DOM bindings for React
 - **React Router DOM 7.6.3** - Declarative routing for React applications
 - **React Bootstrap 2.10.10** - Bootstrap components for React
 - **Bootstrap 5.3.7** - CSS framework for responsive design
 - **Vite 7.0.0** - Fast build tool and development server
+- **@vitejs/plugin-react 4.5.2** - Vite plugin for React
+- **@fortawesome/react-fontawesome 0.2.2** - Font Awesome React components
+- **@fortawesome/free-solid-svg-icons 7.0.0** - Font Awesome icon set
+- **QRCode 1.5.4** - QR code generation
+- **@zxing/library 0.21.3** - QR code scanning
+- **jwt-decode 4.0.0** - JWT decoding utility
+- **react-phone-number-input 3.4.12** - Phone number input component
 
 ### Backend
 - **Node.js** - JavaScript runtime environment
 - **Express.js 4.19.2** - Web application framework
 - **MongoDB** - NoSQL database for data storage
 - **Mongoose 8.16.1** - MongoDB object modeling library
+- **bcrypt 6.0.0** - Password hashing
+- **jsonwebtoken 9.0.2** - JWT authentication
+- **mongoose-field-encryption 7.0.1** - Field-level encryption for sensitive data
+- **cors 2.8.5** - Cross-origin resource sharing
+- **resend 4.6.0** - Transactional email delivery
 
 ### Authentication & Security
 - **Email Confirmation Required**: All new users must confirm their email address via a secure, expiring link before their account is activated. Confirmation links are single-use and expire after 24 hours for security.
@@ -131,43 +151,71 @@ To run Get2KnowMe locally for development or contribution:
 - **mongoose-field-encryption 7.0.1** - Field-level encryption for sensitive data in MongoDB
 
 ### Additional Libraries
-- **QRCode 1.5.4** - QR code generation
-- **@zxing/library 0.21.3** - QR code scanning functionality
 - **libphonenumber-js 1.12.9** - Phone number validation and formatting
-- **react-phone-number-input 3.4.12** - Phone number input component
-- **Font Awesome 6.5.1** - Icon library via CDN
-- **CORS 2.8.5** - Cross-origin resource sharing middleware
+- **Font Awesome** - Icon library (via npm and CDN)
 
 ### Development Tools
-- **ESLint** - Code linting and formatting
-- **Concurrently** - Run multiple npm scripts simultaneously
-- **Vite React Plugin** - React support for Vite
+- **ESLint 9.29.0** - Code linting and formatting
+- **Concurrently 9.2.0** - Run multiple npm scripts simultaneously
+- **Vite React Plugin 4.5.2** - React support for Vite
+- **eslint-plugin-react-hooks 5.2.0**
+- **eslint-plugin-react-refresh 0.4.20**
+- **@eslint/js 9.29.0**
+- **@types/react 19.1.8**
+- **@types/react-dom 19.1.6**
+- **globals 16.2.0**
+
 
 ## API Documentation
 
-### Authentication & User Management Endpoints
-- `POST /api/users/signup` - User registration (sends confirmation email; user must confirm before account is activated)
-- `GET /api/users/confirm-email` - Confirm user email address via token (activates account)
-- `POST /api/users/login` - User authentication
-- `GET /api/users/me` - Get current user profile
-- `PUT /api/users/update-username` - Update username
-- `PUT /api/users/update-email` - Update email
-- `PUT /api/users/change-password` - Change password
-- `POST /api/users/request-password-reset` - Request password reset email
-- `POST /api/users/reset-password` - Reset password using token
-- `DELETE /api/users/delete-account` - Delete user account
-- `POST /api/users/export-data` - Export user data (GDPR)
-- `POST /api/users/start-parental-consent` - Start parental consent workflow (underage registration; expires and deletes after 24 hours if not confirmed)
-- `POST /api/users/send-parental-consent` - Send parental consent email (manual/legacy use)
-- `GET /api/users/consent` - Parental consent approval (tokenized link; creates account if approved)
-- `GET /api/users/consent/declined` - Parental consent declined (tokenized link; deletes pending user)
+### User & Authentication Endpoints (`/api/users`)
+- `POST /signup` — Register a new user (sends confirmation email)
+- `GET /confirm-email` — Confirm user email address via token
+- `POST /login` — User authentication
+- `PUT /update-username` — Update username
+- `PUT /update-email` — Update email
+- `PUT /change-password` — Change password
+- `POST /request-password-reset` — Request password reset email
+- `POST /reset-password` — Reset password using token
+- `DELETE /delete-account` — Delete user account
+- `POST /export-data` — Export user data (GDPR)
+- `POST /start-parental-consent` — Start parental consent workflow (underage registration)
+- `POST /send-parental-consent` — Send parental consent email (manual/legacy use)
+- `GET /consent` — Parental consent approval (tokenized link)
+- `GET /consent/declined` — Parental consent declined (tokenized link)
 
-### Passport Endpoints
-- `GET /api/passport/generate-passcode` - Generate a new passcode
-- `POST /api/passport/create` - Create or update communication passport
-- `GET /api/passport/my-passport` - Get current user's passport
-- `GET /api/passport/public/:passcode` - Retrieve passport by passcode (public)
-- `DELETE /api/passport/delete` - Delete user's passport
+### Passport Endpoints (`/api/passport`)
+- `GET /generate-passcode` — Generate a new passcode
+- `POST /create` — Create or update communication passport
+- `GET /my-passport` — Get current user's passport
+- `GET /public/:passcode` — Retrieve passport by passcode (public)
+- `DELETE /delete` — Delete user's passport
+
+### Follow Endpoints (`/api/follow`)
+- `GET /search` — Search for users to follow
+- `POST /request/:userId` — Send follow request
+- `POST /accept/:fromUserId` — Accept follow request
+- `POST /reject/:fromUserId` — Reject follow request
+- `POST /unfollow/:userId` — Unfollow user
+- `GET /followers` — Get user's followers
+- `GET /following` — Get users being followed
+- `GET /requests/pending` — Get pending follow requests (received)
+- `GET /requests/sent` — Get sent follow requests
+- `DELETE /request/cancel/:userId` — Cancel sent follow request
+
+### Notification Endpoints (`/api/notifications`)
+- `GET /` — Get user's notifications
+- `GET /hidden` — Get hidden notification preferences
+- `POST /hide/:userId` — Hide notifications from a user
+- `POST /unhide/:userId` — Unhide notifications from a user
+- `PATCH /:notificationId/read` — Mark notification as read
+- `PATCH /mark-all-read` — Mark all notifications as read
+- `DELETE /:notificationId` — Delete notification
+- `GET /counts` — Get notification counts by type
+
+### Stories Endpoints (`/api/stories`)
+- `POST /` — Create a new story
+- `PUT /:id` — Update a story by ID
 
 ## Contributing
 
@@ -202,7 +250,7 @@ If you experience any issues with the application, please:
 1. Check existing issues on GitHub
 2. Provide detailed steps to reproduce the problem
 3. Include error messages and browser information
-4. Contact [inquiries@get2knowme.co.uk](mailto:inquiries@get2knowme.co.uk) for urgent issues
+4. Contact [enquiries@get2knowme.co.uk](mailto:enquiries@get2knowme.co.uk) for urgent issues
 
 ## Credits
 
@@ -275,6 +323,8 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **Explicit Consent**: Users must provide explicit consent to the Terms of Service and Privacy Policy during registration, including age confirmation and agreement to data processing.
 - **Right of Access & Deletion**: Users can access, export, or delete their data at any time via the application interface or by contacting support.
 - **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
+  - **User Search Privacy**: User Search is designed for privacy - searching for users requires a full username, a valid passcode, or scanning a QR code. Partial matches are not allowed, and users can opt out of appearing in search results entirely. This helps ensure that only those with explicit information can find a user profile.
+  - **Social Privacy Controls**: Users can toggle on/off their ability to appear in search results and whether they can receive follow requests, directly from their Profile Settings. This gives users full control over their discoverability and social interactions.
 - **Data Security**: Passwords are securely hashed (bcrypt). All data is encrypted in transit (HTTPS). Passport data is only visible when a user chooses to share their passcode or QR code.
 - **Database Encryption**: Personally identifiable information (PII) is encrypted at the field level in MongoDB using [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption), ensuring sensitive data is protected at rest.
 - **Children’s Privacy & Parental Consent**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements. For underage users, no personal data is stored until a parent or guardian provides explicit consent via a secure, tokenized email workflow. All pending registration data is encrypted at rest using field-level encryption (email, username, and password). The parent receives a unique consent link, and only upon their approval is the child's account created and data stored. If consent is declined, all pending data is securely deleted. If consent is neither granted or denied, temporary registration data is automatically deleted after 24 hours.
@@ -283,7 +333,7 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **Third-Party Processors**: Only reputable, GDPR-compliant third-party services are used for hosting and infrastructure. No user data is sold or shared for marketing purposes.
 - **Privacy Policy & Terms**: Full Privacy Policy and Terms of Service are available in the app and repository, outlining user rights and data practices.
 
-For any privacy-related requests or questions, users can contact the team at [inquiries@get2knowme.co.uk].
+For any privacy-related requests or questions, users can contact the team at [enquiries@get2knowme.co.uk].
 
 ---
 

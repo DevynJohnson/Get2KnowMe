@@ -11,7 +11,7 @@ const emailConfirmed = () => (
           Your account has now been created!
         </p>
         <p className="text-center mb-0">
-          If you have any questions or concerns, please contact us at <a href="mailto:inquiries@get2knowme.co.uk">inquiries@get2knowme.co.uk</a>.
+          If you have any questions or concerns, please contact us at <a href="mailto:enquiries@get2knowme.co.uk">enquiries@get2knowme.co.uk</a>.
         </p>
       </Card.Body>
     </Card>
