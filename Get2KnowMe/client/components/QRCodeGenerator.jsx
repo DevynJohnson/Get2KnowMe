@@ -64,73 +64,25 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
 
     const printWindow = window.open("", "_blank");
     const passportURL = `${window.location.origin}/passport/view/${passcode}`;
+    // Path to the CSS file relative to the public root
+    const cssPath = `${window.location.origin}/styles/QRCodeGenerator.css`;
 
     printWindow.document.write(`
       <!DOCTYPE html>
       <html>
         <head>
           <title>Communication Passport QR Code - ${passportName}</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              text-align: center;
-              padding: 20px;
-              margin: 0;
-            }
-            .qr-container {
-              margin: 20px auto;
-              max-width: 400px;
-            }
-            .qr-code {
-              max-width: 100%;
-              height: auto;
-              border: 2px solid #ddd;
-              border-radius: 8px;
-            }
-            .info {
-              margin: 20px 0;
-              padding: 15px;
-              background: #f8f9fa;
-              border-radius: 8px;
-              border: 1px solid #e9ecef;
-            }
-            .passcode {
-              font-family: monospace;
-              font-size: 1.2em;
-              font-weight: bold;
-              color: #007bff;
-            }
-            .url {
-              font-size: 0.9em;
-              color: #666;
-              word-break: break-all;
-            }
-            .instructions {
-              margin-top: 20px;
-              padding: 15px;
-              background: #fff3cd;
-              border: 1px solid #ffeaa7;
-              border-radius: 8px;
-              color: #856404;
-            }
-            @media print {
-              body { padding: 10px; }
-              .no-print { display: none; }
-            }
-          </style>
+          <link rel="stylesheet" type="text/css" href="${cssPath}">
         </head>
-        <body>
+        <body class="qr-print-page">
           <div class="qr-container">
             <h2>Communication Passport QR Code</h2>
             ${passportName ? `<h3>${passportName}</h3>` : ""}
-            
             <img src="${qrCodeDataURL}" alt="QR Code for Communication Passport" class="qr-code" />
-            
             <div class="info">
               <p><strong>Passcode:</strong> <span class="passcode">${passcode}</span></p>
               <p class="url">${passportURL}</p>
             </div>
-            
             <div class="instructions">
               <p><strong>How to use:</strong></p>
               <p>• Scan this QR code with any smartphone camera</p>

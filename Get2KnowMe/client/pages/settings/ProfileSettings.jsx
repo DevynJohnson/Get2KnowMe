@@ -367,21 +367,36 @@ const ProfileSettings = () => {
       </Card>
 
       {/* Data Export Section */}
-      <Card className="mb-4">
-        <Card.Header>
-          <h5 className="mb-0">
-            <i className="fas fa-download me-2"></i>
-            Export My Data
-          </h5>
-        </Card.Header>
-        <Card.Body>
-          <p>You can export all data stored about your account and communication passport. For your security, please verify your password before exporting.</p>
-          <Button className="btn-primary" onClick={() => { setModalAction('export'); setShowModal(true); }}>
-            <i className="fas fa-file-export me-2"></i>
-            Export My Data
-          </Button>
-        </Card.Body>
-      </Card>
+<Card className="mb-4">
+  <Card.Header>
+    <h5 className="mb-0">
+      <i className="fas fa-download me-2"></i>
+      Export My Data
+    </h5>
+  </Card.Header>
+  <Card.Body>
+    <p>You can export all data stored about your account and communication passport. For your security, please verify your password before exporting.</p>
+    
+    {/* ADD THIS: Export scope information */}
+    <div className="mb-3">
+      <h6 className="text-muted mb-2">Your export will include:</h6>
+      <ul className="list-unstyled text-sm">
+        <li><i className="fas fa-check text-success me-2"></i>Complete profile and communication passport</li>
+        <li><i className="fas fa-check text-success me-2"></i>All stories and posts you've created</li>
+        <li><i className="fas fa-check text-success me-2"></i>Social connections (followers, following, requests)</li>
+        <li><i className="fas fa-check text-success me-2"></i>Notification history (sent and received)</li>
+        <li><i className="fas fa-check text-success me-2"></i>Privacy settings and preferences</li>
+        <li><i className="fas fa-check text-success me-2"></i>Account management data</li>
+        <li><i className="fas fa-check text-success me-2"></i>Consent and legal compliance records</li>
+      </ul>
+    </div>
+    
+    <Button className="btn-primary" onClick={() => { setModalAction('export'); setShowModal(true); }}>
+      <i className="fas fa-file-export me-2"></i>
+      Export My Data
+    </Button>
+  </Card.Body>
+</Card>
 
       {/* Confirmation & Export Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
