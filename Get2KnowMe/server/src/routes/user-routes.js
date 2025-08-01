@@ -2,6 +2,8 @@ import express from 'express';
 import User from '../models/User.js';
 import PendingUser from '../models/PendingUser.js';
 import PendingConfirmation from '../models/PendingConfirmation.js';
+import Story from '../models/Story.js';
+import Notification from '../models/Notification.js';
 import jwt from 'jsonwebtoken';
 import { authenticateToken } from '../utils/auth.js';
 import { sendPasswordResetEmail } from '../utils/emailTemplates/passwordReset.js';
@@ -449,16 +451,24 @@ router.post('/export-data', authenticateToken, async (req, res) => {
     if (!password) {
       return res.status(400).json({ message: 'Password is required' });
     }
-    const user = await User.findById(req.user._id);
+
+    const user = await User.findById(req.user._id)
+      .populate('followers.user', 'username email')
+      .populate('following.user', 'username email')
+      .populate('pendingFollowRequests.from', 'username email')
+      .populate('sentFollowRequests.to', 'username email')
+      .populate('hiddenNotifications', 'username email');
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
     const isValidPassword = await user.isCorrectPassword(password);
     if (!isValidPassword) {
       return res.status(400).json({ message: 'Password is incorrect' });
     }
-    // Prepare export data (exclude sensitive fields like password hash)
-    // Remove mongoose-field-encryption metadata fields (robust version)
+
+    // Your excellent encryption metadata removal function
     function removeEncryptionMeta(obj) {
       if (Array.isArray(obj)) {
         return obj.map(removeEncryptionMeta);
@@ -471,25 +481,219 @@ router.post('/export-data', authenticateToken, async (req, res) => {
       }
       return obj;
     }
-    // Convert to plain objects before filtering
-    const passportObj = user.communicationPassport ? user.communicationPassport.toObject ? user.communicationPassport.toObject() : user.communicationPassport : undefined;
+
+    // Fetch all user-related data across your app
+    const [
+      stories,
+      notificationsReceived,
+      notificationsSent,
+      pendingConfirmations,
+      pendingUserRequests
+    ] = await Promise.all([
+      // Stories created by the user
+      Story.find({ user: req.user._id }).lean(),
+      
+      // All notifications received by this user
+      Notification.find({ recipient: req.user._id }).lean(),
+      
+      // All notifications sent by this user (they created these)
+      Notification.find({ sender: req.user._id }).lean(),
+      
+      // Any pending email confirmations for this user
+      PendingConfirmation.find({ email: user.email }).lean(),
+      
+      // Any pending child account requests (if they're a parent)
+      PendingUser.find({ parentEmail: user.email }).lean()
+    ]);
+
+    // Convert user to plain object and remove encryption metadata
+    const userObj = user.toObject();
+    
+    // Process the communication passport with decryption
+    const passportObj = userObj.communicationPassport 
+      ? removeEncryptionMeta(userObj.communicationPassport) 
+      : null;
+
+    // Complete export data structure
     const exportData = {
-      _id: user._id,
-      email: user.email,
-      username: user.username,
-      consent: user.consent,
-      communicationPassport: removeEncryptionMeta(passportObj),
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      // Core User Profile Data
+      profile: {
+        _id: userObj._id,
+        email: userObj.email,
+        username: userObj.username,
+        createdAt: userObj.createdAt,
+        updatedAt: userObj.updatedAt
+      },
+
+      // User Consent Data (GDPR requires this)
+      consent: {
+        agreedToTerms: userObj.consent?.agreedToTerms,
+        ageConfirmed: userObj.consent?.ageConfirmed,
+        consentTimestamp: userObj.consent?.consentTimestamp,
+        ipAddress: userObj.consent?.ipAddress,
+        userAgent: userObj.consent?.userAgent
+      },
+
+      // Communication Passport (all encrypted personal data)
+      communicationPassport: passportObj,
+
+      // Privacy Settings
+      privacySettings: {
+        allowFollowRequests: userObj.privacySettings?.allowFollowRequests,
+        showInSearch: userObj.privacySettings?.showInSearch
+      },
+
+      // Social Network Data
+      socialConnections: {
+        followers: userObj.followers?.map(f => ({
+          user: {
+            _id: f.user._id,
+            username: f.user.username,
+            email: f.user.email
+          },
+          followedAt: f.followedAt
+        })) || [],
+        
+        following: userObj.following?.map(f => ({
+          user: {
+            _id: f.user._id,
+            username: f.user.username,
+            email: f.user.email
+          },
+          followedAt: f.followedAt
+        })) || [],
+        
+        pendingFollowRequests: userObj.pendingFollowRequests?.map(r => ({
+          from: {
+            _id: r.from._id,
+            username: r.from.username,
+            email: r.from.email
+          },
+          requestedAt: r.requestedAt
+        })) || [],
+        
+        sentFollowRequests: userObj.sentFollowRequests?.map(r => ({
+          to: {
+            _id: r.to._id,
+            username: r.to.username,
+            email: r.to.email
+          },
+          requestedAt: r.requestedAt
+        })) || [],
+
+        hiddenNotifications: userObj.hiddenNotifications?.map(h => ({
+          _id: h._id,
+          username: h.username,
+          email: h.email
+        })) || []
+      },
+
+      // Content Created by User
+      stories: stories.map(story => removeEncryptionMeta({
+        _id: story._id,
+        name: story.name,
+        story: story.story,
+        date: story.date,
+        createdAt: story.createdAt || story.date
+      })),
+
+      // Communication/Notification Data
+      notifications: {
+        received: notificationsReceived.map(notif => removeEncryptionMeta({
+          _id: notif._id,
+          sender: notif.sender,
+          type: notif.type,
+          title: notif.title,
+          message: notif.message,
+          data: notif.data,
+          read: notif.read,
+          readAt: notif.readAt,
+          actionTaken: notif.actionTaken,
+          actionTakenAt: notif.actionTakenAt,
+          createdAt: notif.createdAt,
+          expiresAt: notif.expiresAt
+        })),
+        
+        sent: notificationsSent.map(notif => removeEncryptionMeta({
+          _id: notif._id,
+          recipient: notif.recipient,
+          type: notif.type,
+          title: notif.title,
+          message: notif.message,
+          data: notif.data,
+          createdAt: notif.createdAt
+        }))
+      },
+
+      // Account Management Data
+      accountManagement: {
+        pendingEmailConfirmations: pendingConfirmations.map(pc => removeEncryptionMeta({
+          _id: pc._id,
+          email: pc.email,
+          username: pc.username,
+          consent: pc.consent,
+          createdAt: pc.createdAt || new Date(pc.expiresAt.getTime() - 24*60*60*1000), // Estimate creation time if timestamp is missing
+          expiresAt: pc.expiresAt
+        })),
+        
+        childAccountRequests: pendingUserRequests.map(pu => removeEncryptionMeta({
+          _id: pu._id,
+          childEmail: pu.childEmail,
+          childUsername: pu.childUsername,
+          parentEmail: pu.parentEmail,
+          createdAt: pu.createdAt,
+          expiresAt: pu.expiresAt
+        }))
+      },
+
+      // Security & Access Data (GDPR Article 15 requires this)
+      securityData: {
+        passwordResetTokenActive: !!userObj.resetPasswordToken,
+        resetPasswordExpires: userObj.resetPasswordExpires,
+        lastUpdated: userObj.updatedAt
+      },
+
+      // Export Metadata (for audit trail)
+      exportMetadata: {
+        exportedAt: new Date().toISOString(),
+        exportVersion: '2.0',
+        exportedBy: userObj._id,
+        dataScope: 'complete_user_data',
+        totalRecords: {
+          stories: stories.length,
+          notificationsReceived: notificationsReceived.length,
+          notificationsSent: notificationsSent.length,
+          followers: userObj.followers?.length || 0,
+          following: userObj.following?.length || 0,
+          pendingFollowRequests: userObj.pendingFollowRequests?.length || 0,
+          sentFollowRequests: userObj.sentFollowRequests?.length || 0,
+          hiddenNotifications: userObj.hiddenNotifications?.length || 0,
+          pendingConfirmations: pendingConfirmations.length,
+          childAccountRequests: pendingUserRequests.length
+        },
+        gdprCompliance: {
+          personalDataIncluded: true,
+          encryptedDataDecrypted: true,
+          socialConnectionsIncluded: true,
+          communicationHistoryIncluded: true,
+          consentRecordsIncluded: true,
+          accountManagementDataIncluded: true
+        }
+      }
     };
-    res.setHeader('Content-Disposition', 'attachment; filename="get2knowme_data_export.json"');
+
+    // Log the export for GDPR audit trail (use your Winston logger if available)
+    console.log(`GDPR Data Export: User ${req.user._id} (${user.email}) exported their complete data at ${new Date().toISOString()}`);
+
+    res.setHeader('Content-Disposition', 'attachment; filename="get2knowme_complete_data_export.json"');
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send(JSON.stringify(exportData, null, 2));
+
   } catch (error) {
     console.error('Error exporting user data:', error);
-    res.status(500).json({ message: 'An error occurred while exporting data' });
-  }
-});
+      res.status(500).json({ message: 'An error occurred while exporting data' });
+    }
+  });
 
 // POST Send parental consent email (for legacy/manual use only)
 router.post('/send-parental-consent', async (req, res) => {

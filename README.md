@@ -27,6 +27,7 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 - **Print-Friendly Format**: Clean, professional printing capabilities for physical copies
 - **Accessibility Options**: Accessibility customization options including toggle on/off options for colorblindness and dyslexia-friendly fonts
 - **Advanced Security & Data Encryption**: All sensitive personal data is encrypted at rest and protected by strong authentication, ensuring your information is always safe
+- **Enterprise-Grade Security**: Rate limiting, Content Security Policy (CSP), comprehensive logging, and session management protect against common web vulnerabilities
 
 ## Screenshots
 
@@ -56,6 +57,7 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technology Stack](#technology-stack)
+- [Security Features](#security-features)
 - [API Documentation](#api-documentation)
 - [Contributing](#contributing)
 - [Testing](#testing)
@@ -81,13 +83,9 @@ To run Get2KnowMe locally for development or contribution:
    ```
 3. **Set up environment variables**
    - Copy `.env.example` to `.env` in the project root:
-Get2KnowMe is committed to protecting user privacy and complying with the General Data Protection Regulation (GDPR) and other relevant privacy laws. Key measures include:
-
      ```bash
      cp .env.example .env
      ```
-- **User Search Privacy**: User Search is designed for privacy—searching for users requires a full username, a valid passcode, or scanning a QR code. Partial matches are not allowed, and users can opt out of appearing in search results entirely. This helps ensure that only those with explicit information can find a user profile.
-- **Social Privacy Controls**: Users can toggle on/off their ability to appear in search results and whether they can receive follow requests, directly from their Profile Settings. This gives users full control over their discoverability and social interactions.
    - Fill in the required values in your `.env` file. Do not commit your actual secrets or production credentials.
    - If you are contributing, use placeholder/test values as provided in `.env.example`.
 4. **Start the development server**
@@ -143,6 +141,16 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **cors 2.8.5** - Cross-origin resource sharing
 - **resend 4.6.0** - Transactional email delivery
 
+### Security & Infrastructure
+- **helmet 8.1.0** - Security headers and Content Security Policy (CSP)
+- **express-rate-limit 8.0.1** - Rate limiting middleware for DDoS protection
+- **express-validator 7.2.1** - Input validation and sanitization
+- **compression 1.8.1** - Response compression for improved performance
+- **morgan 1.10.1** - HTTP request logging middleware
+- **winston 3.17.0** - Advanced logging framework with multiple transports
+- **cookie-parser 1.4.7** - Cookie parsing middleware
+- **connect-mongo 5.1.0** - MongoDB session store for secure session management
+
 ### Authentication & Security
 - **Email Confirmation Required**: All new users must confirm their email address via a secure, expiring link before their account is activated. Confirmation links are single-use and expire after 24 hours for security.
 - **JSON Web Tokens 9.0.2** - Secure authentication mechanism
@@ -165,6 +173,40 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **@types/react-dom 19.1.6**
 - **globals 16.2.0**
 
+### Testing
+- **Jest 30.0.4** - JavaScript testing framework
+- **Supertest 7.1.1** - HTTP assertions for integration testing
+- **mongodb-memory-server 10.1.4** - In-memory MongoDB server for testing
+
+## Security Features
+
+Get2KnowMe implements comprehensive security measures to protect user data and ensure platform integrity:
+
+### Application Security
+- **Content Security Policy (CSP)**: Strict CSP headers prevent XSS attacks and unauthorized resource loading
+- **Security Headers**: Helmet.js implements security best practices including HSTS, X-Frame-Options, and more
+- **Rate Limiting**: Intelligent rate limiting protects against brute force attacks and API abuse
+- **Input Validation**: All user inputs are validated and sanitized using express-validator
+- **Session Security**: Secure session management with MongoDB-backed session storage
+- **HTTPS Enforcement**: All data transmission is encrypted in transit
+
+### Data Protection
+- **Field-Level Encryption**: Sensitive user data is encrypted at the database level using mongoose-field-encryption
+- **Password Security**: Passwords are hashed using bcrypt with secure salt rounds
+- **JWT Authentication**: Stateless authentication with secure token management
+- **Data Minimization**: Only essential data is collected and stored
+
+### Infrastructure Security
+- **Comprehensive Logging**: Winston-based logging system tracks security events and system activities
+- **Request Logging**: Morgan middleware logs all HTTP requests for monitoring and security analysis
+- **Compression Security**: Response compression is implemented safely to prevent BREACH attacks
+- **Cookie Security**: Secure cookie handling with proper SameSite and HttpOnly flags
+
+### Privacy by Design
+- **User Search Privacy**: Full username or valid passcode required for user discovery
+- **Social Privacy Controls**: Users can opt out of search results and follow requests
+- **Minimal Data Collection**: Only data necessary for core functionality is collected
+- **Granular Privacy Settings**: Users have full control over their data visibility
 
 ## API Documentation
 
@@ -237,6 +279,12 @@ If you have questions about environment variables or setup, please open an issue
 
 ## Testing
 
+### Automated Testing
+The application includes comprehensive testing with:
+- **Jest 30.0.4** - JavaScript testing framework for unit and integration tests
+- **Supertest 7.1.1** - HTTP endpoint testing for API validation
+- **MongoDB Memory Server 10.1.4** - In-memory database for isolated testing
+
 ### Manual Testing
 The application includes comprehensive manual testing procedures for:
 - User registration and authentication
@@ -300,6 +348,16 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
 - [bcrypt](https://www.npmjs.com/package/bcrypt) - Password hashing
 - [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption) - Field-level encryption for sensitive data
 - [CORS](https://www.npmjs.com/package/cors) - Cross-origin resource sharing
+- [Helmet](https://helmetjs.github.io/) - Security headers and Content Security Policy implementation
+- [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit) - Rate limiting middleware for API protection
+- [Express Validator](https://express-validator.github.io/) - Input validation and sanitization
+
+#### Infrastructure & Performance
+- [Compression](https://www.npmjs.com/package/compression) - Response compression middleware
+- [Morgan](https://www.npmjs.com/package/morgan) - HTTP request logging
+- [Winston](https://github.com/winstonjs/winston) - Advanced logging framework
+- [Cookie Parser](https://www.npmjs.com/package/cookie-parser) - Cookie parsing middleware
+- [Connect MongoDB Session](https://www.npmjs.com/package/connect-mongo) - MongoDB session store
 
 #### Development Tools
 - [ESLint](https://eslint.org) - JavaScript linting
@@ -318,20 +376,50 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
             
 ## GDPR & Privacy Compliance
 
-Get2KnowMe is committed to protecting user privacy and complying with the General Data Protection Regulation (GDPR) and other relevant privacy laws. Key measures include:
+Get2KnowMe is committed to protecting user privacy and complying with the General Data Protection Regulation (GDPR) and other relevant privacy laws. Our comprehensive privacy framework includes:
 
+### Legal Compliance
 - **Explicit Consent**: Users must provide explicit consent to the Terms of Service and Privacy Policy during registration, including age confirmation and agreement to data processing.
 - **Right of Access & Deletion**: Users can access, export, or delete their data at any time via the application interface or by contacting support.
-- **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
-  - **User Search Privacy**: User Search is designed for privacy - searching for users requires a full username, a valid passcode, or scanning a QR code. Partial matches are not allowed, and users can opt out of appearing in search results entirely. This helps ensure that only those with explicit information can find a user profile.
-  - **Social Privacy Controls**: Users can toggle on/off their ability to appear in search results and whether they can receive follow requests, directly from their Profile Settings. This gives users full control over their discoverability and social interactions.
-- **Data Security**: Passwords are securely hashed (bcrypt). All data is encrypted in transit (HTTPS). Passport data is only visible when a user chooses to share their passcode or QR code.
-- **Database Encryption**: Personally identifiable information (PII) is encrypted at the field level in MongoDB using [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption), ensuring sensitive data is protected at rest.
-- **Children’s Privacy & Parental Consent**: The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements. For underage users, no personal data is stored until a parent or guardian provides explicit consent via a secure, tokenized email workflow. All pending registration data is encrypted at rest using field-level encryption (email, username, and password). The parent receives a unique consent link, and only upon their approval is the child's account created and data stored. If consent is declined, all pending data is securely deleted. If consent is neither granted or denied, temporary registration data is automatically deleted after 24 hours.
-- **Data Hosting**: Data is stored securely using Render and MongoDB Atlas, both of which provide strong security and compliance features.
+- **Data Portability**: Full data export functionality allows users to download their information in a structured format.
 - **Breach Notification**: Users will be notified promptly in the event of a data breach affecting their personal data.
+
+### Privacy by Design
+- **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
+- **User Search Privacy**: User Search is designed for privacy - searching for users requires a full username, a valid passcode, or scanning a QR code. Partial matches are not allowed, and users can opt out of appearing in search results entirely. This helps ensure that only those with explicit information can find a user profile.
+- **Social Privacy Controls**: Users can toggle on/off their ability to appear in search results and whether they can receive follow requests, directly from their Profile Settings. This gives users full control over their discoverability and social interactions.
+
+### Data Security & Protection
+- **Database Encryption**: Personally identifiable information (PII) is encrypted at the field level in MongoDB using [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption), ensuring sensitive data is protected at rest.
+- **Transport Security**: All data is encrypted in transit using HTTPS with strict security headers.
+- **Password Security**: Passwords are securely hashed using bcrypt with industry-standard salt rounds.
+- **Session Security**: Secure session management with MongoDB-backed storage and proper cookie security.
+- **Access Controls**: Passport data is only visible when a user chooses to share their passcode or QR code.
+
+### Technical Privacy Measures
+- **Rate Limiting**: API rate limits prevent abuse and protect against brute force attacks.
+- **Input Validation**: All user inputs are validated and sanitized to prevent data corruption and security vulnerabilities.
+- **Audit Logging**: Comprehensive logging system tracks security events and data access patterns while respecting user privacy.
+- **Content Security Policy**: Strict CSP headers prevent unauthorized data exfiltration and protect against XSS attacks.
+
+### Children's Privacy & Parental Consent
+The platform restricts use to those 16+ (or 13+ in the UK) unless verifiable parental consent is provided, in line with GDPR and UK GDPR requirements. For underage users:
+- No personal data is stored until a parent or guardian provides explicit consent via a secure, tokenized email workflow
+- All pending registration data is encrypted at rest using field-level encryption (email, username, and password)
+- The parent receives a unique consent link, and only upon their approval is the child's account created and data stored
+- If consent is declined, all pending data is securely deleted
+- If consent is neither granted nor denied, temporary registration data is automatically deleted after 24 hours
+
+### Data Processing & Storage
+- **Data Hosting**: Data is stored securely using Render and MongoDB Atlas, both of which provide strong security and compliance features.
 - **Third-Party Processors**: Only reputable, GDPR-compliant third-party services are used for hosting and infrastructure. No user data is sold or shared for marketing purposes.
+- **Data Retention**: Clear data retention policies ensure information is not kept longer than necessary.
+- **Geographic Compliance**: Data processing complies with both EU GDPR and UK GDPR requirements.
+
+### User Rights & Transparency
 - **Privacy Policy & Terms**: Full Privacy Policy and Terms of Service are available in the app and repository, outlining user rights and data practices.
+- **Transparency Reports**: Regular updates on data processing activities and compliance measures.
+- **User Control**: Granular privacy controls allow users to manage their data visibility and social interactions.
 
 For any privacy-related requests or questions, users can contact the team at [enquiries@get2knowme.co.uk].
 
