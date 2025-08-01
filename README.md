@@ -275,7 +275,7 @@ We welcome contributions from the community! To get started:
 - Update or add documentation as needed
 - Be respectful and inclusive in all communications
 
-If you have questions about environment variables or setup, please open an issue or reach out to [dljohnson1313@gmail.com]!
+If you have questions about environment variables or setup, please open an issue or reach out to [enquiries@get2knowme.co.uk]!
 
 ## Testing
 
