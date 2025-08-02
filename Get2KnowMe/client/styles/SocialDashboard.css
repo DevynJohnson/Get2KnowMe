@@ -1,3 +1,23 @@
+/* Custom style for View Passport button */
+.btn-view-passport {
+  background: #fff !important;
+  color: var(--primary-color, #4f8cff) !important;
+  border: 2px solid var(--primary-color, #4f8cff) !important;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.btn-view-passport:hover,
+.btn-view-passport:focus {
+  background: var(--primary-color, #4f8cff) !important;
+  color: #fff !important;
+  border: 2px solid var(--primary-color, #4f8cff) !important;
+}
+/* FontAwesome icon size utilities for dashboard */
+.fa-icon-xs { font-size: 0.75rem; }
+.fa-icon-sm { font-size: 1rem; }
+.fa-icon-md { font-size: 1.5rem; }
+.fa-icon-lg { font-size: 2rem; }
+.fa-icon-xl { font-size: 3rem; }
 /* Style for follow request card */
 .follow-request-card {
   border-radius: 16px !important;
