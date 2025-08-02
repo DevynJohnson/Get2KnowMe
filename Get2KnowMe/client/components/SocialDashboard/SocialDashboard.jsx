@@ -108,15 +108,16 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
     <div className="flex flex-col items-center w-full">
       {following.map((user) => (
         <Card
-          className="mb-2 mx-auto social-follow-card"
+          className="mb-2 mx-auto"
           key={user._id}
+          style={{ maxWidth: '350px', width: '100%' }}
         >
-          <div className="social-follow-card-body">
+          <div className="p-4 d-flex align-items-center justify-content-between flex-row">
             <div className="d-flex flex-column">
-              <span className="social-follow-username">{user.username}</span>
-              {user.email && <span className="social-follow-email">{user.email}</span>}
+              <span className="fw-bold text-dark" style={{ fontWeight: 700 }}>{user.username}</span>
+              {user.email && <span className="text-sm text-gray-500 mb-0">{user.email}</span>}
             </div>
-            <div className="social-follow-btns">
+            <div className="d-flex flex-row gap-2 ms-3">
               <button
                 className="btn btn-danger btn-sm"
                 onClick={() => handleDelete(user._id)}
@@ -413,10 +414,10 @@ const FollowRequests = ({ onRequestHandled }) => {
   return (
     <div className="space-y-4">
       {requests.map((request) => (
-        <div key={request._id} className="social-follow-request-card">
+        <div key={request._id} className="follow-request-card bg-white p-4 rounded-lg border border-gray-200 flex items-center justify-between" style={{ color: '#111' }}>
           <div>
-            <p className="font-medium">From User: {request.username || request.email || request._id}</p>
-            <p className="text-xs">
+            <p className="font-medium" style={{ color: '#111' }}>From User: {request.username || request.email || request._id}</p>
+            <p className="text-xs" style={{ color: '#666' }}>
               Requested {new Date(request.requestedAt).toLocaleDateString()}
             </p>
           </div>
@@ -590,11 +591,12 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
             return (
               <div
                 key={notification._id}
-                className="social-notification-card"
+                className="cursor-pointer bg-white p-4 shadow border border-gray-200 text-black d-flex flex-column align-items-stretch"
+                style={{ borderRadius: '24px' }}
                 onClick={() => !notification.read && markAsRead(notification._id)}
               >
                 <div className="mb-2 w-100">{message}</div>
-                <div className="social-notification-btns">
+                <div className="d-flex flex-row gap-2 w-100">
                   {showViewPassport && (
                     <a
                       href={passportUrl}
