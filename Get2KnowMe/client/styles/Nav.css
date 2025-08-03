@@ -64,13 +64,28 @@
 .nav-item-custom:hover {
   color: var(--primary-color) !important;
   background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
-  /* Removed transform: translateY(-1px); to remove shadow effect */
 }
 
 .nav-item-custom.active {
   color: var(--primary-color) !important;
   background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
   font-weight: 600;
+}
+
+/* FontAwesome icon styling in nav items */
+.nav-icon {
+  margin-right: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.dropdown-item-icon {
+  margin-right: 0.5rem;
+  width: 20px;
+  text-align: center;
+}
+
+.dropdown-header-icon {
+  margin-right: 0.5rem;
 }
 
 /* Dropdown specific styling */
@@ -95,7 +110,6 @@
 .nav-item-custom .dropdown-toggle:hover {
   color: var(--primary-color) !important;
   background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
-  /* Removed transform: translateY(-1px); to remove shadow effect */
   box-shadow: none !important;
 }
 
@@ -298,8 +312,6 @@
   width: 60%;
 }
 
-
-
 /* Settings dropdown specific styling - cleaned up */
 .dropdown-menu {
   border: none;
@@ -327,11 +339,6 @@
 
 .dropdown-item:hover .text-danger {
   color: #ff6b6b !important;
-}
-
-.dropdown-item .fas {
-  width: 20px;
-  text-align: center;
 }
 
 .dropdown-divider {
@@ -519,30 +526,19 @@
   color: rgba(255, 255, 255, 0.8) !important;
 }
 
-/* Hide icons in collapsed navbar on smaller screens */
+/* Hide icons in collapsed navbar on smaller screens - Updated for FontAwesome components */
 @media (max-width: 767.98px) {
-  /* Hide ALL icons in navbar when collapsed - comprehensive approach */
-  .navbar-collapse i,
-  .navbar-collapse .fas,
-  .navbar-collapse .fa,
-  .navbar-collapse .fab,
-  .navbar-collapse .far,
-  .navbar-collapse .fal,
-  .navbar-collapse .fad,
-  .navbar-collapse .fass,
-  .navbar-collapse .fasr,
-  .navbar-collapse .fasl,
-  .navbar-collapse .fasd {
+  /* Hide FontAwesome icons in navbar when collapsed */
+  .navbar-collapse .nav-icon,
+  .navbar-collapse .dropdown-item-icon,
+  .navbar-collapse .dropdown-header-icon {
     display: none !important;
   }
   
   /* Specifically target the settings dropdown and login/logout icons */
-  .navbar-collapse .settings-dropdown-btn i,
-  .navbar-collapse .settings-dropdown-btn .fas,
-  .navbar-collapse .nav-item-custom i,
-  .navbar-collapse .nav-item-custom .fas,
-  .navbar-collapse .nav-item-custom.logout-btn i,
-  .navbar-collapse .nav-item-custom.logout-btn .fas {
+  .navbar-collapse .settings-dropdown-btn .nav-icon,
+  .navbar-collapse .nav-item-custom .nav-icon,
+  .navbar-collapse .nav-item-custom.logout-btn .nav-icon {
     display: none !important;
   }
   
@@ -564,28 +560,6 @@
     align-items: center !important;
     width: 100% !important;
     margin: 0.25rem 0 !important;
-  }
-}
-
-/* Force icon hiding with highest specificity */
-@media (max-width: 767.98px) {
-  /* Target settings button specifically */
-  .navbar-collapse .nav-item.dropdown .settings-dropdown-btn i,
-  .navbar-collapse .nav-item.dropdown .settings-dropdown-btn .fas,
-  .navbar-collapse .nav-item.dropdown .btn i,
-  .navbar-collapse .nav-item.dropdown .btn .fas,
-  
-  /* Target login/logout links specifically */
-  .navbar-nav .nav-item-custom[href*="login"] i,
-  .navbar-nav .nav-item-custom[href*="login"] .fas,
-  .navbar-collapse .nav-item_custom.logout-btn i,
-  .navbar-collapse .nav-item_custom.logout-btn .fas,
-  
-  /* Catch-all for any remaining icons in nav items */
-  .navbar-collapse .navbar-nav i[class*="fa"],
-  .navbar-collapse .ms-auto i[class*="fa"] {
-    display: none !important;
-    visibility: hidden !important;
   }
 }
 
