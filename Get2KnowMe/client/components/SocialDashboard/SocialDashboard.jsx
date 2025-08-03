@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import QRCodeScanner from '../QRCodeScanner.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faSearch,
   faUserPlus,
@@ -11,6 +12,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Card } from 'react-bootstrap';
 import '../../styles/SocialDashboard.css';
+
+// Add icons to library
+library.add(faSearch, faUserPlus, faUserCheck, faUserTimes, faBell, faUsers);
 
 // Followed Users Component
 function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNotificationsChange }) {
@@ -45,8 +49,8 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
 
   if (following.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <FontAwesomeIcon icon={faUsers} className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+      <div className="empty-state">
+        <FontAwesomeIcon icon={faUsers} className="empty-state-icon" />
         <p>You're not following anyone yet</p>
       </div>
     );
@@ -105,19 +109,18 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="followed-users-container">
       {following.map((user) => (
         <Card
-          className="mb-2 mx-auto"
+          className="followed-user-card"
           key={user._id}
-          style={{ maxWidth: '350px', width: '100%' }}
         >
-          <div className="p-4 d-flex align-items-center justify-content-between flex-row">
-            <div className="d-flex flex-column">
-              <span className="fw-bold text-dark" style={{ fontWeight: 700 }}>{user.username}</span>
-              {user.email && <span className="text-sm text-gray-500 mb-0">{user.email}</span>}
+          <div className="followed-user-card-content">
+            <div className="user-info">
+              <span className="username">{user.username}</span>
+              {user.email && <span className="user-email">{user.email}</span>}
             </div>
-            <div className="d-flex flex-row gap-2 ms-3">
+            <div className="user-actions">
               <button
                 className="btn btn-danger btn-sm"
                 onClick={() => handleDelete(user._id)}
@@ -141,7 +144,7 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
   );
 }
 
-// User Search Component (unchanged)
+// User Search Component
 const UserSearch = ({ onFollowUser }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -212,32 +215,32 @@ const handleFollowRequest = async (userId) => {
   const getFollowButtonContent = (user) => {
     if (user.isFollowing) {
       return {
-        icon: <FontAwesomeIcon icon={faUserCheck} className="h-4 w-4" />,
+        icon: <FontAwesomeIcon icon={faUserCheck} className="button-icon" />,
         text: 'Following',
-        className: 'bg-green-500 text-white cursor-default',
+        className: 'btn-success',
         disabled: true
       };
     }
     if (user.requestSent) {
       return {
-        icon: <FontAwesomeIcon icon={faUserTimes} className="h-4 w-4" />,
+        icon: <FontAwesomeIcon icon={faUserTimes} className="button-icon" />,
         text: 'Requested',
-        className: 'bg-yellow-500 text-white cursor-default',
+        className: 'btn-warning',
         disabled: true
     };
 }
 if (!user.allowsFollowRequests) {
       return {
-        icon: <FontAwesomeIcon icon={faUserTimes} className="h-4 w-4" />,
+        icon: <FontAwesomeIcon icon={faUserTimes} className="button-icon" />,
         text: 'Private',
-        className: 'bg-gray-400 text-white cursor-default',
+        className: 'btn-secondary',
         disabled: true
     };
 }
 return {
-      icon: <FontAwesomeIcon icon={faUserPlus} className="h-4 w-4" />,
+      icon: <FontAwesomeIcon icon={faUserPlus} className="button-icon" />,
       text: 'Follow',
-      className: 'bg-blue-500 hover:bg-blue-600 text-white',
+      className: 'btn-primary',
       disabled: false
     };
   };
@@ -252,11 +255,11 @@ return {
   }, [searchQuery]);
 
   return (
-    <div className="flex justify-center items-center min-h-[60vh]">
-      <div className="w-full max-w-md">
-        <div className="relative mb-4 flex flex-col gap-2">
-          <div className="flex flex-col gap-2 items-center">
-            <div className="flex items-center gap-2" style={{ width: 'auto' }}>
+    <div className="user-search-container">
+      <div className="search-form-container">
+        <div className="search-input-section">
+          <div className="search-controls">
+            <div className="search-input-group">
               <input
                 type="text"
                 placeholder="Search Username or Passcode"
@@ -267,29 +270,28 @@ return {
               />
               <button
                 type="button"
-                className="btn social-dashboard-action-btn d-inline-flex align-items-center"
-                style={{ minWidth: '80px' }}
+                className="btn social-dashboard-action-btn search-btn"
                 onClick={() => searchUsers(searchQuery)}
                 title="Search"
               >
-                <FontAwesomeIcon icon={faSearch} className="me-1" />
+                <FontAwesomeIcon icon={faSearch} className="btn-icon" />
                 <span>Search</span>
               </button>
             </div>
-            <h4 className="mb-1 text-center search-divider">----- OR -----</h4>
+            <h4 className="search-divider">----- OR -----</h4>
             <button
               type="button"
-              className="btn btn-outline-white social-dashboard-action-btn d-inline-flex align-items-center scan-qr-button mx-auto"
+              className="btn btn-outline-white social-dashboard-action-btn scan-qr-button"
               onClick={() => setShowScanner(true)}
               title="Scan QR Code"
             >
-              <FontAwesomeIcon icon={faUserPlus} className="me-1" />
+              <FontAwesomeIcon icon={faUserPlus} className="btn-icon" />
               <span>Scan QR</span>
             </button>
           </div>
           {loading && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+            <div className="search-loading">
+              <div className="loading-spinner"></div>
             </div>
           )}
         </div>
@@ -300,46 +302,33 @@ return {
         />
         {/* Always show a result area after a search */}
         {hasSearched && (
-          <div className="flex flex-col items-center mt-4">
+          <div className="search-results-container">
             {searchResults.length === 0 && !loading ? (
-              <div className="bg-white border border-gray-300 rounded-lg shadow-lg p-4 text-center text-gray-500 max-w-xs mx-auto">
-                <FontAwesomeIcon icon={faUsers} className="h-8 w-8 mb-2 text-gray-300" />
+              <div className="no-results-card">
+                <FontAwesomeIcon icon={faUsers} className="no-results-icon" />
                 <div>No users found matching your search.</div>
               </div>
             ) : searchResults.length > 0 ? (
-              <div className="flex flex-col items-center w-full">
+              <div className="search-results-list">
                 {searchResults.map((user) => {
                   const buttonProps = getFollowButtonContent(user);
                   return (
                     <Card
-                      className="mb-2 mx-auto"
+                      className="search-result-card"
                       key={user._id}
-                      style={{ maxWidth: '350px', width: '100%' }}
                     >
-                      <div className="p-4 flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-gray-900">{user.username}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
+                      <div className="search-result-content">
+                        <div className="search-result-user-info">
+                          <p className="search-result-username">{user.username}</p>
+                          <p className="search-result-email">{user.email}</p>
                         </div>
                         <button
                           onClick={() => handleFollowRequest(user._id)}
                           disabled={buttonProps.disabled}
-                          className={`btn ${
-                            buttonProps.disabled
-                              ? buttonProps.text === 'Following'
-                                ? 'btn-success'
-                                : buttonProps.text === 'Requested'
-                                ? 'btn-warning'
-                                : buttonProps.text === 'Private'
-                                ? 'btn-secondary'
-                                : 'btn-secondary'
-                              : buttonProps.text === 'Follow'
-                              ? 'btn-primary'
-                              : 'btn-secondary'
-                          } d-inline-flex align-items-center`}
+                          className={`btn ${buttonProps.className} follow-action-btn`}
                         >
                           {buttonProps.icon}
-                          <span className="ms-2">{buttonProps.text}</span>
+                          <span className="follow-btn-text">{buttonProps.text}</span>
                         </button>
                       </div>
                     </Card>
@@ -354,7 +343,7 @@ return {
   );
 };
 
-// Follow Requests Component (unchanged)
+// Follow Requests Component
 const FollowRequests = ({ onRequestHandled }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -404,36 +393,36 @@ const FollowRequests = ({ onRequestHandled }) => {
 
   if (requests.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <FontAwesomeIcon icon={faUsers} className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+      <div className="empty-state">
+        <FontAwesomeIcon icon={faUsers} className="empty-state-icon" />
         <p>No pending follow requests</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="follow-requests-container">
       {requests.map((request) => (
-        <div key={request._id} className="follow-request-card bg-white p-4 rounded-lg border border-gray-200 flex items-center justify-between" style={{ color: '#111' }}>
-          <div>
-            <p className="font-medium" style={{ color: '#111' }}>From User: {request.username || request.email || request._id}</p>
-            <p className="text-xs" style={{ color: '#666' }}>
+        <div key={request._id} className="follow-request-card">
+          <div className="request-info">
+            <p className="request-username">From User: {request.username || request.email || request._id}</p>
+            <p className="request-date">
               Requested {new Date(request.requestedAt).toLocaleDateString()}
             </p>
           </div>
-          <div className="flex space-x-2">
+          <div className="request-actions">
             <button
               onClick={() => handleRequest(request._id, 'accept')}
-              className="btn btn-success d-inline-flex align-items-center me-2"
+              className="btn btn-success request-btn"
             >
-              <FontAwesomeIcon icon={faUserCheck} className="h-4 w-4 me-1" />
+              <FontAwesomeIcon icon={faUserCheck} className="request-btn-icon" />
               Accept
             </button>
             <button
               onClick={() => handleRequest(request._id, 'reject')}
-              className="btn btn-danger d-inline-flex align-items-center"
+              className="btn btn-danger request-btn"
             >
-              <FontAwesomeIcon icon={faUserTimes} className="h-4 w-4 me-1" />
+              <FontAwesomeIcon icon={faUserTimes} className="request-btn-icon" />
               Decline
             </button>
           </div>
@@ -542,27 +531,26 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
     }
   };
 
-
   if (loading) {
     return <div className="text-center py-4">Loading notifications...</div>;
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="notifications-container">
       {unreadCount > 0 && (
-        <div className="flex items-center justify-end mb-4">
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <div className="unread-count-container">
+          <span className="unread-count-badge">
             {unreadCount} unread
           </span>
         </div>
       )}
       {notifications.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          <FontAwesomeIcon icon={faBell} className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+        <div className="empty-state">
+          <FontAwesomeIcon icon={faBell} className="empty-state-icon" />
           <p>No notifications yet</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="notifications-list">
           {notifications.map((notification) => {
             let message = '';
             const username = notification.data && notification.data.username ? notification.data.username : notification.sender.username;
@@ -591,16 +579,15 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
             return (
               <div
                 key={notification._id}
-                className="cursor-pointer bg-white p-4 shadow border border-gray-200 text-black d-flex flex-column align-items-stretch"
-                style={{ borderRadius: '24px' }}
+                className={`notification-card ${!notification.read ? 'unread' : ''}`}
                 onClick={() => !notification.read && markAsRead(notification._id)}
               >
-                <div className="mb-2 w-100">{message}</div>
-                <div className="d-flex flex-row gap-2 w-100">
+                <div className="notification-message">{message}</div>
+                <div className="notification-actions">
                   {showViewPassport && (
                     <a
                       href={passportUrl}
-                      className="btn btn-primary flex-fill"
+                      className="btn btn-primary notification-action-btn"
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={e => e.stopPropagation()}
@@ -609,7 +596,7 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
                     </a>
                   )}
                   <button
-                    className="btn btn-danger flex-fill"
+                    className="btn btn-danger notification-action-btn"
                     onClick={e => {
                       e.stopPropagation();
                       handleDismiss(notification._id);
@@ -679,19 +666,23 @@ const SocialDashboard = () => {
   return (
     <div className="social-dashboard-grid p-6">
       <div className="social-dashboard-card find-people">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><FontAwesomeIcon icon={faSearch} /> Find People</h2>
+        <h2 className="card-title">
+          <FontAwesomeIcon icon={faSearch} className="title-icon" /> Find People
+        </h2>
         <UserSearch onFollowUser={handleRefresh} />
       </div>
       <div className="social-dashboard-card requests">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><FontAwesomeIcon icon={faUserPlus} /> Requests</h2>
+        <h2 className="card-title">
+          <FontAwesomeIcon icon={faUserPlus} className="title-icon" /> Requests
+        </h2>
         <FollowRequests key={refreshKey} onRequestHandled={handleRefresh} />
       </div>
       <div className="social-dashboard-card notifications">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <FontAwesomeIcon icon={faBell} /> 
+        <h2 className="card-title">
+          <FontAwesomeIcon icon={faBell} className="title-icon" /> 
           Notifications
           {notificationCount > 0 && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-2">
+            <span className="notification-count-badge">
               {notificationCount}
             </span>
           )}
@@ -702,7 +693,9 @@ const SocialDashboard = () => {
         />
       </div>
       <div className="social-dashboard-card following">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><FontAwesomeIcon icon={faUsers} /> Following</h2>
+        <h2 className="card-title">
+          <FontAwesomeIcon icon={faUsers} className="title-icon" /> Following
+        </h2>
         <FollowedUsers 
           hiddenNotifications={hiddenNotifications} 
           setHiddenNotifications={setHiddenNotifications} 
