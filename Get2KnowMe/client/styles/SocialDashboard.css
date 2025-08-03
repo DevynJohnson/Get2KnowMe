@@ -80,11 +80,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20rem;
+  width: auto;
+  min-width: 120px;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border-radius: 8px;
-  margin: 1rem;
+  margin: 0.5rem;
   text-align: center;
   background: #fff;
   color: var(--primary-color, #4f8cff);
@@ -277,6 +278,13 @@
 
 .search-btn {
   min-width: 80px;
+  width: auto;
+}
+
+/* Scan QR button specific styling */
+.scan-qr-button {
+  width: auto;
+  min-width: 120px;
 }
 
 .btn-icon {
