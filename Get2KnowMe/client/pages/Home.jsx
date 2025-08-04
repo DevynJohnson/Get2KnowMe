@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthService from "../utils/auth.js";
 import "../styles/Home.css";
 
@@ -71,17 +72,17 @@ const Home = () => {
 
               {user ? (
                 <Link to="/profile" className="cta-button">
-                  <i className="fas fa-user"></i>
+                  <FontAwesomeIcon icon="user" />
                   Go to My Profile
                 </Link>
               ) : (
                 <div className="d-flex gap-3 justify-content-center flex-wrap">
                   <Link to="/register" className="cta-button">
-                    <i className="fas fa-user-plus"></i>
+                    <FontAwesomeIcon icon="user-plus" />
                     Get Started
                   </Link>
                   <Link to="/passport-lookup" className="cta-button secondary">
-                    <i className="fas fa-search"></i>
+                    <FontAwesomeIcon icon="search" />
                     View a Passport
                   </Link>
                 </div>
@@ -93,7 +94,7 @@ const Home = () => {
           <Card className="home-card mb-4">
             <Card.Body className="p-5">
               <h2 className="h3 mb-4">
-                <i className="fas fa-question-circle me-2"></i>
+                <FontAwesomeIcon icon="question-circle" className="me-2" />
                 What is a Communication Passport?
               </h2>
               <p className="mb-4">
@@ -105,9 +106,9 @@ const Home = () => {
 
               <Row>
                 <Col md={6}>
-                  <h5>
-                    <i className="fas fa-lightbulb me-2"></i>
-                    What's Included in a Communication Passport:
+                                    <h5>
+                    <FontAwesomeIcon icon="lightbulb" className="me-2" />
+                    What's Included?
                   </h5>
                   <ul className="feature-list-simple">
                     <li>
@@ -137,7 +138,7 @@ const Home = () => {
                 </Col>
                 <Col md={6}>
                   <h5>
-                    <i className="fas fa-users me-2"></i>
+                    <FontAwesomeIcon icon="users" className="me-2" />
                     Who Can Benefit:
                   </h5>
                   <ul className="feature-list-simple">
@@ -163,14 +164,14 @@ const Home = () => {
           <Card className="home-card mb-4">
             <Card.Body className="p-5">
               <h2 className="h3 mb-4">
-                <i className="fas fa-star me-2"></i>
+                <FontAwesomeIcon icon="star" className="me-2" />
                 Key Features
               </h2>
               <Row>
                 <Col sm={6} lg={3} xl={3} className="mb-4">
                   <div className="feature-card">
                     <div className="feature-icon-large mb-3">
-                      <i className="fas fa-comments"></i>
+                      <FontAwesomeIcon icon="comments" />
                     </div>
                     <h5>Easy Sharing</h5>
                     <p>
@@ -182,7 +183,7 @@ const Home = () => {
                 <Col sm={6} lg={3} xl={3} className="mb-4">
                   <div className="feature-card">
                     <div className="feature-icon-large mb-3">
-                      <i className="fas fa-user-shield"></i>
+                      <FontAwesomeIcon icon="user-shield" />
                     </div>
                     <h5>Privacy Focused</h5>
                     <p>Control what information you share and with whom.</p>
@@ -191,7 +192,7 @@ const Home = () => {
                 <Col sm={6} lg={3} xl={3} className="mb-4">
                   <div className="feature-card">
                     <div className="feature-icon-large mb-3">
-                      <i className="fas fa-mobile-alt"></i>
+                      <FontAwesomeIcon icon="mobile-alt" />
                     </div>
                     <h5>Mobile Friendly</h5>
                     <p>Access your passport anywhere, on any device.</p>
@@ -200,7 +201,7 @@ const Home = () => {
                 <Col sm={6} lg={3} xl={3} className="mb-4">
                   <div className="feature-card">
                     <div className="feature-icon-large mb-3">
-                      <i className="fas fa-heart"></i>
+                      <FontAwesomeIcon icon="heart" />
                     </div>
                     <h5>Be Understood</h5>
                     <p>
@@ -217,7 +218,7 @@ const Home = () => {
           <Card className="home-card">
             <Card.Body className="p-5">
               <h2 className="h3 mb-4">
-                <i className="fas fa-cogs me-2"></i>
+                <FontAwesomeIcon icon="cogs" className="me-2" />
                 How It Works
               </h2>
               <Row>
@@ -257,7 +258,7 @@ const Home = () => {
                 <div className="text-center mt-4">
                   <p className="mb-3">Ready to get started?</p>
                   <Link to="/register" className="cta-button">
-                    <i className="fas fa-rocket"></i>
+                    <FontAwesomeIcon icon="rocket" />
                     Create Your Passport
                   </Link>
                   <p className="text-muted mt-3 mb-0">

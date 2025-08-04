@@ -1,6 +1,8 @@
 // client/pages/settings/DangerZone.jsx
 import React, { useState } from 'react';
 import { Card, Form, Button, Alert, Modal, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { useAuth } from '../../utils/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -80,7 +82,7 @@ const DangerZone = () => {
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h4 className="text-danger">
-          <i className="fas fa-exclamation-triangle me-2"></i>
+          <FontAwesomeIcon icon="exclamation-triangle" className="me-2" />
           Danger Zone
         </h4>
       </div>
@@ -94,13 +96,13 @@ const DangerZone = () => {
       <Card className="border-danger">
         <Card.Header className="bg-danger text-white">
           <h5 className="mb-0">
-            <i className="fas fa-trash-alt me-2"></i>
+            <FontAwesomeIcon icon="trash-alt" className="me-2" />
             Delete Account
           </h5>
         </Card.Header>
         <Card.Body>
           <div className="alert alert-warning">
-            <i className="fas fa-exclamation-triangle me-2"></i>
+            <FontAwesomeIcon icon="exclamation-triangle" className="me-2" />
             <strong>Warning:</strong> This action cannot be undone!
           </div>
 
@@ -127,7 +129,7 @@ const DangerZone = () => {
               onClick={() => setShowDeleteModal(true)}
               className="btn-lg"
             >
-              <i className="fas fa-exclamation-triangle me-2"></i>
+              <FontAwesomeIcon icon="exclamation-triangle" className="me-2" />
               I want to delete my account
             </Button>
           </div>
@@ -144,7 +146,7 @@ const DangerZone = () => {
       >
         <Modal.Header className="bg-danger text-white">
           <Modal.Title>
-            <i className="fas fa-exclamation-triangle me-2"></i>
+            <FontAwesomeIcon icon="exclamation-triangle" className="me-2" />
             Confirm Account Deletion
           </Modal.Title>
         </Modal.Header>
@@ -213,7 +215,7 @@ const DangerZone = () => {
               </>
             ) : (
               <>
-                <i className="fas fa-trash-alt me-2"></i>
+                <FontAwesomeIcon icon="trash-alt" className="me-2" />
                 Delete My Account Forever
               </>
             )}

@@ -1,6 +1,7 @@
 // client/pages/settings/AppearanceSettings.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Form, Alert, Row, Col } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { colorSchemes, colorblindTypes, applyColorScheme, getDefaultTheme, getDefaultColorScheme } from '../../constants/colorSchemes.js';
 
 const AppearanceSettings = () => {
@@ -106,7 +107,7 @@ const AppearanceSettings = () => {
       <Card className="mb-4">
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-palette me-2"></i>
+            <FontAwesomeIcon icon="palette" className="me-2" />
             Theme Mode
           </h5>
         </Card.Header>
@@ -183,14 +184,14 @@ const AppearanceSettings = () => {
       <Card className="mb-4">
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-paint-brush me-2"></i>
+            <FontAwesomeIcon icon="paint-brush" className="me-2" />
             Color Scheme
           </h5>
         </Card.Header>
         <Card.Body style={{ opacity: colorblindMode ? 0.5 : 1, pointerEvents: colorblindMode ? 'none' : 'auto' }}>
           {colorblindMode && (
             <Alert variant="info" className="mb-3">
-              <i className="fas fa-info-circle me-2"></i>
+              <FontAwesomeIcon icon="info-circle" className="me-2" />
               Color scheme customization is not available when using colorblind mode.
             </Alert>
           )}
@@ -240,7 +241,7 @@ const AppearanceSettings = () => {
       <Card className="mb-4">
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-universal-access me-2"></i>
+            <FontAwesomeIcon icon="universal-access" className="me-2" />
             Accessibility Options
           </h5>
         </Card.Header>
@@ -272,7 +273,7 @@ const AppearanceSettings = () => {
           {colorblindMode && (
             <div className="mt-4 p-3 border rounded">
               <h6 className="mb-3">
-                <i className="fas fa-eye me-2"></i>
+                <FontAwesomeIcon icon="eye" className="me-2" />
                 Colorblind Type
               </h6>
               <p className="text-muted small mb-3">
@@ -326,7 +327,7 @@ const AppearanceSettings = () => {
       <Card>
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-info-circle me-2"></i>
+            <FontAwesomeIcon icon="info-circle" className="me-2" />
             Current Settings
           </h5>
         </Card.Header>
@@ -335,7 +336,7 @@ const AppearanceSettings = () => {
             <Col md={4}>
               <h6>Theme Mode</h6>
               <p className="text-muted">
-                <i className={`fas ${theme === 'dark' ? 'fa-moon' : 'fa-sun'} me-2`}></i>
+                <FontAwesomeIcon icon={theme === 'dark' ? 'moon' : 'sun'} className="me-2" />
                 {theme === 'dark' ? 'Dark Theme' : 'Light Theme'}
               </p>
             </Col>
@@ -359,7 +360,7 @@ const AppearanceSettings = () => {
             <Col md={4}>
               <h6>Accessibility</h6>
               <p className="text-muted">
-                <i className={`fas ${colorblindMode ? 'fa-check-circle text-success' : 'fa-times-circle'} me-2`}></i>
+                <FontAwesomeIcon icon={colorblindMode ? 'check-circle' : 'times-circle'} className={`me-2 ${colorblindMode ? 'text-success' : ''}`} />
                 {colorblindMode ? 'Enhanced Mode' : 'Standard Mode'}
               </p>
             </Col>

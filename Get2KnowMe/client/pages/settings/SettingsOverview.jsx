@@ -2,34 +2,35 @@
 import React from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const SettingsOverview = () => {
   const settingsCards = [
     {
       path: '/settings/profile',
       title: 'Profile Settings',
-      icon: 'fas fa-user',
+      icon: 'user',
       description: 'Update your username and email address',
       color: 'primary'
     },
     {
       path: '/settings/security',
       title: 'Security & Password',
-      icon: 'fas fa-shield-alt',
+      icon: 'shield-alt',
       description: 'Change password and security settings',
       color: 'success'
     },
     {
       path: '/settings/appearance',
       title: 'Appearance',
-      icon: 'fas fa-palette',
+      icon: 'palette',
       description: 'Customize theme and display preferences',
       color: 'info'
     },
     {
       path: '/settings/danger-zone',
       title: 'Danger Zone',
-      icon: 'fas fa-exclamation-triangle',
+      icon: 'exclamation-triangle',
       description: 'Account deletion and destructive actions',
       color: 'danger'
     }
@@ -56,7 +57,7 @@ const SettingsOverview = () => {
             >
               <Card.Body className="d-flex align-items-center">
                 <div className={`rounded-circle p-3 me-3 bg-${setting.color} bg-opacity-10`}>
-                  <i className={`${setting.icon} fa-2x text-${setting.color}`}></i>
+                  <FontAwesomeIcon icon={setting.icon} className={`fa-2x text-${setting.color}`} />
                 </div>
                 <div className="flex-grow-1">
                   <h5 className="card-title mb-1">{setting.title}</h5>
@@ -65,7 +66,7 @@ const SettingsOverview = () => {
                   </p>
                 </div>
                 <div>
-                  <i className="fas fa-chevron-right text-muted"></i>
+                  <FontAwesomeIcon icon="chevron-right" className="text-muted" />
                 </div>
               </Card.Body>
             </Card>
@@ -76,7 +77,7 @@ const SettingsOverview = () => {
       <Card className="mt-4">
         <Card.Header>
           <h5 className="mb-0">
-            <i className="fas fa-info-circle me-2"></i>
+            <FontAwesomeIcon icon="info-circle" className="me-2" />
             Quick Tips
           </h5>
         </Card.Header>
@@ -84,7 +85,7 @@ const SettingsOverview = () => {
           <Row>
             <Col md={6}>
               <h6 className="text-primary">
-                <i className="fas fa-lightbulb me-2"></i>
+                <FontAwesomeIcon icon="lightbulb" className="me-2" />
                 Security Best Practices
               </h6>
               <ul className="small text-muted">
@@ -95,7 +96,7 @@ const SettingsOverview = () => {
             </Col>
             <Col md={6}>
               <h6 className="text-success">
-                <i className="fas fa-shield-alt me-2"></i>
+                <FontAwesomeIcon icon="shield-alt" className="me-2" />
                 Account Safety
               </h6>
               <ul className="small text-muted">

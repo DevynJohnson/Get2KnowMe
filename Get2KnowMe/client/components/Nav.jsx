@@ -3,22 +3,8 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Navbar, Nav as BsNav, Container } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-  faCog,
-  faUser,
-  faShieldAlt,
-  faPalette,
-  faExclamationTriangle,
-  faUserPlus,
-  faSignInAlt,
-  faSignOutAlt
-} from '@fortawesome/free-solid-svg-icons';
 import AuthService from "../utils/auth.js";
 import "../styles/Nav.css";
-
-// Add icons to library
-library.add(faCog, faUser, faShieldAlt, faPalette, faExclamationTriangle, faUserPlus, faSignInAlt, faSignOutAlt);
 
 const NavTabs = () => {
   // Get the current path for active styling
@@ -133,7 +119,7 @@ const NavTabs = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <FontAwesomeIcon icon={faCog} className="nav-icon" />
+                <FontAwesomeIcon icon="cog" className="nav-icon" />
                 Settings
               </button>
               <ul
@@ -145,7 +131,7 @@ const NavTabs = () => {
                   <>
                     <li>
                       <h6 className="dropdown-header">
-                        <FontAwesomeIcon icon={faUser} className="dropdown-header-icon" />
+                        <FontAwesomeIcon icon="user" className="dropdown-header-icon" />
                         Account Settings
                       </h6>
                     </li>
@@ -155,7 +141,7 @@ const NavTabs = () => {
                         to="/settings/profile"
                         onClick={closeNavbar}
                       >
-                        <FontAwesomeIcon icon={faUser} className="dropdown-item-icon" />
+                        <FontAwesomeIcon icon="user" className="dropdown-item-icon" />
                         Profile Settings
                       </Link>
                     </li>
@@ -165,7 +151,7 @@ const NavTabs = () => {
                         to="/settings/security"
                         onClick={closeNavbar}
                       >
-                        <FontAwesomeIcon icon={faShieldAlt} className="dropdown-item-icon" />
+                        <FontAwesomeIcon icon="shield-alt" className="dropdown-item-icon" />
                         Security & Password
                       </Link>
                     </li>
@@ -175,7 +161,7 @@ const NavTabs = () => {
                         to="/settings/appearance"
                         onClick={closeNavbar}
                       >
-                        <FontAwesomeIcon icon={faPalette} className="dropdown-item-icon" />
+                        <FontAwesomeIcon icon="palette" className="dropdown-item-icon" />
                         Appearance
                       </Link>
                     </li>
@@ -188,7 +174,7 @@ const NavTabs = () => {
                         to="/settings/danger-zone"
                         onClick={closeNavbar}
                       >
-                        <FontAwesomeIcon icon={faExclamationTriangle} className="dropdown-item-icon" />
+                        <FontAwesomeIcon icon="exclamation-triangle" className="dropdown-item-icon" />
                         Danger Zone
                       </Link>
                     </li>
@@ -197,7 +183,7 @@ const NavTabs = () => {
                   <>
                     <li>
                       <h6 className="dropdown-header">
-                        <FontAwesomeIcon icon={faUserPlus} className="dropdown-header-icon" />
+                        <FontAwesomeIcon icon="user-plus" className="dropdown-header-icon" />
                         Settings
                       </h6>
                     </li>
@@ -207,7 +193,7 @@ const NavTabs = () => {
                         to="/settings/security"
                         onClick={closeNavbar}
                       >
-                        <FontAwesomeIcon icon={faShieldAlt} className="dropdown-item-icon" />
+                        <FontAwesomeIcon icon="shield-alt" className="dropdown-item-icon" />
                         Security & Password
                       </Link>
                     </li>
@@ -217,7 +203,7 @@ const NavTabs = () => {
                         to="/settings/appearance"
                         onClick={closeNavbar}
                       >
-                        <FontAwesomeIcon icon={faPalette} className="dropdown-item-icon" />
+                        <FontAwesomeIcon icon="palette" className="dropdown-item-icon" />
                         Appearance
                       </Link>
                     </li>
@@ -256,7 +242,7 @@ const NavTabs = () => {
                 className="nav-item-custom"
                 onClick={closeNavbar}
               >
-                <FontAwesomeIcon icon={faSignInAlt} className="nav-icon" />
+                <FontAwesomeIcon icon="sign-in-alt" className="nav-icon" />
                 Login
               </BsNav.Link>
             ) : (
@@ -266,7 +252,7 @@ const NavTabs = () => {
                   onClick={handleLogout}
                   className="nav-item-custom logout-btn"
                 >
-                  <FontAwesomeIcon icon={faSignOutAlt} className="nav-icon" />
+                  <FontAwesomeIcon icon="sign-out-alt" className="nav-icon" />
                   Logout
                 </BsNav.Link>
               </>

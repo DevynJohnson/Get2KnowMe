@@ -123,7 +123,8 @@ To run Get2KnowMe locally for development or contribution:
 - **Bootstrap 5.3.7** - CSS framework for responsive design
 - **Vite 7.0.0** - Fast build tool and development server
 - **@vitejs/plugin-react 4.5.2** - Vite plugin for React
-- **@fortawesome/react-fontawesome 0.2.2** - Font Awesome React components
+- **@fortawesome/react-fontawesome 0.2.3** - Font Awesome React components
+- **@fortawesome/fontawesome-svg-core 7.0.0** - Font Awesome core library
 - **@fortawesome/free-solid-svg-icons 7.0.0** - Font Awesome icon set
 - **QRCode 1.5.4** - QR code generation
 - **@zxing/library 0.21.3** - QR code scanning
@@ -160,12 +161,14 @@ To run Get2KnowMe locally for development or contribution:
 
 ### Additional Libraries
 - **libphonenumber-js 1.12.9** - Phone number validation and formatting
-- **Font Awesome** - Icon library (via npm and CDN)
+- **Font Awesome** - Icon library (via npm)
+- **Terser 5.43.1** - JavaScript minification and optimization
 
 ### Development Tools
 - **ESLint 9.29.0** - Code linting and formatting
 - **Concurrently 9.2.0** - Run multiple npm scripts simultaneously
 - **Vite React Plugin 4.5.2** - React support for Vite
+- **Terser 5.43.1** - JavaScript minification and optimization
 - **eslint-plugin-react-hooks 5.2.0**
 - **eslint-plugin-react-refresh 0.4.20**
 - **@eslint/js 9.29.0**
@@ -174,9 +177,12 @@ To run Get2KnowMe locally for development or contribution:
 - **globals 16.2.0**
 
 ### Testing
-- **Jest 30.0.4** - JavaScript testing framework
-- **Supertest 7.1.1** - HTTP assertions for integration testing
-- **mongodb-memory-server 10.1.4** - In-memory MongoDB server for testing
+### Testing
+- **Jest 30.0.4** - JavaScript testing framework for unit and integration tests
+- **Supertest 7.1.1** - HTTP endpoint testing for API validation
+- **MongoDB Memory Server 10.1.4** - In-memory database for isolated testing
+- **Puppeteer 24.15.0** - Browser automation for end-to-end testing
+- **Axios 1.11.0** - HTTP client library for API testing
 
 ## Security Features
 
@@ -284,6 +290,49 @@ The application includes comprehensive testing with:
 - **Jest 30.0.4** - JavaScript testing framework for unit and integration tests
 - **Supertest 7.1.1** - HTTP endpoint testing for API validation
 - **MongoDB Memory Server 10.1.4** - In-memory database for isolated testing
+- **Puppeteer 24.15.0** - Browser automation for end-to-end testing
+- **Axios 1.11.0** - HTTP client library for API testing
+
+### Test Suites
+The application includes multiple test approaches:
+
+#### Unit & Integration Tests
+```bash
+npm run test
+```
+Runs Jest-based unit and integration tests for API endpoints and core functionality.
+
+#### Endpoint Health Testing
+```bash
+npm run test:endpoints
+```
+Comprehensive browser automation testing using Puppeteer to verify all frontend routes load correctly, FontAwesome icons render properly, and no JavaScript errors occur.
+
+#### API Health Testing
+```bash
+npm run test:api
+```
+Backend API endpoint testing to verify server functionality and response codes.
+
+#### Quick Endpoint Testing
+```bash
+npm run test:quick
+```
+Fast frontend endpoint verification that checks all routes return 200 status codes and counts FontAwesome icon usage.
+
+#### Comprehensive Testing
+```bash
+npm run test:all
+```
+Runs all available test suites for complete application validation.
+
+### Test Infrastructure
+The testing infrastructure includes:
+- **endpoint-health-check.js** - Browser automation testing with Puppeteer
+- **api-health-check.js** - Backend API endpoint validation
+- **quick-endpoint-test.js** - Fast frontend route verification
+- **manual-endpoint-test.js** - Manual testing guidance and procedures
+- **check-server-status.js** - Development server connectivity verification
 
 ### Manual Testing
 The application includes comprehensive manual testing procedures for:
@@ -373,6 +422,8 @@ Special thanks to the neurodivergent community, healthcare professionals, and be
 - [Jest](https://jestjs.io) - JavaScript testing framework
 - [Supertest](https://www.npmjs.com/package/supertest) - HTTP assertions for integration testing
 - [mongodb-memory-server](https://www.npmjs.com/package/mongodb-memory-server) - In-memory MongoDB server for testing
+- [Puppeteer](https://pptr.dev/) - Browser automation for end-to-end testing
+- [Axios](https://axios-http.com/) - HTTP client library for API testing
             
 ## GDPR & Privacy Compliance
 

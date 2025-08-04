@@ -8,6 +8,10 @@
     "build": "vite build",
     "lint": "eslint client",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:endpoints": "node test/endpoint-health-check.js",
+    "test:api": "node test/api-health-check.js",
+    "test:quick": "node test/quick-endpoint-test.js",
+    "test:all": "npm run test && npm run test:quick",
     "preview": "vite preview",
     "server:dev": "node --env-file=.env --watch server/server.js",
     "server:start": "node --env-file=.env server/server.js",
@@ -51,6 +55,7 @@
     "@eslint/js": "^9.29.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "axios": "^1.11.0",
     "concurrently": "^9.2.0",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -58,6 +63,8 @@
     "globals": "^16.2.0",
     "jest": "^30.0.4",
     "mongodb-memory-server": "^10.1.4",
-    "supertest": "^7.1.1"
+    "puppeteer": "^24.15.0",
+    "supertest": "^7.1.1",
+    "terser": "^5.43.1"
   }
 }

@@ -1,6 +1,8 @@
 import React from "react";
 import { Card, Row, Col, Accordion, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import AuthService from "../utils/auth.js";
 import "../styles/EducationContent.css";
 
@@ -111,7 +113,7 @@ export const AutismContent = () => {
             variant="primary"
             size="lg"
           >
-            <i className="fas fa-id-card me-2"></i>
+            <FontAwesomeIcon icon="id-card" className="me-2" />
             Create your personalised autism-friendly passport!
           </Button>
         </div>
@@ -243,7 +245,7 @@ export const ADHDContent = () => {
             variant="primary"
             size="lg"
           >
-            <i className="fas fa-id-card me-2"></i>
+            <FontAwesomeIcon icon="id-card" className="me-2" />
             Start creating your ADHD-friendly passport
           </Button>
         </div>
@@ -339,7 +341,7 @@ export const DyslexiaContent = () => {
             variant="primary"
             size="lg"
           >
-            <i className="fas fa-id-card me-2"></i>
+            <FontAwesomeIcon icon="id-card" className="me-2" />
             Start creating your Dyslexia-friendly passport
           </Button>
         </div>
@@ -435,7 +437,7 @@ export const DyscalculiaContent = () => {
             variant="primary"
             size="lg"
           >
-            <i className="fas fa-id-card me-2"></i>
+            <FontAwesomeIcon icon="id-card" className="me-2" />
             Start creating your Dyscalculia-friendly passport
           </Button>
         </div>

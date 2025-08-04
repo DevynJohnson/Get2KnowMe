@@ -1,6 +1,8 @@
 import React from "react";
 import { Accordion, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const DyslexiaContent = ({ isLoggedIn }) => (
   <Accordion.Item eventKey="2">
@@ -79,7 +81,7 @@ const DyslexiaContent = ({ isLoggedIn }) => (
           variant="primary"
           size="lg"
         >
-          <i className="fas fa-id-card me-2"></i>
+          <FontAwesomeIcon icon="id-card" className="me-2" />
           Start creating your Dyslexia-friendly passport
         </Button>
       </div>

@@ -7,6 +7,7 @@ import {
   Alert,
   Button
 } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import QRCodeGenerator from "./QRCodeGenerator.jsx";
 import get2knowmeLogo from "/get2knowme_logo_png.png";
 import { formatPhoneForDisplay, createPhoneLink } from "../utils/phoneUtils.js";
@@ -95,7 +96,7 @@ const CommunicationPassport = ({
             {passport.healthAlert && passport.healthAlert.length > 0 && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-notes-medical section-icon text-danger"></i>
+                  <FontAwesomeIcon icon="notes-medical" className="section-icon text-danger" />
                   <h4 className="section-title">Health Alerts</h4>
                 </div>
                 <div className="section-content">
@@ -115,7 +116,7 @@ const CommunicationPassport = ({
                     alertObj.detail ? (
                       <div key={idx} className={`mt-1 ms-1 ${alertObj.label === 'Allergies' ? 'allergy-list-text' : 'custom-health-alert-text'}`}>
                         {alertObj.label === 'Allergies' ? null : (
-                          <i className="fas fa-question-circle text-purple me-1"></i>
+                          <FontAwesomeIcon icon="question-circle" className="text-purple me-1" />
                         )}
                         <span className="fw-bold">{alertObj.label}:</span> {alertObj.detail}
                       </div>
@@ -128,7 +129,7 @@ const CommunicationPassport = ({
             {/* Diagnosis Section */}
             <div className="passport-section mb-4">
               <div className="section-header">
-                <i className="fas fa-stethoscope section-icon"></i>
+                <FontAwesomeIcon icon="stethoscope" className="section-icon" />
                 <h4 className="section-title">Diagnosis</h4>
               </div>
               <div className="section-content">
@@ -147,7 +148,7 @@ const CommunicationPassport = ({
               passport.communicationPreferences.length > 0 && (
                 <div className="passport-section mb-4">
                   <div className="section-header">
-                    <i className="fas fa-comments section-icon"></i>
+                    <FontAwesomeIcon icon="comments" className="section-icon" />
                     <h4 className="section-title">
                       Communication Preferences
                     </h4>
@@ -157,7 +158,7 @@ const CommunicationPassport = ({
                       {passport.communicationPreferences.map(
                         (preference, index) => (
                           <li key={index} className="preference-item">
-                            <i className="fas fa-check-circle preference-icon"></i>
+                            <FontAwesomeIcon icon="check-circle" className="preference-icon" />
                             {preference}
                           </li>
                         )
@@ -171,7 +172,7 @@ const CommunicationPassport = ({
             {passport.avoidWords && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-exclamation-triangle section-icon text-warning"></i>
+                  <FontAwesomeIcon icon="exclamation-triangle" className="section-icon text-warning" />
                   <h4 className="section-title">
                     Words/Phrases/Topics to Avoid
                   </h4>
@@ -186,7 +187,7 @@ const CommunicationPassport = ({
             {passport.customPreferences && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-plus-circle section-icon"></i>
+                  <FontAwesomeIcon icon="plus-circle" className="section-icon" />
                   <h4 className="section-title">Additional Preferences</h4>
                 </div>
                 <div className="section-content">
@@ -201,14 +202,14 @@ const CommunicationPassport = ({
             {passport.trustedContact && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-user-shield section-icon text-success"></i>
+                  <FontAwesomeIcon icon="user-shield" className="section-icon text-success" />
                   <h4 className="section-title">Trusted Contact</h4>
                 </div>
                 <div className="section-content">
                   {!trustedContactVisible ? (
                     <div className="privacy-protection">
                       <div className="privacy-message mb-3">
-                        <i className="fas fa-lock me-2 text-muted"></i>
+                        <FontAwesomeIcon icon="lock" className="me-2 text-muted" />
                         <span className="text-muted">
                           Contact information is hidden for privacy protection
                         </span>
@@ -218,7 +219,7 @@ const CommunicationPassport = ({
                         onClick={() => setTrustedContactVisible(true)}
                         className="show-contact-btn btn-secondary"
                       >
-                        <i className="fas fa-eye me-2"></i>
+                        <FontAwesomeIcon icon="eye" className="me-2" />
                         Show Trusted Person Contact Information
                       </Button>
                     </div>
@@ -226,7 +227,7 @@ const CommunicationPassport = ({
                     <div className="trusted-contact-revealed">
                       <div className="d-flex justify-content-between align-items-center mb-3">
                         <div className="privacy-note">
-                          <i className="fas fa-shield-alt me-2 text-success"></i>
+                          <FontAwesomeIcon icon="shield-alt" className="me-2 text-success" />
                           <small className="text-success">
                             Contact information visible
                           </small>
@@ -237,18 +238,18 @@ const CommunicationPassport = ({
                           onClick={() => setTrustedContactVisible(false)}
                           className="hide-contact-btn"
                         >
-                          <i className="fas fa-eye-slash me-1"></i>
+                          <FontAwesomeIcon icon="eye-slash" className="me-1" />
                           Hide
                         </Button>
                       </div>
                       <div className="trusted-contact-card">
                         <div className="contact-info">
                           <div className="contact-name">
-                            <i className="fas fa-user contact-icon"></i>
+                            <FontAwesomeIcon icon="user" className="contact-icon" />
                             <strong>{passport.trustedContact.name}</strong>
                           </div>
                           <div className="contact-phone">
-                            <i className="fas fa-phone contact-icon"></i>
+                            <FontAwesomeIcon icon="phone" className="contact-icon" />
                             <a
                               href={createPhoneLink(
                                 passport.trustedContact.phone
@@ -261,7 +262,7 @@ const CommunicationPassport = ({
                           </div>
                           {passport.trustedContact.email && (
                             <div className="contact-email">
-                              <i className="fas fa-envelope contact-icon"></i>
+                              <FontAwesomeIcon icon="envelope" className="contact-icon" />
                               <a
                                 href={`mailto:${passport.trustedContact.email}`}
                               >
@@ -281,12 +282,12 @@ const CommunicationPassport = ({
             {passport.triggers && passport.triggers.trim() !== "" && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-bolt section-icon text-danger"></i>
+                  <FontAwesomeIcon icon="bolt" className="section-icon text-danger" />
                   <h4 className="section-title">Triggers</h4>
                 </div>
                 <div className="section-content">
                   <div className="triggers-box">
-                    <i className="fas fa-exclamation-circle trigger-icon text-danger me-2"></i>
+                    <FontAwesomeIcon icon="exclamation-circle" className="trigger-icon text-danger me-2" />
                     {passport.triggers}
                   </div>
                 </div>
@@ -297,12 +298,12 @@ const CommunicationPassport = ({
             {passport.likes && passport.likes.trim() !== "" && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-thumbs-up section-icon text-success"></i>
+                  <FontAwesomeIcon icon="thumbs-up" className="section-icon text-success" />
                   <h4 className="section-title">Likes</h4>
                 </div>
                 <div className="section-content">
                   <div className="likes-box">
-                    <i className="fas fa-heart like-icon text-success me-2"></i>
+                    <FontAwesomeIcon icon="heart" className="like-icon text-success me-2" />
                     {passport.likes}
                   </div>
                 </div>
@@ -313,12 +314,12 @@ const CommunicationPassport = ({
             {passport.dislikes && passport.dislikes.trim() !== "" && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-thumbs-down section-icon text-warning"></i>
+                  <FontAwesomeIcon icon="thumbs-down" className="section-icon text-warning" />
                   <h4 className="section-title">Dislikes</h4>
                 </div>
                 <div className="section-content">
                   <div className="dislikes-box">
-                    <i className="fas fa-minus-circle dislike-icon text-warning me-2"></i>
+                    <FontAwesomeIcon icon="minus-circle" className="dislike-icon text-warning me-2" />
                     {passport.dislikes}
                   </div>
                 </div>
@@ -329,7 +330,7 @@ const CommunicationPassport = ({
             {passport.otherInformation && (
               <div className="passport-section mb-4">
                 <div className="section-header">
-                  <i className="fas fa-info-circle section-icon"></i>
+                  <FontAwesomeIcon icon="info-circle" className="section-icon" />
                   <h4 className="section-title">Additional Information</h4>
                 </div>
                 <div className="section-content">
@@ -344,7 +345,7 @@ const CommunicationPassport = ({
             <div className="passport-footer mt-4 pt-3 border-top">
               <div className="d-flex justify-content-between align-items-center">
                 <small className="text-muted">
-                  <i className="fas fa-clock"></i>
+                  <FontAwesomeIcon icon="clock" />
                   Last updated: {formatDate(passport.updatedAt)}
                 </small>
                 <div className="d-flex gap-2">
@@ -357,7 +358,7 @@ const CommunicationPassport = ({
                         title="Generate QR code for easy sharing"
                         className="btn-secondary"
                       >
-                        <i className="fas fa-qrcode me-1"></i>
+                        <FontAwesomeIcon icon="qrcode" className="me-1" />
                         QR Code
                       </Button>
                       <Button
@@ -366,7 +367,7 @@ const CommunicationPassport = ({
                         onClick={() => window.print()}
                         className="btn-secondary-reverse"
                       >
-                        <i className="fas fa-print me-1"></i>
+                        <FontAwesomeIcon icon="print" className="me-1" />
                         Print
                       </Button>
                     </>
@@ -380,7 +381,7 @@ const CommunicationPassport = ({
         {/* Emergency Notice */}
         <Alert variant="info" className="mt-3 text-center">
           <Alert.Heading className="h6">
-            <i className="fas fa-info-circle"></i> Important Notice
+            <FontAwesomeIcon icon="info-circle" /> Important Notice
           </Alert.Heading>
           <p className="mb-0 small">
             If additional support is needed, please contact the trusted person
