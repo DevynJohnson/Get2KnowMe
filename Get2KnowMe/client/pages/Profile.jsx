@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthService from "../utils/auth.js";
 import QRCodeGenerator from "../components/QRCodeGenerator.jsx";
 import { usePassportData } from "../hooks/usePassportData.js";
@@ -32,7 +33,7 @@ const Profile = () => {
                 <h3>Please Log In</h3>
                 <p>You need to be logged in to view your profile.</p>
                 <Link to="/login" className="cta-button">
-                  <i className="fas fa-sign-in-alt"></i>
+                  <FontAwesomeIcon icon="sign-in-alt" />
                   Sign In
                 </Link>
               </Card.Body>
@@ -52,7 +53,7 @@ const Profile = () => {
             <Card.Body className="p-5">
               <div className="welcome-message">
                 {/* <h1 className="display-5 mb-3">
-                  <i className="fas fa-user-circle me-2"></i>
+                  <FontAwesomeIcon icon="user-circle" className="me-2" />
                   My Profile
                 </h1> */}
                 <h3>
@@ -74,7 +75,7 @@ const Profile = () => {
                     to="/create-passport"
                     className={`cta-button ${isLoading ? 'disabled' : ''}`}
                   >
-                    <i className="fas fa-id-card"></i>
+                    <FontAwesomeIcon icon="id-card" />
                     {isLoading ? "Loading..." : "Create My Passport"}
                   </Link>
                 )}
@@ -84,7 +85,7 @@ const Profile = () => {
                     onClick={() => setShowQRModal(true)}
                     title="Generate QR code to share your passport"
                   >
-                    <i className="fas fa-qrcode"></i>
+                    <FontAwesomeIcon icon="qrcode" />
                     Share My QR Code
                   </button>
                 )}
@@ -97,14 +98,14 @@ const Profile = () => {
             <Card className="home-card">
               <Card.Body className="p-4">
                 <h5>
-                  <i className="fas fa-bolt me-2"></i>
+                  <FontAwesomeIcon icon="bolt" className="me-2" />
                   Quick Actions
                 </h5>
                 <Row className="mt-3">
                   <Col md={6} className="mb-3">
                     <Link to="/my-passport" className="quick-action-link">
                       <div className="quick-action-card">
-                        <i className="fas fa-eye"></i>
+                        <FontAwesomeIcon icon="eye" />
                         <span>View My Passport</span>
                       </div>
                     </Link>
@@ -112,7 +113,7 @@ const Profile = () => {
                   <Col md={6} className="mb-3">
                     <Link to="/passport-lookup" className="quick-action-link">
                       <div className="quick-action-card">
-                        <i className="fas fa-search"></i>
+                        <FontAwesomeIcon icon="search" />
                         <span>View Someone's Passport</span>
                       </div>
                     </Link>
@@ -120,7 +121,7 @@ const Profile = () => {
                   <Col md={6} className="mb-3">
                     <Link to="/create-passport" className="quick-action-link">
                       <div className="quick-action-card">
-                        <i className="fas fa-edit"></i>
+                        <FontAwesomeIcon icon="edit" />
                         <span>Edit My Passport</span>
                       </div>
                     </Link>
@@ -128,7 +129,7 @@ const Profile = () => {
                   <Col md={6} className="mb-3">
                     <Link to="/settings/profile" className="quick-action-link">
                       <div className="quick-action-card">
-                        <i className="fas fa-user-cog"></i>
+                        <FontAwesomeIcon icon="user-cog" />
                         <span>Account Settings</span>
                       </div>
                     </Link>

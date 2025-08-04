@@ -9,6 +9,8 @@ import {
   Card,
   Alert,
 } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { useNavigate } from "react-router-dom";
 import QRCodeScanner from "../components/QRCodeScanner.jsx";
 import "../styles/PasscodeLookup.css";
@@ -102,7 +104,7 @@ const PasscodeLookup = () => {
             <Card.Body className="p-4">
               <div className="text-center mb-4">
                 <div className="lookup-icon mb-3">
-                  <i className="fas fa-search"></i>
+                  <FontAwesomeIcon icon="search" />
                 </div>
                 <h2 className="lookup-title">Passport Lookup</h2>
                 <p className="text-muted">
@@ -150,7 +152,7 @@ const PasscodeLookup = () => {
                     </>
                   ) : (
                     <>
-                      <i className="fas fa-eye me-2"></i>
+                      <FontAwesomeIcon icon="eye" className="me-2" />
                       View Passport
                     </>
                   )}
@@ -169,7 +171,7 @@ const PasscodeLookup = () => {
                   size="lg"
                   onClick={() => setShowScanner(true)}
                 >
-                  <i className="fas fa-camera me-2"></i>
+                  <FontAwesomeIcon icon="camera" className="me-2" />
                   Scan QR Code
                 </Button>
               </Form>
@@ -186,7 +188,7 @@ const PasscodeLookup = () => {
 
               <div className="emergency-notice mt-4 p-3">
                 <div className="text-center">
-                  <i className="fas fa-exclamation-triangle text-warning mb-2"></i>
+                  <FontAwesomeIcon icon="exclamation-triangle" className="text-warning mb-2" />
                   <h6 className="text-warning mb-2">Emergency Assistance</h6>
                   <p className="small text-muted mb-0">
                     If you need immediate support, contact the trusted person

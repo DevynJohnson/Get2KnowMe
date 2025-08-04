@@ -3,6 +3,8 @@ import React from 'react';
 import { useAuth } from '../utils/AuthContext';
 import { Container, Row, Col, Card, Nav } from 'react-bootstrap';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import '../styles/Settings.css';
 
 const Settings = () => {
@@ -13,25 +15,25 @@ const Settings = () => {
     {
       path: '/settings/profile',
       title: 'Profile Settings',
-      icon: 'fas fa-user',
+      icon: "user",
       description: 'Edit your username, email address, or export your data'
     },
     {
       path: '/settings/security',
       title: 'Security & Password',
-      icon: 'fas fa-shield-alt',
+      icon: "shield-alt",
       description: 'Change or reset your password'
     },
     {
       path: '/settings/appearance',
       title: 'Appearance',
-      icon: 'fas fa-palette',
+      icon: "palette",
       description: 'Customize light mode/dark mode, choose a color theme, or adjust accessibility settings'
     },
     {
       path: '/settings/danger-zone',
       title: 'Danger Zone',
-      icon: 'fas fa-exclamation-triangle',
+      icon: "exclamation-triangle",
       description: 'Delete your account. This action is irreversible and will permanently remove all your data.'
     }
   ];
@@ -43,7 +45,7 @@ const Settings = () => {
           <Card className="settings-sidebar">
             <Card.Header className="bg-primary text-white">
               <h5 className="mb-0">
-                <i className="fas fa-cog me-2"></i>
+                <FontAwesomeIcon icon="cog" className="me-2" />
                 Settings
               </h5>
             </Card.Header>

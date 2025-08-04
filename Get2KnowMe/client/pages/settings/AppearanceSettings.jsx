@@ -1,6 +1,7 @@
 // client/pages/settings/AppearanceSettings.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Form, Alert, Row, Col } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { colorSchemes, colorblindTypes, applyColorScheme, getDefaultTheme, getDefaultColorScheme } from '../../constants/colorSchemes.js';
 
 const AppearanceSettings = () => {
@@ -87,7 +88,7 @@ const AppearanceSettings = () => {
     setDyslexiaFont(enabled);
     localStorage.setItem('dyslexiaFont', enabled.toString());
     document.body.classList.toggle('dyslexia-font', enabled);
-    showAlert(enabled ? 'Dyslexia-friendly font enabled!' : 'Dyslexia-friendly font disabled!');
+    showAlert(enabled ? 'Atkinson Hyperlegible font enabled!' : 'Dyslexia-friendly font disabled!');
   };
 
   return (
@@ -106,7 +107,7 @@ const AppearanceSettings = () => {
       <Card className="mb-4">
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-palette me-2"></i>
+            <FontAwesomeIcon icon="palette" className="me-2" />
             Theme Mode
           </h5>
         </Card.Header>
@@ -183,14 +184,14 @@ const AppearanceSettings = () => {
       <Card className="mb-4">
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-paint-brush me-2"></i>
+            <FontAwesomeIcon icon="paint-brush" className="me-2" />
             Color Scheme
           </h5>
         </Card.Header>
         <Card.Body style={{ opacity: colorblindMode ? 0.5 : 1, pointerEvents: colorblindMode ? 'none' : 'auto' }}>
           {colorblindMode && (
             <Alert variant="info" className="mb-3">
-              <i className="fas fa-info-circle me-2"></i>
+              <FontAwesomeIcon icon="info-circle" className="me-2" />
               Color scheme customization is not available when using colorblind mode.
             </Alert>
           )}
@@ -240,7 +241,7 @@ const AppearanceSettings = () => {
       <Card className="mb-4">
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-universal-access me-2"></i>
+            <FontAwesomeIcon icon="universal-access" className="me-2" />
             Accessibility Options
           </h5>
         </Card.Header>
@@ -259,20 +260,19 @@ const AppearanceSettings = () => {
           <Form.Check
             type="switch"
             id="dyslexia-font"
-            label="Dyslexia-Friendly Font"
+            label="Dyslexia-Friendly Font (Atkinson Hyperlegible)"
             checked={dyslexiaFont}
             onChange={(e) => handleDyslexiaFontChange(e.target.checked)}
             className="mb-3"
           />
           <Form.Text className="text-muted mb-4 d-block">
-            Uses high contrast, safe colors that are easier to distinguish and less overwhelming. 
-            Reduces bright colors that may cause sensory overload.
+            Uses Atkinson Hyperlegible, a research-backed font designed to improve readability for people with dyslexia and low vision. This font features enhanced character differentiation and spacing.
           </Form.Text>
 
           {colorblindMode && (
             <div className="mt-4 p-3 border rounded">
               <h6 className="mb-3">
-                <i className="fas fa-eye me-2"></i>
+                <FontAwesomeIcon icon="eye" className="me-2" />
                 Colorblind Type
               </h6>
               <p className="text-muted small mb-3">
@@ -326,7 +326,7 @@ const AppearanceSettings = () => {
       <Card>
         <Card.Header className="gradient-header">
           <h5 className="mb-0 text-white">
-            <i className="fas fa-info-circle me-2"></i>
+            <FontAwesomeIcon icon="info-circle" className="me-2" />
             Current Settings
           </h5>
         </Card.Header>
@@ -335,7 +335,7 @@ const AppearanceSettings = () => {
             <Col md={4}>
               <h6>Theme Mode</h6>
               <p className="text-muted">
-                <i className={`fas ${theme === 'dark' ? 'fa-moon' : 'fa-sun'} me-2`}></i>
+                <FontAwesomeIcon icon={theme === 'dark' ? 'moon' : 'sun'} className="me-2" />
                 {theme === 'dark' ? 'Dark Theme' : 'Light Theme'}
               </p>
             </Col>
@@ -359,7 +359,7 @@ const AppearanceSettings = () => {
             <Col md={4}>
               <h6>Accessibility</h6>
               <p className="text-muted">
-                <i className={`fas ${colorblindMode ? 'fa-check-circle text-success' : 'fa-times-circle'} me-2`}></i>
+                <FontAwesomeIcon icon={colorblindMode ? 'check-circle' : 'times-circle'} className={`me-2 ${colorblindMode ? 'text-success' : ''}`} />
                 {colorblindMode ? 'Enhanced Mode' : 'Standard Mode'}
               </p>
             </Col>
@@ -375,58 +375,6 @@ const AppearanceSettings = () => {
           </div>
         </Card.Body>
       </Card>
-
-      <style jsx>{`
-        .theme-card, .color-scheme-card {
-          transition: all 0.3s ease;
-        }
-        
-        .theme-card:hover, .color-scheme-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .theme-preview {
-          height: 80px;
-          border-radius: 8px;
-          overflow: hidden;
-          border: 1px solid #dee2e6;
-        }
-        
-        .preview-header {
-          height: 20px;
-        }
-        
-        .preview-content {
-          height: 60px;
-          padding: 8px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        
-        .preview-text {
-          height: 8px;
-          border-radius: 4px;
-          opacity: 0.7;
-        }
-        
-        .preview-text:first-child {
-          width: 70%;
-        }
-        
-        .preview-text:last-child {
-          width: 50%;
-        }
-        
-        .dark-preview .preview-content {
-          background-color: #343a40;
-        }
-        
-        .dark-preview .preview-text {
-          background-color: #6c757d;
-        }
-      `}</style>
     </>
   );
 };

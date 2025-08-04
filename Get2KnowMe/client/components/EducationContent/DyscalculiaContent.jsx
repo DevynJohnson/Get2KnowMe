@@ -1,6 +1,8 @@
 import React from "react";
 import { Accordion, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const DyscalculiaContent = ({ isLoggedIn }) => (
   <Accordion.Item eventKey="3">
@@ -79,7 +81,7 @@ const DyscalculiaContent = ({ isLoggedIn }) => (
           variant="primary"
           size="lg"
         >
-          <i className="fas fa-id-card me-2"></i>
+          <FontAwesomeIcon icon="id-card" className="me-2" />
           Start creating your Dyscalculia-friendly passport
         </Button>
       </div>

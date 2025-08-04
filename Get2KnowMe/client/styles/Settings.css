@@ -1,5 +1,73 @@
 /* Settings.css - Styling for settings pages */
 
+/* Settings Overview Card Styling */
+.settings-overview-card {
+  border: 1px solid #dee2e6;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.settings-overview-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-decoration: none;
+}
+
+.settings-overview-card:hover .card-title {
+  color: #0d6efd;
+}
+
+/* Appearance Settings Card Styling */
+.theme-card, .color-scheme-card {
+  transition: all 0.3s ease;
+}
+
+.theme-card:hover, .color-scheme-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.theme-preview {
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+}
+
+.preview-header {
+  height: 20px;
+}
+
+.preview-content {
+  height: 60px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.preview-text {
+  height: 8px;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.preview-text:first-child {
+  width: 70%;
+}
+
+.preview-text:last-child {
+  width: 50%;
+}
+
+.dark-preview .preview-content {
+  background-color: #343a40;
+}
+
+.dark-preview .preview-text {
+  background-color: #6c757d;
+}
+
 .settings-container {
   min-height: calc(100vh - 76px);
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);

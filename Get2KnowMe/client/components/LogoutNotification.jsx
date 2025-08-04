@@ -1,6 +1,8 @@
 // client/components/LogoutNotification.jsx
 import React, { useState, useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const LogoutNotification = () => {
   const [message, setMessage] = useState('');
@@ -36,7 +38,7 @@ const LogoutNotification = () => {
         style={{ minWidth: '400px', maxWidth: '600px' }}
       >
         <Alert.Heading>
-          <i className="fas fa-clock me-2"></i>
+          <FontAwesomeIcon icon="clock" className="me-2" />
           Session Expired
         </Alert.Heading>
         <p className="mb-0">{message}</p>

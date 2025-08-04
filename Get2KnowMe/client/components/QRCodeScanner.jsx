@@ -1,6 +1,7 @@
 // client/components/QRCodeScanner.jsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Modal, Button, Alert, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BrowserMultiFormatReader } from '@zxing/library';
 
 const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
@@ -128,7 +129,7 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
     <Modal show={show} onHide={onHide} size="md" centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <i className="fas fa-camera me-2"></i>
+          <FontAwesomeIcon icon="camera" className="me-2" />
           Scan QR Code
         </Modal.Title>
       </Modal.Header>
@@ -201,7 +202,7 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
             {scanning && (
               <Alert variant="info" className="text-start">
                 <Alert.Heading className="h6">
-                  <i className="fas fa-info-circle me-2"></i>
+                  <FontAwesomeIcon icon="info-circle" className="me-2" />
                   Scanning Instructions
                 </Alert.Heading>
                 <ul className="mb-0 small">
@@ -223,7 +224,7 @@ const QRCodeScanner = ({ show, onHide, onScanSuccess }) => {
         
         {error && (
           <Button variant="primary" onClick={handleRetry} className="btn-primary">
-            <i className="fas fa-redo me-1"></i>
+            <FontAwesomeIcon icon="redo" className="me-1" />
             Try Again
           </Button>
         )}

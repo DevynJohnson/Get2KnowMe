@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import QRCodeScanner from '../QRCodeScanner.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-  faSearch,
-  faUserPlus,
-  faUserCheck,
-  faUserTimes,
-  faBell,
-  faUsers
-} from '@fortawesome/free-solid-svg-icons';
 import { Card } from 'react-bootstrap';
 import '../../styles/SocialDashboard.css';
-
-// Add icons to library
-library.add(faSearch, faUserPlus, faUserCheck, faUserTimes, faBell, faUsers);
 
 // Followed Users Component
 function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNotificationsChange }) {
@@ -50,7 +38,7 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
   if (following.length === 0) {
     return (
       <div className="empty-state">
-        <FontAwesomeIcon icon={faUsers} className="empty-state-icon" />
+        <FontAwesomeIcon icon="users" className="empty-state-icon" />
         <p>You're not following anyone yet</p>
       </div>
     );
@@ -215,7 +203,7 @@ const handleFollowRequest = async (userId) => {
   const getFollowButtonContent = (user) => {
     if (user.isFollowing) {
       return {
-        icon: <FontAwesomeIcon icon={faUserCheck} className="button-icon" />,
+        icon: <FontAwesomeIcon icon="user-check" className="button-icon" />,
         text: 'Following',
         className: 'btn-success',
         disabled: true
@@ -223,7 +211,7 @@ const handleFollowRequest = async (userId) => {
     }
     if (user.requestSent) {
       return {
-        icon: <FontAwesomeIcon icon={faUserTimes} className="button-icon" />,
+        icon: <FontAwesomeIcon icon="user-times" className="button-icon" />,
         text: 'Requested',
         className: 'btn-warning',
         disabled: true
@@ -231,14 +219,14 @@ const handleFollowRequest = async (userId) => {
 }
 if (!user.allowsFollowRequests) {
       return {
-        icon: <FontAwesomeIcon icon={faUserTimes} className="button-icon" />,
+        icon: <FontAwesomeIcon icon="user-times" className="button-icon" />,
         text: 'Private',
         className: 'btn-secondary',
         disabled: true
     };
 }
 return {
-      icon: <FontAwesomeIcon icon={faUserPlus} className="button-icon" />,
+      icon: <FontAwesomeIcon icon="user-plus" className="button-icon" />,
       text: 'Follow',
       className: 'btn-primary',
       disabled: false
@@ -274,7 +262,7 @@ return {
                 onClick={() => searchUsers(searchQuery)}
                 title="Search"
               >
-                <FontAwesomeIcon icon={faSearch} className="btn-icon" />
+                <FontAwesomeIcon icon="search" className="btn-icon" />
                 <span>Search</span>
               </button>
             </div>
@@ -285,7 +273,7 @@ return {
               onClick={() => setShowScanner(true)}
               title="Scan QR Code"
             >
-              <FontAwesomeIcon icon={faUserPlus} className="btn-icon" />
+              <FontAwesomeIcon icon="user-plus" className="btn-icon" />
               <span>Scan QR</span>
             </button>
           </div>
@@ -305,7 +293,7 @@ return {
           <div className="search-results-container">
             {searchResults.length === 0 && !loading ? (
               <div className="no-results-card">
-                <FontAwesomeIcon icon={faUsers} className="no-results-icon" />
+                <FontAwesomeIcon icon="users" className="no-results-icon" />
                 <div>No users found matching your search.</div>
               </div>
             ) : searchResults.length > 0 ? (
@@ -394,7 +382,7 @@ const FollowRequests = ({ onRequestHandled }) => {
   if (requests.length === 0) {
     return (
       <div className="empty-state">
-        <FontAwesomeIcon icon={faUsers} className="empty-state-icon" />
+        <FontAwesomeIcon icon="users" className="empty-state-icon" />
         <p>No pending follow requests</p>
       </div>
     );
@@ -415,14 +403,14 @@ const FollowRequests = ({ onRequestHandled }) => {
               onClick={() => handleRequest(request._id, 'accept')}
               className="btn btn-success request-btn"
             >
-              <FontAwesomeIcon icon={faUserCheck} className="request-btn-icon" />
+              <FontAwesomeIcon icon="user-check" className="request-btn-icon" />
               Accept
             </button>
             <button
               onClick={() => handleRequest(request._id, 'reject')}
               className="btn btn-danger request-btn"
             >
-              <FontAwesomeIcon icon={faUserTimes} className="request-btn-icon" />
+              <FontAwesomeIcon icon="user-times" className="request-btn-icon" />
               Decline
             </button>
           </div>
@@ -546,7 +534,7 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
       )}
       {notifications.length === 0 ? (
         <div className="empty-state">
-          <FontAwesomeIcon icon={faBell} className="empty-state-icon" />
+          <FontAwesomeIcon icon="bell" className="empty-state-icon" />
           <p>No notifications yet</p>
         </div>
       ) : (
@@ -667,19 +655,19 @@ const SocialDashboard = () => {
     <div className="social-dashboard-grid p-6">
       <div className="social-dashboard-card find-people">
         <h2 className="card-title">
-          <FontAwesomeIcon icon={faSearch} className="title-icon" /> Find People
+          <FontAwesomeIcon icon="search" className="title-icon" /> Find People
         </h2>
         <UserSearch onFollowUser={handleRefresh} />
       </div>
       <div className="social-dashboard-card requests">
         <h2 className="card-title">
-          <FontAwesomeIcon icon={faUserPlus} className="title-icon" /> Requests
+          <FontAwesomeIcon icon="user-plus" className="title-icon" /> Requests
         </h2>
         <FollowRequests key={refreshKey} onRequestHandled={handleRefresh} />
       </div>
       <div className="social-dashboard-card notifications">
         <h2 className="card-title">
-          <FontAwesomeIcon icon={faBell} className="title-icon" /> 
+          <FontAwesomeIcon icon="bell" className="title-icon" /> 
           Notifications
           {notificationCount > 0 && (
             <span className="notification-count-badge">
@@ -694,7 +682,7 @@ const SocialDashboard = () => {
       </div>
       <div className="social-dashboard-card following">
         <h2 className="card-title">
-          <FontAwesomeIcon icon={faUsers} className="title-icon" /> Following
+          <FontAwesomeIcon icon="users" className="title-icon" /> Following
         </h2>
         <FollowedUsers 
           hiddenNotifications={hiddenNotifications} 

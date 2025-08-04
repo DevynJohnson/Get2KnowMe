@@ -2,6 +2,7 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./utils/fontawesome"; // Ensure FontAwesome is initialized before use
 
 // Styles
 import "./styles/index.css";
@@ -9,6 +10,7 @@ import "./styles/App.css";
 import "./styles/ColorSchemes.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "@fortawesome/fontawesome-svg-core/styles.css"; // Import FontAwesome styles
 
 // Components and Pages
 

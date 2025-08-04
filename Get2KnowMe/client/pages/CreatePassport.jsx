@@ -10,6 +10,8 @@ import {
   Card,
   Badge,
 } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { useNavigate } from "react-router-dom";
 import { parsePhoneNumber } from 'libphonenumber-js';
 import auth from "../utils/auth.js";
@@ -774,7 +776,7 @@ const CreatePassport = () => {
                       onClick={() => setShowQRModal(true)}
                       title="Generate QR code for easy sharing"
                     >
-                      <i className="fas fa-qrcode me-1"></i>
+                      <FontAwesomeIcon icon="qrcode" className="me-1" />
                       Get QR Code
                     </Button>
                   </div>

@@ -1,6 +1,8 @@
 // client/pages/settings/SecuritySettings.jsx
 import React, { useState } from 'react';
 import { Card, Form, Button, Alert, Modal, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { useAuth } from '../../utils/AuthContext';
 
 const SecuritySettings = () => {
@@ -140,7 +142,7 @@ const SecuritySettings = () => {
         <Card className="mb-4">
           <Card.Header>
             <h5 className="mb-0">
-              <i className="fas fa-key me-2"></i>
+              <FontAwesomeIcon icon="key" className="me-2" />
               Change Password
             </h5>
           </Card.Header>
@@ -191,19 +193,19 @@ const SecuritySettings = () => {
                     <h6 className="mb-3">Password Requirements:</h6>
                     <ul className="list-unstyled">
                       <li className={passwordValidation.hasMinLength ? 'text-success' : 'text-muted'}>
-                        <i className={`fas ${passwordValidation.hasMinLength ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        <FontAwesomeIcon icon={passwordValidation.hasMinLength ? "check" : "times"} className="me-2" />
                         At least 8 characters long
                       </li>
                       <li className={passwordValidation.hasUpperCase ? 'text-success' : 'text-muted'}>
-                        <i className={`fas ${passwordValidation.hasUpperCase ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        <FontAwesomeIcon icon={passwordValidation.hasUpperCase ? "check" : "times"} className="me-2" />
                         One uppercase letter
                       </li>
                       <li className={passwordValidation.hasLowerCase ? 'text-success' : 'text-muted'}>
-                        <i className={`fas ${passwordValidation.hasLowerCase ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        <FontAwesomeIcon icon={passwordValidation.hasLowerCase ? "check" : "times"} className="me-2" />
                         One lowercase letter
                       </li>
                       <li className={passwordValidation.hasSpecialChar ? 'text-success' : 'text-muted'}>
-                        <i className={`fas ${passwordValidation.hasSpecialChar ? 'fa-check' : 'fa-times'} me-2`}></i>
+                        <FontAwesomeIcon icon={passwordValidation.hasSpecialChar ? "check" : "times"} className="me-2" />
                         One special character
                       </li>
                     </ul>
@@ -234,7 +236,7 @@ const SecuritySettings = () => {
       <Card>
         <Card.Header>
           <h5 className="mb-0">
-            <i className="fas fa-envelope me-2"></i>
+            <FontAwesomeIcon icon="envelope" className="me-2" />
             Password Reset
           </h5>
         </Card.Header>
@@ -246,7 +248,7 @@ const SecuritySettings = () => {
             className="btn-secondary" 
             onClick={() => setShowResetModal(true)}
           >
-            <i className="fas fa-paper-plane me-2"></i>
+            <FontAwesomeIcon icon="paper-plane" className="me-2" />
             Send Password Reset Email
           </Button>
         </Card.Body>

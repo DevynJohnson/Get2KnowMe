@@ -1,6 +1,8 @@
 import React from "react";
 import { Accordion, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const DyslexiaContent = ({ isLoggedIn }) => (
   <Accordion.Item eventKey="2">
@@ -34,7 +36,7 @@ const DyslexiaContent = ({ isLoggedIn }) => (
       <h5>How to Support Someone with Dyslexia</h5>
       <h6>Make Reading Accessible</h6>
       <ul className="feature-list-simple">
-        <li>Use dyslexia-friendly fonts (e.g., sans-serif, larger size)</li>
+        <li>Use dyslexia-friendly fonts like Atkinson Hyperlegible (available in Settings)</li>
         <li>Allow use of text-to-speech tools, audiobooks, and visual supports</li>
         <li>Avoid judging reading aloud—some may prefer not to</li>
       </ul>
@@ -79,7 +81,7 @@ const DyslexiaContent = ({ isLoggedIn }) => (
           variant="primary"
           size="lg"
         >
-          <i className="fas fa-id-card me-2"></i>
+          <FontAwesomeIcon icon="id-card" className="me-2" />
           Start creating your Dyslexia-friendly passport
         </Button>
       </div>

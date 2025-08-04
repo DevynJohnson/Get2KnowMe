@@ -1,6 +1,7 @@
 // client/pages/settings/ProfileSettings.jsx
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Button, Alert, Modal, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '../../utils/AuthContext';
 
 const ProfileSettings = () => {
@@ -223,7 +224,7 @@ const ProfileSettings = () => {
       <Card className="mb-4">
         <Card.Header>
           <h5 className="mb-0">
-            <i className="fas fa-user me-2"></i>
+            <FontAwesomeIcon icon="user" className="me-2" />
             Account Information
           </h5>
         </Card.Header>
@@ -288,7 +289,7 @@ const ProfileSettings = () => {
       <Card className="mb-4">
         <Card.Header>
           <h5 className="mb-0">
-            <i className="fas fa-shield-alt me-2"></i>
+            <FontAwesomeIcon icon="shield-alt" className="me-2" />
             Privacy Settings
           </h5>
         </Card.Header>
@@ -327,7 +328,7 @@ const ProfileSettings = () => {
                 {privacySettingsChanged && (
                   <div className="d-flex justify-content-between align-items-center mt-4 p-3 bg-light rounded">
                     <div className="text-muted">
-                      <i className="fas fa-info-circle me-2"></i>
+                      <FontAwesomeIcon icon="info-circle" className="me-2" />
                       You have unsaved privacy setting changes
                     </div>
                     <div className="d-flex gap-2">
@@ -352,7 +353,7 @@ const ProfileSettings = () => {
                           </>
                         ) : (
                           <>
-                            <i className="fas fa-save me-2"></i>
+                            <FontAwesomeIcon icon="save" className="me-2" />
                             Save Changes
                           </>
                         )}
@@ -370,7 +371,7 @@ const ProfileSettings = () => {
 <Card className="mb-4">
   <Card.Header>
     <h5 className="mb-0">
-      <i className="fas fa-download me-2"></i>
+      <FontAwesomeIcon icon="download" className="me-2" />
       Export My Data
     </h5>
   </Card.Header>
@@ -381,18 +382,18 @@ const ProfileSettings = () => {
     <div className="mb-3">
       <h6 className="text-muted mb-2">Your export will include:</h6>
       <ul className="list-unstyled text-sm">
-        <li><i className="fas fa-check text-success me-2"></i>Complete profile and communication passport</li>
-        <li><i className="fas fa-check text-success me-2"></i>All stories and posts you've created</li>
-        <li><i className="fas fa-check text-success me-2"></i>Social connections (followers, following, requests)</li>
-        <li><i className="fas fa-check text-success me-2"></i>Notification history (sent and received)</li>
-        <li><i className="fas fa-check text-success me-2"></i>Privacy settings and preferences</li>
-        <li><i className="fas fa-check text-success me-2"></i>Account management data</li>
-        <li><i className="fas fa-check text-success me-2"></i>Consent and legal compliance records</li>
+        <li><FontAwesomeIcon icon="check" className="text-success me-2" />Complete profile and communication passport</li>
+        <li><FontAwesomeIcon icon="check" className="text-success me-2" />All stories and posts you've created</li>
+        <li><FontAwesomeIcon icon="check" className="text-success me-2" />Social connections (followers, following, requests)</li>
+        <li><FontAwesomeIcon icon="check" className="text-success me-2" />Notification history (sent and received)</li>
+        <li><FontAwesomeIcon icon="check" className="text-success me-2" />Privacy settings and preferences</li>
+        <li><FontAwesomeIcon icon="check" className="text-success me-2" />Account management data</li>
+        <li><FontAwesomeIcon icon="check" className="text-success me-2" />Consent and legal compliance records</li>
       </ul>
     </div>
     
     <Button className="btn-primary" onClick={() => { setModalAction('export'); setShowModal(true); }}>
-      <i className="fas fa-file-export me-2"></i>
+      <FontAwesomeIcon icon="file-export" className="me-2" />
       Export My Data
     </Button>
   </Card.Body>

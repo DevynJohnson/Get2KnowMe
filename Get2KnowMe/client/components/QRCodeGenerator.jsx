@@ -1,7 +1,8 @@
 // client/components/QRCodeGenerator.jsx
-import React, { useState, useEffect, useCallback } from "react";
-import { Modal, Button, Card, Alert, Spinner } from "react-bootstrap";
-import QRCode from "qrcode";
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Modal, Button, Alert } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import QRCode from 'qrcode';
 import "../styles/QRCodeGenerator.css";
 
 const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
@@ -122,7 +123,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
     <Modal show={show} onHide={onHide} size="md" centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <i className="fas fa-qrcode me-2"></i>
+          <FontAwesomeIcon icon="qrcode" className="me-2" />
           Communication Passport QR Code
         </Modal.Title>
       </Modal.Header>
@@ -176,7 +177,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
 
             <Alert variant="info" className="text-start">
               <Alert.Heading className="h6">
-                <i className="fas fa-info-circle me-2"></i>
+                <FontAwesomeIcon icon="info-circle" className="me-2" />
                 How to Use
               </Alert.Heading>
               <ul className="mb-0 small">
@@ -210,7 +211,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
               title="Copy link to clipboard"
               className="btn-secondary"
             >
-              <i className="fas fa-copy me-1"></i>
+              <FontAwesomeIcon icon="copy" className="me-1" />
               Copy Link
             </Button>
             <Button
@@ -220,7 +221,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
               title="Download QR code as PNG"
               className="btn-secondary-reverse"
             >
-              <i className="fas fa-download me-1"></i>
+              <FontAwesomeIcon icon="download" className="me-1" />
               Download
             </Button>
             <Button
@@ -230,7 +231,7 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
               title="Print QR code"
               className="btn-accent"
             >
-              <i className="fas fa-print me-1"></i>
+                            <FontAwesomeIcon icon="print" className="me-1" />
               Print
             </Button>
           </div>
