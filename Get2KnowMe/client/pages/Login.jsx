@@ -68,7 +68,18 @@ const Login = () => {
         auth.login(data.token);
         console.log("Login successful", data);
       } else {
-        setError(data.message || "Something went wrong during login");
+        // Handle specific HTTP status codes for better user experience
+        if (response.status === 429) {
+          setError("Too many login attempts. Please wait 15 minutes before trying again.");
+        } else if (response.status === 401) {
+          setError("Invalid email/username or password. Please check your credentials and try again.");
+        } else if (response.status === 403) {
+          setError("Account access denied. Please contact support if this continues.");
+        } else if (response.status >= 500) {
+          setError("Server error. Please try again in a few minutes.");
+        } else {
+          setError(data.message || "Something went wrong during login");
+        }
       }
     } catch (err) {
       console.error("Error logging in:", err);

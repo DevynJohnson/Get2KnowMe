@@ -27,19 +27,23 @@ router.get('/search', authenticateToken, async (req, res) => {
       searchConditions.push({ 'communicationPassport.profilePasscode': { $regex: q.replace(/-/g, ''), $options: 'i' } });
     }
 
+    // Check follow status for each user and get blocked users list
+    const currentUser = await User.findById(currentUserId)
+      .select('following sentFollowRequests blockedUsers');
+
+    // Get list of blocked user IDs
+    const blockedUserIds = currentUser.blockedUsers.map(b => b.user);
+
     const users = await User.find({
       $and: [
         { _id: { $ne: currentUserId } },
+        { _id: { $nin: blockedUserIds } }, // Exclude blocked users
         { $or: searchConditions },
         { 'privacySettings.showInSearch': true }
       ]
     })
       .select('username email communicationPassport.preferredName privacySettings communicationPassport.profilePasscode')
       .limit(parseInt(limit));
-
-    // Check follow status for each user
-    const currentUser = await User.findById(currentUserId)
-      .select('following sentFollowRequests');
 
     const usersWithFollowStatus = users.map(user => {
       const isFollowing = currentUser.following.some(f => f.user.equals(user._id));
@@ -157,15 +161,24 @@ router.post('/unfollow/:userId', authenticateToken, async (req, res) => {
 router.get('/followers', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
-      .populate('followers.user', 'username communicationPassport.preferredName')
-      .select('followers');
+      .populate('followers.user', 'username email communicationPassport.preferredName')
+      .select('followers following sentFollowRequests');
 
-    const followers = user.followers.map(f => ({
-      _id: f.user._id,
-      username: f.user.username,
-      email: f.user.email,
-      followedAt: f.followedAt
-    }));
+    const followers = user.followers.map(f => {
+      // Check if you're already following this follower back
+      const isFollowing = user.following.some(following => following.user.equals(f.user._id));
+      // Check if you've sent a follow request to this follower
+      const followRequestSent = user.sentFollowRequests.some(req => req.to.equals(f.user._id));
+      
+      return {
+        _id: f.user._id,
+        username: f.user.username,
+        email: f.user.email,
+        followedAt: f.followedAt,
+        isFollowing,
+        followRequestSent
+      };
+    });
 
     res.json(followers);
   } catch (error) {
@@ -178,7 +191,7 @@ router.get('/followers', authenticateToken, async (req, res) => {
 router.get('/following', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
-      .populate('following.user', 'username communicationPassport.preferredName')
+      .populate('following.user', 'username email communicationPassport.preferredName')
       .select('following');
 
     const following = user.following.map(f => ({
@@ -272,6 +285,126 @@ router.delete('/request/cancel/:userId', authenticateToken, async (req, res) => 
   } catch (error) {
     console.error('Cancel request error:', error);
     res.status(500).json({ error: 'Failed to cancel request' });
+  }
+});
+
+// Block user
+router.post('/block/:userId', authenticateToken, async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user._id);
+    const userIdToBlock = req.params.userId;
+
+    if (!currentUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (currentUser._id.equals(userIdToBlock)) {
+      return res.status(400).json({ error: 'Cannot block yourself' });
+    }
+
+    await currentUser.blockUser(userIdToBlock);
+
+    res.json({ message: 'User blocked successfully' });
+  } catch (error) {
+    console.error('Block user error:', error);
+    if (error.message === 'User not found') {
+      res.status(404).json({ error: 'User not found' });
+    } else if (error.message === 'User is already blocked') {
+      res.status(400).json({ error: 'User is already blocked' });
+    } else {
+      res.status(500).json({ error: 'Failed to block user' });
+    }
+  }
+});
+
+// Remove follower - just removes them from your followers list
+router.post('/remove-follower/:userId', authenticateToken, async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user._id);
+    const followerIdToRemove = req.params.userId;
+
+    if (!currentUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (currentUser._id.equals(followerIdToRemove)) {
+      return res.status(400).json({ error: 'Cannot remove yourself' });
+    }
+
+    const followerUser = await User.findById(followerIdToRemove);
+    if (!followerUser) {
+      return res.status(404).json({ error: 'Follower not found' });
+    }
+
+    // Remove from your followers list
+    const followerIndex = currentUser.followers.findIndex(f => f.user.equals(followerIdToRemove));
+    if (followerIndex === -1) {
+      return res.status(400).json({ error: 'User is not following you' });
+    }
+
+    currentUser.followers.splice(followerIndex, 1);
+
+    // Remove you from their following list
+    const followingIndex = followerUser.following.findIndex(f => f.user.equals(currentUser._id));
+    if (followingIndex !== -1) {
+      followerUser.following.splice(followingIndex, 1);
+    }
+
+    await currentUser.save();
+    await followerUser.save();
+
+    res.json({ message: 'Follower removed successfully' });
+  } catch (error) {
+    console.error('Remove follower error:', error);
+    res.status(500).json({ error: 'Failed to remove follower' });
+  }
+});
+
+// Get blocked users
+router.get('/blocked', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate('blockedUsers.user', 'username email')
+      .select('blockedUsers');
+
+    const blockedUsers = user.blockedUsers.map(b => ({
+      _id: b.user._id,
+      username: b.user.username,
+      email: b.user.email,
+      blockedAt: b.blockedAt
+    }));
+
+    res.json(blockedUsers);
+  } catch (error) {
+    console.error('Get blocked users error:', error);
+    res.status(500).json({ error: 'Failed to get blocked users' });
+  }
+});
+
+// Unblock user
+router.post('/unblock/:userId', authenticateToken, async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user._id);
+    const userIdToUnblock = req.params.userId;
+
+    if (!currentUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (currentUser._id.equals(userIdToUnblock)) {
+      return res.status(400).json({ error: 'Cannot unblock yourself' });
+    }
+
+    await currentUser.unblockUser(userIdToUnblock);
+
+    res.json({ message: 'User unblocked successfully' });
+  } catch (error) {
+    console.error('Unblock user error:', error);
+    if (error.message === 'User is not blocked') {
+      res.status(400).json({ error: 'User is not blocked' });
+    } else {
+      res.status(500).json({ error: 'Failed to unblock user' });
+    }
   }
 });
 

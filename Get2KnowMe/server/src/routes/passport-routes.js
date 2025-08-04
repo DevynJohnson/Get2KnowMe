@@ -28,6 +28,13 @@ router.post('/create', authenticateToken, passportUpdateMiddleware, validatePass
 
     const passportData = req.body;
 
+    // Validate and clean the passcode
+    if (!passportData.profilePasscode || typeof passportData.profilePasscode !== 'string' || !passportData.profilePasscode.trim()) {
+      return res.status(400).json({
+        message: 'ProfilePasscode is required and cannot be empty.'
+      });
+    }
+
     // Clean and normalize the passcode
     const cleanPasscode = passportData.profilePasscode.replace(/-/g, '').toUpperCase();
 
@@ -135,6 +142,11 @@ router.get('/my-passport', authenticateToken, async (req, res) => {
 router.get('/public/:passcode', async (req, res) => {
   try {
     const { passcode } = req.params;
+
+    // Validate passcode parameter
+    if (!passcode || typeof passcode !== 'string' || !passcode.trim()) {
+      return res.status(400).json({ message: 'Invalid passcode parameter.' });
+    }
 
     // Clean passcode (remove dashes, convert to uppercase)
     const cleanPasscode = passcode.replace(/-/g, '').toUpperCase();

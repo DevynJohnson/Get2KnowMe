@@ -42,7 +42,10 @@ router.get('/confirm-email', async (req, res) => {
       }
       await PendingConfirmation.deleteOne({ _id: pending._id });
       // Always redirect to email confirmed page
-      return res.redirect('https://get2know.me/email-confirmed');
+      const frontendUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://get2know.me' 
+        : 'http://localhost:5173';
+      return res.redirect(`${frontendUrl}/email-confirmed`);
     } else {
       // If not found, check if user already exists (idempotent)
       // Try to find a user with a matching email or username from any pending confirmation
@@ -61,7 +64,10 @@ router.get('/confirm-email', async (req, res) => {
       }
       if (user) {
         // Redirect to email confirmed page even if already confirmed
-        return res.redirect('https://get2know.me/email-confirmed');
+        const frontendUrl = process.env.NODE_ENV === 'production' 
+          ? 'https://get2know.me' 
+          : 'http://localhost:5173';
+        return res.redirect(`${frontendUrl}/email-confirmed`);
       } else {
         // Still not found, show error
         return res.status(404).send('Confirmation request not found or already processed.');
@@ -153,7 +159,10 @@ router.post('/signup', async (req, res) => {
     });
     
     // Send confirmation email
-    const confirmUrl = `https://get2know.me/api/users/confirm-email?token=${confirmToken}`;
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://get2know.me' 
+      : 'http://localhost:3001';
+    const confirmUrl = `${baseUrl}/api/users/confirm-email?token=${confirmToken}`;
     try {
       await sendConfirmationEmail(normalizedEmail, confirmUrl, normalizedUsername);
     } catch (emailError) {
@@ -331,7 +340,10 @@ router.post('/request-password-reset', async (req, res) => {
     await user.save();
 
     // 2. Construct reset link (update to your frontend URL)
-    const resetLink = `https://get2know.me/reset-password?token=${resetToken}`;
+    const frontendUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://get2know.me' 
+      : 'http://localhost:5173';
+    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
     
     // 3. Send email using Resend
     try {

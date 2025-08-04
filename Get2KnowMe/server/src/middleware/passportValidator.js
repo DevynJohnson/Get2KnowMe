@@ -42,7 +42,9 @@ export function validatePassportData(req, res, next) {
   // Required fields presence check
   const requiredFields = ['firstName', 'lastName', 'diagnoses', 'profilePasscode'];
   for (const field of requiredFields) {
-    if (!data[field] || (Array.isArray(data[field]) && data[field].length === 0)) {
+    if (!data[field] || 
+        (Array.isArray(data[field]) && data[field].length === 0) ||
+        (typeof data[field] === 'string' && !data[field].trim())) {
       return res.status(400).json({ message: `Missing required field: ${field}` });
     }
   }

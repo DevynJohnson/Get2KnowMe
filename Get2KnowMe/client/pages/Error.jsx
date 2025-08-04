@@ -1,6 +1,7 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import { useRouteError, Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import "../styles/Error.css";
 
 const ErrorPage = () => {
@@ -47,68 +48,63 @@ const ErrorPage = () => {
 
   const content = getErrorContent(errorInfo.status);
   return (
-    <Container
-      className="d-flex justify-content-center align-items-center error-container"
-      style={{ minHeight: "100vh" }}
-    >
-      <Row className="text-center">
-        <Col>
-          <div
-            className="error-emoji"
-            style={{ fontSize: "4rem", marginBottom: "20px" }}
-          >
-            {content.emoji}
-          </div>
-          <h1
-            className="error-title"
-            style={{
-              fontSize: "3rem",
-              fontWeight: "bold",
-              marginBottom: "20px",
-            }}
-          >
-            {content.title}
-          </h1>
-          <p className="error-description">
-            {content.description}
-          </p>
+    <Container className="error-container">
+      <Row className="justify-content-center">
+        <Col md={10} lg={8}>
+          <Card className="error-card mb-4">
+            <Card.Body className="p-5 text-center">
+              <div
+                className="error-emoji"
+                style={{ fontSize: "4rem", marginBottom: "20px" }}
+              >
+                {content.emoji}
+              </div>
+              <h1
+                className="error-title"
+                style={{
+                  fontSize: "3rem",
+                  fontWeight: "bold",
+                  marginBottom: "20px",
+                }}
+              >
+                {content.title}
+              </h1>
+              <p className="error-description lead mb-4">
+                {content.description}
+              </p>
 
-          {/* Error details */}
-          <div className="error-details">
-            <p className="error-details-status">
-              Error {errorInfo.status}:{" "}
-              <strong className="error-details-status-text">
-                {errorInfo.statusText}
-              </strong>
-            </p>
-            {errorInfo.message &&
-              errorInfo.message !== errorInfo.statusText && (
-                <p className="error-details-message">
-                  {errorInfo.message}
+              {/* Error details */}
+              <div className="error-details mb-4">
+                <p className="error-details-status">
+                  Error {errorInfo.status}:{" "}
+                  <strong className="error-details-status-text">
+                    {errorInfo.statusText}
+                  </strong>
                 </p>
-              )}
-          </div>
+                {errorInfo.message &&
+                  errorInfo.message !== errorInfo.statusText && (
+                    <p className="error-details-message">
+                      {errorInfo.message}
+                    </p>
+                  )}
+              </div>
 
-          {/* Action buttons */}
-          <div className="mt-4 error-buttons">
-            <Button
-              as={Link}
-              to="/"
-              variant="primary"
-              size="lg"
-              className="error-button me-3"
-            >
-              🏠 Go Home
-            </Button>
-            <Button
-              variant="outline-secondary"
-              size="lg"
-              className="error-button"
-              onClick={() => window.history.back()}
-            >
-              ↩️ Go Back
-            </Button>
-          </div>
+              {/* Action buttons */}
+              <div className="d-flex gap-3 justify-content-center flex-wrap">
+                <Link to="/" className="cta-button">
+                  <FontAwesomeIcon icon="home" />
+                  Go Home
+                </Link>
+                <button
+                  className="cta-button secondary"
+                  onClick={() => window.history.back()}
+                >
+                  <FontAwesomeIcon icon="arrow-left" />
+                  Go Back
+                </button>
+              </div>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>
