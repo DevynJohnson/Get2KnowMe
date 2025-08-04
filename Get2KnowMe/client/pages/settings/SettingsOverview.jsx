@@ -108,23 +108,6 @@ const SettingsOverview = () => {
           </Row>
         </Card.Body>
       </Card>
-
-      <style jsx>{`
-        .settings-overview-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-          text-decoration: none;
-        }
-        
-        .settings-overview-card {
-          border: 1px solid #dee2e6;
-          color: inherit;
-        }
-        
-        .settings-overview-card:hover .card-title {
-          color: #0d6efd;
-        }
-      `}</style>
     </>
   );
 };

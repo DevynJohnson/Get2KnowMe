@@ -1,7 +1,7 @@
 /* App.css - Main application styles */
 
-/* Import Dyslexia-friendly font */
-@import url('https://fonts.googleapis.com/css2?family=OpenDyslexic:wght@400;700&display=swap');
+/* Import dyslexia-friendly font - Atkinson Hyperlegible */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 /* App Container */
 .app-container {
@@ -27,7 +27,7 @@ body {
 
 /* Dyslexia-friendly font settings */
 body.dyslexia-font, body.dyslexia-font * {
-  font-family: 'OpenDyslexic', Arial, sans-serif !important;
+  font-family: 'Atkinson Hyperlegible', 'Comic Sans MS', 'Trebuchet MS', 'Arial', sans-serif !important;
 }
 
 /* Prevent dyslexia font from affecting FontAwesome icons */

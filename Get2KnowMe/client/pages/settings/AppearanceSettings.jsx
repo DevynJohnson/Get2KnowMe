@@ -88,7 +88,7 @@ const AppearanceSettings = () => {
     setDyslexiaFont(enabled);
     localStorage.setItem('dyslexiaFont', enabled.toString());
     document.body.classList.toggle('dyslexia-font', enabled);
-    showAlert(enabled ? 'Dyslexia-friendly font enabled!' : 'Dyslexia-friendly font disabled!');
+    showAlert(enabled ? 'Atkinson Hyperlegible font enabled!' : 'Dyslexia-friendly font disabled!');
   };
 
   return (
@@ -260,14 +260,13 @@ const AppearanceSettings = () => {
           <Form.Check
             type="switch"
             id="dyslexia-font"
-            label="Dyslexia-Friendly Font"
+            label="Dyslexia-Friendly Font (Atkinson Hyperlegible)"
             checked={dyslexiaFont}
             onChange={(e) => handleDyslexiaFontChange(e.target.checked)}
             className="mb-3"
           />
           <Form.Text className="text-muted mb-4 d-block">
-            Uses high contrast, safe colors that are easier to distinguish and less overwhelming. 
-            Reduces bright colors that may cause sensory overload.
+            Uses Atkinson Hyperlegible, a research-backed font designed to improve readability for people with dyslexia and low vision. This font features enhanced character differentiation and spacing.
           </Form.Text>
 
           {colorblindMode && (
@@ -376,58 +375,6 @@ const AppearanceSettings = () => {
           </div>
         </Card.Body>
       </Card>
-
-      <style jsx>{`
-        .theme-card, .color-scheme-card {
-          transition: all 0.3s ease;
-        }
-        
-        .theme-card:hover, .color-scheme-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .theme-preview {
-          height: 80px;
-          border-radius: 8px;
-          overflow: hidden;
-          border: 1px solid #dee2e6;
-        }
-        
-        .preview-header {
-          height: 20px;
-        }
-        
-        .preview-content {
-          height: 60px;
-          padding: 8px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        
-        .preview-text {
-          height: 8px;
-          border-radius: 4px;
-          opacity: 0.7;
-        }
-        
-        .preview-text:first-child {
-          width: 70%;
-        }
-        
-        .preview-text:last-child {
-          width: 50%;
-        }
-        
-        .dark-preview .preview-content {
-          background-color: #343a40;
-        }
-        
-        .dark-preview .preview-text {
-          background-color: #6c757d;
-        }
-      `}</style>
     </>
   );
 };

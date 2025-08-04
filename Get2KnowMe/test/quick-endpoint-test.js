@@ -13,7 +13,20 @@ const routes = [
   '/stories',
   '/passport-lookup',
   '/register',
-  '/login'
+  '/login',
+  '/dashboard',
+  '/email-confirmed',
+  '/policy/UserInfo',
+  '/policy/terms-of-service',
+  '/profile',
+  '/my-passport',
+  '/create-passport',
+  '/reset-password',
+  '/parental-consent',
+  '/consent',
+  '/consent/declined',
+  '/registration-pending',
+  '/submit-story'
 ];
 
 async function quickTest() {

@@ -296,7 +296,7 @@ export const DyslexiaContent = () => {
         <h5>How to Support Someone with Dyslexia</h5>
         <h6>Make Reading Accessible</h6>
         <ul className="feature-list-simple">
-          <li>Use dyslexia-friendly fonts (e.g., sans-serif, larger size)</li>
+          <li>Use dyslexia-friendly fonts like Atkinson Hyperlegible (available in Settings)</li>
           <li>Allow use of text-to-speech tools, audiobooks, and visual supports</li>
           <li>Avoid judging reading aloud—some may prefer not to</li>
         </ul>
