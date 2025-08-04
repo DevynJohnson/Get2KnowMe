@@ -22,6 +22,7 @@ Each passport comes with a unique QR code, allowing you to easily share your inf
 - **Secure Passcode System**: Alternative sharing method using unique alphanumeric codes
 - **Trusted Contact Integration**: Emergency contact information with privacy controls
 - **Follow & Notification System**: Users can follow others to receive notifications when a communication passport is updated—ideal for caregivers, educators, or support teams who need to stay informed about changes.
+- **Social Management Tools**: Users can view their followers, remove themselves from other users' follow lists, and block users for enhanced privacy and safety.
 - **Privacy Controls for Social Features**: Users can toggle their ability to receive follow requests and choose to be excluded from search results for added privacy and security. These options are available in Profile Settings.
 - **Responsive Design**: Optimized for mobile devices and various screen sizes
 - **Print-Friendly Format**: Clean, professional printing capabilities for physical copies
@@ -245,6 +246,10 @@ Get2KnowMe implements comprehensive security measures to protect user data and e
 - `POST /accept/:fromUserId` — Accept follow request
 - `POST /reject/:fromUserId` — Reject follow request
 - `POST /unfollow/:userId` — Unfollow user
+- `POST /block/:userId` — Block a user
+- `POST /unblock/:userId` — Unblock a user
+- `GET /blocked` — Get list of blocked users
+- `POST /remove-follower/:userId` — Remove a follower from your account
 - `GET /followers` — Get user's followers
 - `GET /following` — Get users being followed
 - `GET /requests/pending` — Get pending follow requests (received)
@@ -439,6 +444,8 @@ Get2KnowMe is committed to protecting user privacy and complying with the Genera
 - **Data Minimization**: Only essential information is collected for account creation and communication passport functionality. No unnecessary or sensitive data is collected beyond what is required for the service.
 - **User Search Privacy**: User Search is designed for privacy - searching for users requires a full username, a valid passcode, or scanning a QR code. Partial matches are not allowed, and users can opt out of appearing in search results entirely. This helps ensure that only those with explicit information can find a user profile.
 - **Social Privacy Controls**: Users can toggle on/off their ability to appear in search results and whether they can receive follow requests, directly from their Profile Settings. This gives users full control over their discoverability and social interactions.
+- **Follower Management**: Users can view who follows their account, remove followers, and block users who may be inappropriate or unwanted. Users can also remove themselves from other users' follow lists for complete control over their social connections.
+- **Blocking & Safety Features**: Comprehensive blocking system allows users to prevent unwanted contact and interactions. Blocked users cannot send follow requests, see notifications, or interact with the user's content.
 
 ### Data Security & Protection
 - **Database Encryption**: Personally identifiable information (PII) is encrypted at the field level in MongoDB using [mongoose-field-encryption](https://www.npmjs.com/package/mongoose-field-encryption), ensuring sensitive data is protected at rest.
