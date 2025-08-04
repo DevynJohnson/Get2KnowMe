@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import QRCodeScanner from '../QRCodeScanner.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card } from 'react-bootstrap';
@@ -110,19 +110,19 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
             </div>
             <div className="user-actions">
               <button
+                className="btn btn-primary btn-sm"
+                onClick={() => handleToggleHideNotifications(user._id)}
+                type="button"
+              >
+                {hiddenNotifications.includes(user._id) ? 'Unmute' : 'Mute'}
+              </button>
+              <button
                 className="btn btn-danger btn-sm"
                 onClick={() => handleDelete(user._id)}
                 title="Unfollow user"
                 type="button"
               >
                 Unfollow
-              </button>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => handleToggleHideNotifications(user._id)}
-                type="button"
-              >
-                {hiddenNotifications.includes(user._id) ? 'Show Notifications' : 'Hide Notifications'}
               </button>
             </div>
           </div>
@@ -132,12 +132,169 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
   );
 }
 
+// Followers Component - shows users who are following you
+const Followers = ({ refreshTrigger }) => {
+  const [followers, setFollowers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFollowers();
+  }, [refreshTrigger]);
+
+  const fetchFollowers = async () => {
+    try {
+      const response = await fetch('/api/follow/followers', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setFollowers(data);
+      }
+    } catch (error) {
+      console.error('Fetch followers error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Remove follower (they stop following you)
+  const handleRemoveFollower = async (userId) => {
+    if (!window.confirm('Are you sure you want to remove this follower? They will no longer be able to see your updates.')) return;
+    try {
+      const response = await fetch(`/api/follow/remove-follower/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+        }
+      });
+      if (response.ok) {
+        setFollowers(followers.filter(f => f._id !== userId));
+      } else {
+        console.error('Failed to remove follower');
+      }
+    } catch (error) {
+      console.error('Remove follower error:', error);
+    }
+  };
+
+  // Block user (prevents them from following you and removes current follow)
+  const handleBlockUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to block this user? They will not be able to follow you or send you requests in the future.')) return;
+    try {
+      const response = await fetch(`/api/follow/block/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+        }
+      });
+      if (response.ok) {
+        setFollowers(followers.filter(f => f._id !== userId));
+      } else {
+        console.error('Failed to block user');
+      }
+    } catch (error) {
+      console.error('Block user error:', error);
+    }
+  };
+
+  // Follow back user
+  const handleFollowBack = async (userId) => {
+    try {
+      const response = await fetch(`/api/follow/request/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+        }
+      });
+      if (response.ok) {
+        // Update the follower to show they now have a follow request sent
+        setFollowers(followers.map(f => 
+          f._id === userId 
+            ? { ...f, followRequestSent: true, isFollowedBack: true }
+            : f
+        ));
+      } else {
+        console.error('Failed to send follow request');
+      }
+    } catch (error) {
+      console.error('Follow back error:', error);
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center py-4">Loading followers...</div>;
+  }
+
+  if (followers.length === 0) {
+    return (
+      <div className="empty-state">
+        <FontAwesomeIcon icon="user-friends" className="empty-state-icon" />
+        <p>No followers yet</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="followers-container">
+      {followers.map((follower) => (
+        <Card
+          className="follower-card"
+          key={follower._id}
+        >
+          <div className="follower-card-content">
+            <div className="user-info">
+              <span className="username">{follower.username}</span>
+              {follower.email && <span className="user-email">{follower.email}</span>}
+            </div>
+            <div className="follower-actions">
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => handleFollowBack(follower._id)}
+                disabled={follower.isFollowing || follower.followRequestSent || follower.isFollowedBack}
+                title={follower.isFollowing ? "Already following this user" : 
+                       follower.followRequestSent ? "Follow request already sent" : 
+                       "Send follow request"}
+                type="button"
+              >
+                {follower.isFollowing ? 'Already Following' : 
+                 follower.followRequestSent || follower.isFollowedBack ? 'Request Sent' : 
+                 'Follow Back'}
+              </button>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => handleRemoveFollower(follower._id)}
+                title="Remove follower"
+                type="button"
+              >
+                Remove
+              </button>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => handleBlockUser(follower._id)}
+                title="Block user"
+                type="button"
+              >
+                Block
+              </button>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
 // User Search Component
 const UserSearch = ({ onFollowUser }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showScanner, setShowScanner] = useState(false);
+    const [showBlockedUsers, setShowBlockedUsers] = useState(false);
+    const [blockedUsers, setBlockedUsers] = useState([]);
+    const [blockedLoading, setBlockedLoading] = useState(false);
     
     const searchUsers = async (query) => {
         if (query.length < 2) {
@@ -175,6 +332,55 @@ useEffect(() => {
     setSearchQuery(scannedValue);
     // Optionally, trigger search immediately:
     searchUsers(scannedValue);
+};
+
+// Fetch blocked users
+const fetchBlockedUsers = async () => {
+  setBlockedLoading(true);
+  try {
+    const response = await fetch('/api/follow/blocked', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setBlockedUsers(data);
+    }
+  } catch (error) {
+    console.error('Fetch blocked users error:', error);
+  } finally {
+    setBlockedLoading(false);
+  }
+};
+
+// Handle unblock user
+const handleUnblockUser = async (userId) => {
+  if (!window.confirm('Are you sure you want to unblock this user? They will be able to send you follow requests and appear in searches again.')) return;
+  
+  try {
+    const response = await fetch(`/api/follow/unblock/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('id_token')}`
+      }
+    });
+    if (response.ok) {
+      setBlockedUsers(blockedUsers.filter(u => u._id !== userId));
+    } else {
+      console.error('Failed to unblock user');
+    }
+  } catch (error) {
+    console.error('Unblock user error:', error);
+  }
+};
+
+// Toggle blocked users view
+const toggleBlockedUsers = () => {
+  if (!showBlockedUsers) {
+    fetchBlockedUsers();
+  }
+  setShowBlockedUsers(!showBlockedUsers);
 };
 
 const handleFollowRequest = async (userId) => {
@@ -250,22 +456,22 @@ return {
             <div className="search-input-group">
               <input
                 type="text"
-                placeholder="Search Username or Passcode"
+                placeholder="Search Username, Email or Passcode"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="form-control social-dashboard-search-input"
                 onKeyDown={(e) => { if (e.key === 'Enter') searchUsers(searchQuery); }}
               />
-              <button
-                type="button"
-                className="btn social-dashboard-action-btn search-btn"
-                onClick={() => searchUsers(searchQuery)}
-                title="Search"
-              >
-                <FontAwesomeIcon icon="search" className="btn-icon" />
-                <span>Search</span>
-              </button>
             </div>
+            <button
+              type="button"
+              className="btn social-dashboard-action-btn search-btn"
+              onClick={() => searchUsers(searchQuery)}
+              title="Search"
+            >
+              <FontAwesomeIcon icon="search" className="btn-icon" />
+              <span>Search</span>
+            </button>
             <h4 className="search-divider">----- OR -----</h4>
             <button
               type="button"
@@ -275,6 +481,15 @@ return {
             >
               <FontAwesomeIcon icon="user-plus" className="btn-icon" />
               <span>Scan QR</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary social-dashboard-action-btn blocked-users-button"
+              onClick={toggleBlockedUsers}
+              title="View Blocked Users"
+            >
+              <FontAwesomeIcon icon="user-slash" className="btn-icon" />
+              <span>{showBlockedUsers ? 'Hide Blocked' : 'View Blocked'}</span>
             </button>
           </div>
           {loading && (
@@ -294,7 +509,7 @@ return {
             {searchResults.length === 0 && !loading ? (
               <div className="no-results-card">
                 <FontAwesomeIcon icon="users" className="no-results-icon" />
-                <div>No users found matching your search.</div>
+                <div>No users found. Make sure to enter their entire username, email address or passcode.</div>
               </div>
             ) : searchResults.length > 0 ? (
               <div className="search-results-list">
@@ -324,6 +539,51 @@ return {
                 })}
               </div>
             ) : null}
+          </div>
+        )}
+        {/* Blocked users section */}
+        {showBlockedUsers && (
+          <div className="blocked-users-container">
+            <h4 className="blocked-users-title">
+              <FontAwesomeIcon icon="user-slash" className="blocked-users-icon" />
+              Blocked Users
+            </h4>
+            {blockedLoading ? (
+              <div className="text-center py-4">Loading blocked users...</div>
+            ) : blockedUsers.length === 0 ? (
+              <div className="empty-state">
+                <FontAwesomeIcon icon="user-slash" className="empty-state-icon" />
+                <p>No blocked users</p>
+              </div>
+            ) : (
+              <div className="blocked-users-list">
+                {blockedUsers.map((user) => (
+                  <Card
+                    className="blocked-user-card"
+                    key={user._id}
+                  >
+                    <div className="blocked-user-content">
+                      <div className="blocked-user-info">
+                        <span className="blocked-username">{user.username}</span>
+                        {user.email && <span className="blocked-user-email">{user.email}</span>}
+                        <span className="blocked-date">
+                          Blocked {new Date(user.blockedAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => handleUnblockUser(user._id)}
+                        title="Unblock user"
+                        type="button"
+                      >
+                        <FontAwesomeIcon icon="user-check" className="btn-icon" />
+                        Unblock
+                      </button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -426,11 +686,7 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
   const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [refreshTrigger]);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       const response = await fetch('/api/notifications', {
         headers: {
@@ -465,7 +721,11 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [onNotificationCountChange]);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [refreshTrigger, fetchNotifications]);
 
   // Dismiss notification handler
   const handleDismiss = async (notificationId) => {
@@ -652,12 +912,18 @@ const SocialDashboard = () => {
   }
 
   return (
-    <div className="social-dashboard-grid p-6">
+    <div className="social-dashboard-grid">
       <div className="social-dashboard-card find-people">
         <h2 className="card-title">
           <FontAwesomeIcon icon="search" className="title-icon" /> Find People
         </h2>
         <UserSearch onFollowUser={handleRefresh} />
+      </div>
+      <div className="social-dashboard-card followers">
+        <h2 className="card-title">
+          <FontAwesomeIcon icon="user-friends" className="title-icon" /> Who Is Following Me?
+        </h2>
+        <Followers refreshTrigger={refreshKey} />
       </div>
       <div className="social-dashboard-card requests">
         <h2 className="card-title">

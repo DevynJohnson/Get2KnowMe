@@ -40,6 +40,10 @@ export const generateFriendlyPasscode = (groups = 2, groupLength = 4) => {
  * @returns {boolean} - True if valid format
  */
 export const validatePasscode = (passcode) => {
+  // Check if passcode is a valid string first
+  if (!passcode || typeof passcode !== 'string') {
+    return false;
+  }
   // Remove dashes and check if alphanumeric (case-insensitive)
   const cleanPasscode = passcode.replace(/-/g, '').toUpperCase();
   return /^[A-Z0-9]{6,20}$/.test(cleanPasscode);

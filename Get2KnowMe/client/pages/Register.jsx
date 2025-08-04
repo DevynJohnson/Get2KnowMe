@@ -116,7 +116,18 @@ const Register = () => {
         navigate("/registration-pending");
         return;
       } else {
-        setError(data.message || "Signup failed. Please try again.");
+        // Handle specific HTTP status codes for better user experience
+        if (response.status === 429) {
+          setError("Too many registration attempts. Please wait 15 minutes before trying again.");
+        } else if (response.status === 409) {
+          setError("This email or username is already registered. Please try logging in instead.");
+        } else if (response.status === 400) {
+          setError(data.message || "Invalid registration data. Please check your information and try again.");
+        } else if (response.status >= 500) {
+          setError("Server error. Please try again in a few minutes.");
+        } else {
+          setError(data.message || "Signup failed. Please try again.");
+        }
       }
     } catch (err) {
       console.error("Signup error:", err);

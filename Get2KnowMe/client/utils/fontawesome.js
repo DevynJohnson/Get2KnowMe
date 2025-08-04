@@ -57,12 +57,14 @@ import {
   faCopy,
   faUserCheck,
   faUserTimes,
+  faUserSlash,
   faTimes,
   faMoon,
   faSun,
   faTimesCircle,
   faBell,
-  faChevronDown
+  faChevronDown,
+  faUserFriends
 } from '@fortawesome/free-solid-svg-icons';
 
 // Tell FontAwesome to skip adding the CSS automatically 
@@ -127,12 +129,14 @@ library.add(
   faCopy,
   faUserCheck,
   faUserTimes,
+  faUserSlash,
   faTimes,
   faMoon,
   faSun,
   faTimesCircle,
   faBell,
-  faChevronDown
+  faChevronDown,
+  faUserFriends
 );
 
 export default config;

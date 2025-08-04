@@ -172,6 +172,11 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
+  // Blocked users feature
+  blockedUsers: [{
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    blockedAt: { type: Date, default: Date.now }
+  }],
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
   createdAt: { type: Date, default: Date.now },
@@ -217,6 +222,18 @@ userSchema.methods.sendFollowRequest = async function (targetUserId) {
   const targetUser = await this.constructor.findById(targetUserId);
   if (!targetUser) {
     throw new Error('User not found');
+  }
+
+  // Check if you have blocked this user
+  const youBlocked = this.blockedUsers.some(b => b.user.equals(targetUserId));
+  if (youBlocked) {
+    throw new Error('Cannot send follow request to blocked user');
+  }
+
+  // Check if this user has blocked you
+  const theyBlocked = targetUser.blockedUsers.some(b => b.user.equals(this._id));
+  if (theyBlocked) {
+    throw new Error('Cannot send follow request - user has blocked you');
   }
 
   // Check if already following
@@ -329,6 +346,80 @@ userSchema.methods.unhideNotificationsFrom = async function (userId) {
   return true;
 };
 
+// Block user method
+userSchema.methods.blockUser = async function (userIdToBlock) {
+  const User = this.constructor;
+  const targetUser = await User.findById(userIdToBlock);
+  
+  if (!targetUser) {
+    throw new Error('User not found');
+  }
+
+  // Check if already blocked
+  const alreadyBlocked = this.blockedUsers.some(b => b.user.equals(userIdToBlock));
+  if (alreadyBlocked) {
+    throw new Error('User is already blocked');
+  }
+
+  // Add to blocked users list
+  this.blockedUsers.push({ user: userIdToBlock });
+  
+  // Remove from followers if they're following you
+  const followerIndex = this.followers.findIndex(f => f.user.equals(userIdToBlock));
+  if (followerIndex !== -1) {
+    this.followers.splice(followerIndex, 1);
+  }
+  
+  // Remove from following if you're following them
+  const followingIndex = this.following.findIndex(f => f.user.equals(userIdToBlock));
+  if (followingIndex !== -1) {
+    this.following.splice(followingIndex, 1);
+  }
+  
+  // Remove any pending follow requests from them
+  this.pendingFollowRequests = this.pendingFollowRequests.filter(req => !req.from.equals(userIdToBlock));
+  
+  // Remove any sent follow requests to them
+  this.sentFollowRequests = this.sentFollowRequests.filter(req => !req.to.equals(userIdToBlock));
+  
+  await this.save();
+
+  // Also remove this user from the blocked user's followers/following lists
+  const targetFollowerIndex = targetUser.followers.findIndex(f => f.user.equals(this._id));
+  if (targetFollowerIndex !== -1) {
+    targetUser.followers.splice(targetFollowerIndex, 1);
+  }
+  
+  const targetFollowingIndex = targetUser.following.findIndex(f => f.user.equals(this._id));
+  if (targetFollowingIndex !== -1) {
+    targetUser.following.splice(targetFollowingIndex, 1);
+  }
+  
+  // Remove any pending follow requests to this user
+  targetUser.pendingFollowRequests = targetUser.pendingFollowRequests.filter(req => !req.from.equals(this._id));
+  
+  // Remove any sent follow requests from this user
+  targetUser.sentFollowRequests = targetUser.sentFollowRequests.filter(req => !req.to.equals(this._id));
+  
+  await targetUser.save();
+
+  return true;
+};
+
+// Unblock user method
+userSchema.methods.unblockUser = async function (userIdToUnblock) {
+  const blockedIndex = this.blockedUsers.findIndex(b => b.user.equals(userIdToUnblock));
+  if (blockedIndex === -1) {
+    throw new Error('User is not blocked');
+  }
+
+  // Remove from blocked users list
+  this.blockedUsers.splice(blockedIndex, 1);
+  await this.save();
+
+  return true;
+};
+
 userSchema.pre("findOneAndUpdate", function (next) {
   this.set({ updatedAt: new Date() });
   next();
@@ -343,6 +434,8 @@ userSchema.index(
 userSchema.index({ 'followers.user': 1 });
 userSchema.index({ 'following.user': 1 });
 userSchema.index({ 'pendingFollowRequests.from': 1 });
+userSchema.index({ 'sentFollowRequests.to': 1 });
+userSchema.index({ 'blockedUsers.user': 1 });
 userSchema.index({ hiddenNotifications: 1 }); // NEW: Index for hidden notifications
 userSchema.index({ username: 'text', 'communicationPassport.profilePasscode': 'text' });
 

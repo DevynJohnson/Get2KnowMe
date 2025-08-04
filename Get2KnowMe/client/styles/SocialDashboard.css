@@ -3,28 +3,145 @@
   border-radius: 16px !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   overflow: hidden;
-  background: white;
+  background: var(--card-bg);
   padding: 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.follow-request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .follow-request-card .request-info {
-  color: #111;
+  color: var(--text-color);
 }
 
 .follow-request-card .request-username {
   font-weight: 500;
-  color: #111;
+  color: var(--text-color);
   margin-bottom: 0.25rem;
 }
 
 .follow-request-card .request-date {
   font-size: 0.75rem;
-  color: #666;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+.follow-request-card .request-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.follow-request-card .request-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.follow-request-card .request-btn-icon {
+  height: 1rem;
+  width: 1rem;
+  margin-right: 0.25rem;
+}
+
+/* Social Dashboard Grid Layout */
+.social-dashboard-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  grid-template-areas:
+    "find find find followers followers followers"
+    "requests requests notifications notifications following following" !important;
+  gap: 2rem !important;
+  justify-items: stretch !important;
+  align-items: flex-start;
+  margin-top: 2.5rem;
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+  min-height: 100vh;
+  background: var(--bg-color);
+  padding: 2rem 0;
+}
+
+.social-dashboard-card.find-people {
+  grid-area: find;
+}
+
+.social-dashboard-card.followers {
+  grid-area: followers;
+}
+
+.social-dashboard-card.requests {
+  grid-area: requests;
+}
+
+.social-dashboard-card.notifications {
+  grid-area: notifications;
+}
+
+.social-dashboard-card.following {
+  grid-area: following;
+}
+
+.social-dashboard-card {
+  width: 100% !important;
+  min-width: 280px;
+  min-height: 260px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  animation: fadeInUp 0.6s ease-out;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* Style for follow request card */
+.follow-request-card {
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+  background: var(--card-bg);
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.follow-request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.follow-request-card .request-info {
+  color: var(--text-color);
+}
+
+.follow-request-card .request-username {
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.follow-request-card .request-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
   margin-bottom: 0;
 }
 
@@ -74,6 +191,8 @@
 .search-divider {
   margin: 1rem 0;
   text-align: center;
+  color: var(--text-muted);
+  font-weight: 500;
 }
 
 .social-dashboard-action-btn {
@@ -85,20 +204,22 @@
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border-radius: 8px;
-  margin: 0.5rem;
+  margin: 0;
   text-align: center;
-  background: #fff;
-  color: var(--primary-color, #4f8cff);
-  border: 2px solid var(--primary-color, #4f8cff);
+  background: var(--card-bg);
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
   font-weight: 600;
-  transition: background 0.2s, color 0.2s, border 0.2s;
+  transition: all 0.3s ease;
 }
 
 .social-dashboard-action-btn:hover,
 .social-dashboard-action-btn:focus {
-  background: var(--primary-color, #4f8cff);
-  color: #fff;
-  border: 2px solid var(--primary-color, #4f8cff);
+  background: var(--primary-color);
+  color: var(--card-bg);
+  border: 2px solid var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Match input and select styles to CreatePassport.css */
@@ -136,9 +257,9 @@
 .social-dashboard-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto;
   grid-template-areas:
-    "find find find"
+    "find . followers"
     "requests notifications following";
   gap: 2rem;
   justify-items: center;
@@ -146,10 +267,17 @@
   margin-top: 2.5rem;
   margin-left: 2.5rem;
   margin-right: 2.5rem;
+  min-height: 100vh;
+  background: var(--bg-color);
+  padding: 2rem 0;
 }
 
 .social-dashboard-card.find-people {
   grid-area: find;
+}
+
+.social-dashboard-card.followers {
+  grid-area: followers;
 }
 
 .social-dashboard-card.requests {
@@ -168,52 +296,87 @@
   width: 100%;
   max-width: 420px;
   min-width: 280px;
-  min-height: 260px;
-  background: var(--primary-color, #4f8cff);
-  border-radius: 15px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-height: 400px;
+  max-height: 600px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
   animation: fadeInUp 0.6s ease-out;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1rem;
   margin-bottom: 2rem;
-  color: #fff;
+  color: var(--text-color);
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: flex-start;
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-/* Center card titles and add text shadow for depth */
+/* Ensure top row cards are same height */
+.social-dashboard-card.find-people,
+.social-dashboard-card.followers {
+  min-height: 500px;
+  max-height: 500px;
+}
+
+.social-dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* Center card titles */
 .social-dashboard-card h2, 
 .social-dashboard-card h4,
 .card-title {
   text-align: center;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.25), 0 1px 0 #000;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  letter-spacing: -1px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  flex: 0 0 auto;
+}
+
+/* Content containers within cards */
+.user-search-container,
+.followers-container,
+.follow-requests-container,
+.notifications-container,
+.followed-users-container {
+  flex: 1 1 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .title-icon {
   font-size: 2rem;
+  color: var(--primary-color);
 }
 
-.notification-count-badge {
+.notification-count-badge,
+.unread-count-badge {
   display: inline-flex;
   align-items: center;
   padding: 0.125rem 0.5rem;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
-  background-color: #fef2f2;
-  color: #991b1b;
+  background-color: var(--accent-color);
+  color: white;
   margin-left: 0.5rem;
+  flex-shrink: 0;
 }
 
 @keyframes fadeInUp {
@@ -231,31 +394,34 @@
 .empty-state {
   text-align: center;
   padding: 2rem 0;
-  color: white;
+  color: var(--text-muted);
 }
 
 .empty-state-icon {
   height: 3rem;
   width: 3rem;
   margin: 0 auto 0.5rem auto;
-  color: #d1d5db;
+  color: var(--text-muted);
 }
 
 /* User Search Styling */
 .user-search-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .search-form-container {
   width: 100%;
-  max-width: 28rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .search-input-section {
-  position: relative;
+  flex: 0 0 auto;
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
@@ -265,26 +431,51 @@
 .search-controls {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  align-items: center;
+  gap: 0.75rem;
+  align-items: stretch;
+  width: 100%;
+  overflow: hidden;
+}
+
+.search-results-container {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  max-height: 300px;
 }
 
 .search-input-group {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.social-dashboard-search-input {
+  width: 100%;
+  margin-bottom: 0;
 }
 
 .search-btn {
   min-width: 80px;
-  width: auto;
+  width: 100%;
+  align-self: stretch;
+  margin: 0;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Scan QR button specific styling */
 .scan-qr-button {
-  width: auto;
+  width: 100%;
   min-width: 120px;
+  margin: 0;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .btn-icon {
@@ -321,13 +512,13 @@
 }
 
 .no-results-card {
-  background-color: white;
-  border: 1px solid #d1d5db;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   padding: 1rem;
   text-align: center;
-  color: #6b7280;
+  color: var(--text-muted);
   max-width: 18rem;
   margin: 0 auto;
 }
@@ -336,7 +527,7 @@
   height: 2rem;
   width: 2rem;
   margin-bottom: 0.5rem;
-  color: #d1d5db;
+  color: var(--text-muted);
 }
 
 .search-results-list {
@@ -346,34 +537,34 @@
   width: 100%;
 }
 
-.search-result-card {
+.search-result-card,
+.followed-user-card {
   margin-bottom: 0.5rem;
   margin-left: auto;
   margin-right: auto;
   max-width: 350px;
   width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
-.search-result-content {
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.search-result-user-info {
-  flex: 1;
+.search-result-card:hover,
+.followed-user-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .search-result-username {
   font-weight: 500;
-  color: #111827;
+  color: var(--text-color);
   margin-bottom: 0.25rem;
 }
 
 .search-result-email {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-bottom: 0;
 }
 
@@ -397,10 +588,33 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem;
+  gap: 0.75rem;
+}
+
+/* Custom scrollbar styling for followed users container */
+.followed-users-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.followed-users-container::-webkit-scrollbar-track {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.followed-users-container::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+
+.followed-users-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
 }
 
 .followed-user-card {
-  margin-bottom: 0.5rem;
   margin-left: auto;
   margin-right: auto;
   max-width: 350px;
@@ -413,33 +627,69 @@
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.search-result-content {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-result-user-info {
+  flex: 1;
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
 .username {
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-email {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-actions {
   display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.375rem;
   margin-left: 0.75rem;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.user-actions .btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  width: 100%;
+  min-width: 80px;
 }
 
 /* Follow Requests Styling */
 .follow-requests-container {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -447,8 +697,12 @@
 
 /* Notifications Styling */
 .notifications-container {
-  max-width: 32rem;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .unread-count-container {
@@ -465,8 +719,8 @@
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
-  background-color: #fef2f2;
-  color: #991b1b;
+  background-color: var(--accent-color);
+  color: white;
 }
 
 .notifications-list {
@@ -477,19 +731,25 @@
 
 .notification-card {
   cursor: pointer;
-  background-color: white;
+  background-color: var(--card-bg);
   padding: 1rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border: 1px solid #d1d5db;
-  color: black;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  border-radius: 24px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.notification-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .notification-card.unread {
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--primary-color);
 }
 
 .notification-message {
@@ -510,12 +770,13 @@
 
 @media (max-width: 1100px) {
   .social-dashboard-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     grid-template-areas:
       "find"
+      "followers"
       "requests"
       "notifications"
-      "following";
+      "following" !important;
   }
 }
 
@@ -531,4 +792,188 @@
     border-radius: 0.5rem;
     padding: 1.25rem 0.5rem;
   }
+}
+
+/* Followers component styles */
+.followers-container {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.follower-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  flex: 0 0 auto;
+}
+
+.follower-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.follower-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.follower-card .user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.follower-card .username {
+  font-weight: 700;
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.follower-card .user-email {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.follower-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin-left: 0.75rem;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.follower-actions .btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Ensure top row cards have consistent height and width */
+.social-dashboard-card.find-people,
+.social-dashboard-card.followers {
+  height: 550px !important;
+  min-height: 550px !important;
+  max-height: 550px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 1 1 auto !important;
+}
+
+/* Blocked Users Styles */
+.blocked-users-container {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar styling for blocked users container */
+.blocked-users-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.blocked-users-container::-webkit-scrollbar-track {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.blocked-users-container::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+
+.blocked-users-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+}
+
+.blocked-users-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.blocked-users-icon {
+  color: var(--text-muted);
+}
+
+.blocked-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.blocked-user-card {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  background: var(--card-bg) !important;
+  padding: 0 !important;
+  transition: all 0.2s ease;
+}
+
+.blocked-user-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.blocked-user-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.blocked-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.blocked-username {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.blocked-user-email {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.blocked-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.blocked-users-button {
+  margin-top: 0.5rem;
 }

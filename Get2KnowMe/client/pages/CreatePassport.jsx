@@ -43,7 +43,7 @@ const CreatePassport = () => {
     trustedContact: {
       name: "",
       phone: "",
-      countryCode: "",
+      countryCode: "GB", // Default to GB for UK-based service
       email: "",
     },
     profilePasscode: "",
@@ -116,7 +116,15 @@ const CreatePassport = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setFormData(data.passport);
+        // Ensure GB default is preserved if no country code exists
+        const passportData = {
+          ...data.passport,
+          trustedContact: {
+            ...data.passport.trustedContact,
+            countryCode: data.passport.trustedContact?.countryCode || "GB"
+          }
+        };
+        setFormData(passportData);
         setIsEditing(true);
       }
       // If 404, user doesn't have a passport yet - that's fine
@@ -232,6 +240,11 @@ const CreatePassport = () => {
       console.warn("Could not infer country from phone number", err);
       countryCode = "GB";
     }
+  }
+
+  // Validate countryCode before calling string methods
+  if (!countryCode || typeof countryCode !== 'string') {
+    countryCode = "GB"; // Default fallback
   }
 
   setFormData((prev) => ({
@@ -671,7 +684,7 @@ const CreatePassport = () => {
                     label="Phone Number"
                     placeholder="Enter phone number"
                     required
-                    country={formData.trustedContact.countryCode || "GB"}
+                    country={formData.trustedContact.countryCode}
                     onCountryChange={handleCountryChange}
                   />
 
