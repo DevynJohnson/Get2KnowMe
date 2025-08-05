@@ -792,6 +792,50 @@
     border-radius: 0.5rem;
     padding: 1.25rem 0.5rem;
   }
+  
+  /* Mobile responsive layout for followed-user-card */
+  .followed-user-card .user-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  
+  .followed-user-card .username,
+  .followed-user-card .user-email {
+    white-space: normal !important;
+    text-overflow: initial !important;
+    overflow: visible !important;
+  }
+}
+
+/* Tablet breakpoint - stack buttons vertically for better readability */
+@media (max-width: 768px) {
+  .followed-user-actions {
+    flex-direction: column !important;
+    gap: 0.375rem !important;
+    margin-left: 0.75rem !important;
+    min-width: 80px !important;
+  }
+  
+  .followed-user-actions .btn {
+    font-size: 0.8rem !important;
+    padding: 0.375rem 0.75rem !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+  }
+  
+  .follower-actions {
+    flex-direction: column !important;
+    gap: 0.375rem !important;
+    margin-left: 0.75rem !important;
+    min-width: 80px !important;
+  }
+  
+  .follower-actions .btn {
+    font-size: 0.8rem !important;
+    padding: 0.375rem 0.75rem !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+  }
 }
 
 /* Followers component styles */
