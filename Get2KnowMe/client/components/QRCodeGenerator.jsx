@@ -1,6 +1,6 @@
 // client/components/QRCodeGenerator.jsx
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Modal, Button, Alert, Spinner } from 'react-bootstrap';
+import { Modal, Button, Alert, Spinner, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import QRCode from 'qrcode';
 import "../styles/QRCodeGenerator.css";
