@@ -178,7 +178,6 @@ To run Get2KnowMe locally for development or contribution:
 - **globals 16.2.0**
 
 ### Testing
-### Testing
 - **Jest 30.0.4** - JavaScript testing framework for unit and integration tests
 - **Supertest 7.1.1** - HTTP endpoint testing for API validation
 - **MongoDB Memory Server 10.1.4** - In-memory database for isolated testing
