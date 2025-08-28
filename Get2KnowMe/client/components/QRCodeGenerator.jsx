@@ -1,6 +1,6 @@
 // client/components/QRCodeGenerator.jsx
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Modal, Button, Alert } from 'react-bootstrap';
+import { Modal, Button, Alert, Spinner, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import QRCode from 'qrcode';
 import "../styles/QRCodeGenerator.css";
@@ -104,7 +104,6 @@ const QRCodeGenerator = ({ show, onHide, passcode, passportName }) => {
     const passportURL = `${window.location.origin}/passport/view/${passcode}`;
     try {
       await navigator.clipboard.writeText(passportURL);
-      // You could add a toast notification here
       alert("Link copied to clipboard!");
     } catch (err) {
       console.error("Failed to copy to clipboard:", err);
