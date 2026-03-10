@@ -47,6 +47,40 @@ const logger = winston.createLogger({
 // Trust proxy to handle forwarded headers correctly in production, this helps with correct IP logging and security headers.
 app.set("trust proxy", 1);
 
+// WAF IP Blacklist Middleware - blocks requests from known malicious IPs
+// Configure blacklisted IPs via WAF_BLACKLIST environment variable (comma-separated)
+const blacklistedIPs = process.env.WAF_BLACKLIST 
+  ? process.env.WAF_BLACKLIST.split(',').map(ip => ip.trim()).filter(Boolean)
+  : [];
+
+if (blacklistedIPs.length > 0) {
+  logger.info(`WAF Blacklist enabled with ${blacklistedIPs.length} IP(s): ${blacklistedIPs.join(', ')}`);
+  
+  app.use((req, res, next) => {
+    const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    
+    // Normalize IPv6 localhost and IPv4-mapped IPv6 addresses
+    const normalizedIP = clientIP.replace(/^::ffff:/, '');
+    
+    if (blacklistedIPs.includes(clientIP) || blacklistedIPs.includes(normalizedIP)) {
+      logger.warn('Blocked request from blacklisted IP', {
+        ip: clientIP,
+        path: req.path,
+        method: req.method,
+        userAgent: req.get('User-Agent'),
+        timestamp: new Date().toISOString(),
+      });
+      
+      return res.status(403).json({ 
+        error: 'Access denied',
+        message: 'Your IP address has been blocked due to suspicious activity.'
+      });
+    }
+    
+    next();
+  });
+}
+
 // Security middleware with helmet to set security headers
 app.use(
   helmet({
