@@ -14,6 +14,7 @@ import rateLimit from "express-rate-limit";
 import compression from "compression";
 import morgan from "morgan";
 import winston from "winston";
+import { wafMiddleware } from "./src/middleware/wafMiddleware.js";
 
 // Define __filename and __dirname variables for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -97,6 +98,10 @@ const authLimiter = rateLimit({
 });
 
 app.use(limiter);
+
+// WAF (Web Application Firewall) middleware - blocks requests to PHP files, scanners, and other malicious patterns
+app.use(wafMiddleware);
+
 app.use("/api/users", authLimiter); // Applied to your user routes to protect login and signup endpoints
 app.use("/api/passport", authLimiter); // Applied to your passport routes to protect communication passport endpoints
 
