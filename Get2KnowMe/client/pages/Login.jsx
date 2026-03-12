@@ -55,9 +55,11 @@ const Login = () => {
       const response = await fetch("/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Important for refresh token cookies
         body: JSON.stringify({ 
           emailOrUsername: loginIdentifier, 
-          password: passwordValue 
+          password: passwordValue,
+          useRefreshToken: true // Enable refresh tokens
         }),
       });
 
@@ -69,7 +71,10 @@ const Login = () => {
         console.log("Login successful", data);
       } else {
         // Handle specific HTTP status codes for better user experience
-        if (response.status === 429) {
+        if (response.status === 423) {
+          // Account locked due to failed attempts
+          setError(data.message || "Account temporarily locked. Please try again later.");
+        } else if (response.status === 429) {
           setError("Too many login attempts. Please wait 15 minutes before trying again.");
         } else if (response.status === 401) {
           setError("Invalid email/username or password. Please check your credentials and try again.");

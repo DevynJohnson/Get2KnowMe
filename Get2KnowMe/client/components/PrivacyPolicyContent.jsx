@@ -99,7 +99,29 @@ const PrivacyPolicy = () => (
       Passwords are hashed. Data is encrypted in transit, and sensitive data stored in the database is encrypted at rest. Only you can share your passcode or QR code. Social data is protected by the same security measures as all other personal data.
     </p>
 
-    <h2 className="text-2xl font-semibold mt-6 mb-2">9. Children's Privacy</h2>
+    <h2 className="text-2xl font-semibold mt-6 mb-2">9. Cookies</h2>
+    <p className="mb-4">
+      Get2KnowMe uses <strong>only strictly necessary cookies</strong> required for the website to function. We do not use cookies for analytics, marketing, or tracking purposes.
+    </p>
+    <p className="mb-2">
+      <strong>Cookies we use:</strong>
+    </p>
+    <ul className="list-disc list-inside mb-4">
+      <li>
+        <strong>Authentication Cookie (refreshToken):</strong> Keeps you logged in securely for 7 days
+      </li>
+      <li>
+        <strong>Security Cookies (_csrf, csrf-token):</strong> Protects your account from cyber attacks (session only)
+      </li>
+    </ul>
+    <p className="mb-4">
+      These cookies are <strong>strictly necessary</strong> and do not require consent under GDPR Article 5(3) and UK PECR Regulation 6(1). For more information, see our{' '}
+      <a href="/policy/cookie-policy" className="text-blue-600 hover:underline">
+        Cookie Policy
+      </a>.
+    </p>
+
+    <h2 className="text-2xl font-semibold mt-6 mb-2">10. Children's Privacy</h2>
     <p className="mb-4">
       Get2KnowYou is not intended for use by children under the age of 16, or
       under 13 in the United Kingdom, unless they have the verifiable consent of
@@ -109,7 +131,7 @@ const PrivacyPolicy = () => (
       will delete it as soon as possible.
     </p>
 
-    <h2 className="text-2xl font-semibold mt-6 mb-2">10. Contact</h2>
+    <h2 className="text-2xl font-semibold mt-6 mb-2">11. Contact</h2>
     <p>Email us at: <a href="mailto:enquiries@get2knowme.co.uk">enquiries@get2knowme.co.uk</a></p>
   </div>
 );

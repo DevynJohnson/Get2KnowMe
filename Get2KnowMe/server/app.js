@@ -14,6 +14,8 @@ import rateLimit from "express-rate-limit";
 import compression from "compression";
 import morgan from "morgan";
 import winston from "winston";
+import cookieParser from "cookie-parser";
+import csrf from "csurf";
 
 // Define __filename and __dirname variables for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -131,8 +133,8 @@ const authLimiter = rateLimit({
 });
 
 app.use(limiter);
-app.use("/api/users", authLimiter); // Applied to your user routes to protect login and signup endpoints
-app.use("/api/passport", authLimiter); // Applied to your passport routes to protect communication passport endpoints
+app.use("/api/users/login", authLimiter); // Protect login endpoint from brute force
+app.use("/api/users/signup", authLimiter); // Protect signup endpoint from abuse
 
 app.use(compression());
 app.use(
@@ -161,6 +163,18 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Cookie parser for CSRF tokens
+app.use(cookieParser());
+
+// CSRF Protection for state-changing routes
+const csrfProtection = csrf({ 
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  }
+});
+
 // CORS configuration for both production and development environments
 // This allows requests from specific origins in production and all origins in development
 const corsOptions = {
@@ -176,9 +190,27 @@ const corsOptions = {
           "http://localhost:5173",
         ],
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "csrf-token"],
 };
 app.use(cors(corsOptions));
+
+// CSRF token endpoint - do not protect this route, it generates tokens
+app.get('/api/csrf-token', csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+// Apply CSRF protection to authenticated routes that modify data
+app.use('/api/users/update-username', csrfProtection);
+app.use('/api/users/update-email', csrfProtection);
+app.use('/api/users/change-password', csrfProtection);
+app.use('/api/users/delete-account', csrfProtection);
+app.use('/api/users/export-data', csrfProtection);
+app.use('/api/users/update-privacy', csrfProtection);
+app.use('/api/passport/create', csrfProtection);
+app.use('/api/passport/delete', csrfProtection);
+app.use('/api/stories/', csrfProtection);
+app.use('/api/follow/', csrfProtection);
+app.use('/api/notifications/', csrfProtection);
 
 // API Routes for user data
 app.use("/api/users", userRoutes);

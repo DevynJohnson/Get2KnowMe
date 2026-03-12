@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import QRCodeScanner from '../QRCodeScanner.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card } from 'react-bootstrap';
+import auth from '../../utils/auth.js';
 import '../../styles/SocialDashboard.css';
 
 // Followed Users Component
@@ -48,11 +49,8 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to unfollow this user?')) return;
     try {
-      const response = await fetch(`/api/follow/unfollow/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+      const response = await auth.authenticatedFetch(`/api/follow/unfollow/${userId}`, {
+        method: 'POST'
       });
       if (response.ok) {
         setFollowing(following.filter(u => u._id !== userId));
@@ -68,12 +66,8 @@ function FollowedUsers({ hiddenNotifications, setHiddenNotifications, onHiddenNo
     const action = isCurrentlyHidden ? 'unhide' : 'hide';
     
     try {
-      const response = await fetch(`/api/notifications/${action}/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`,
-          'Content-Type': 'application/json'
-        }
+      const response = await auth.authenticatedFetch(`/api/notifications/${action}/${userId}`, {
+        method: 'POST'
       });
       
       if (response.ok) {
@@ -163,11 +157,8 @@ const Followers = ({ refreshTrigger }) => {
   const handleRemoveFollower = async (userId) => {
     if (!window.confirm('Are you sure you want to remove this follower? They will no longer be able to see your updates.')) return;
     try {
-      const response = await fetch(`/api/follow/remove-follower/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+      const response = await auth.authenticatedFetch(`/api/follow/remove-follower/${userId}`, {
+        method: 'POST'
       });
       if (response.ok) {
         setFollowers(followers.filter(f => f._id !== userId));
@@ -183,11 +174,8 @@ const Followers = ({ refreshTrigger }) => {
   const handleBlockUser = async (userId) => {
     if (!window.confirm('Are you sure you want to block this user? They will not be able to follow you or send you requests in the future.')) return;
     try {
-      const response = await fetch(`/api/follow/block/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+      const response = await auth.authenticatedFetch(`/api/follow/block/${userId}`, {
+        method: 'POST'
       });
       if (response.ok) {
         setFollowers(followers.filter(f => f._id !== userId));
@@ -202,11 +190,8 @@ const Followers = ({ refreshTrigger }) => {
   // Follow back user
   const handleFollowBack = async (userId) => {
     try {
-      const response = await fetch(`/api/follow/request/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+      const response = await auth.authenticatedFetch(`/api/follow/request/${userId}`, {
+        method: 'POST'
       });
       if (response.ok) {
         // Update the follower to show they now have a follow request sent
@@ -359,11 +344,8 @@ const handleUnblockUser = async (userId) => {
   if (!window.confirm('Are you sure you want to unblock this user? They will be able to send you follow requests and appear in searches again.')) return;
   
   try {
-    const response = await fetch(`/api/follow/unblock/${userId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-      }
+    const response = await auth.authenticatedFetch(`/api/follow/unblock/${userId}`, {
+      method: 'POST'
     });
     if (response.ok) {
       setBlockedUsers(blockedUsers.filter(u => u._id !== userId));
@@ -385,11 +367,8 @@ const toggleBlockedUsers = () => {
 
 const handleFollowRequest = async (userId) => {
     try {
-        const response = await fetch(`/api/follow/request/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+        const response = await auth.authenticatedFetch(`/api/follow/request/${userId}`, {
+        method: 'POST'
       });
       if (response.ok) {
         setSearchResults(results =>
@@ -620,11 +599,8 @@ const FollowRequests = ({ onRequestHandled }) => {
 
   const handleRequest = async (userId, action) => {
     try {
-      const response = await fetch(`/api/follow/${action}/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+      const response = await auth.authenticatedFetch(`/api/follow/${action}/${userId}`, {
+        method: 'POST'
       });
       if (response.ok) {
         setRequests(requests.filter(req => req._id !== userId));
@@ -730,11 +706,8 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
   // Dismiss notification handler
   const handleDismiss = async (notificationId) => {
     try {
-      const response = await fetch(`/api/notifications/${notificationId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+      const response = await auth.authenticatedFetch(`/api/notifications/${notificationId}`, {
+        method: 'DELETE'
       });
       if (response.ok) {
         const updatedNotifications = notifications.filter(n => n._id !== notificationId);
@@ -754,11 +727,8 @@ const NotificationsList = ({ refreshTrigger, onNotificationCountChange }) => {
 
   const markAsRead = async (notificationId) => {
     try {
-      const response = await fetch(`/api/notifications/${notificationId}/read`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('id_token')}`
-        }
+      const response = await auth.authenticatedFetch(`/api/notifications/${notificationId}/read`, {
+        method: 'PATCH'
       });
       if (response.ok) {
         setNotifications(notifications.map(notif =>

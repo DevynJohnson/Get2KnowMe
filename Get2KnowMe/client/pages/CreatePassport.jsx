@@ -318,13 +318,8 @@ const CreatePassport = () => {
     }
 
     try {
-      const token = auth.getToken();
-      const response = await fetch("/api/passport/create", {
+      const response = await auth.authenticatedFetch("/api/passport/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(submissionData),
       });
 

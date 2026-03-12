@@ -5,23 +5,32 @@ import PendingConfirmation from '../models/PendingConfirmation.js';
 import Story from '../models/Story.js';
 import Notification from '../models/Notification.js';
 import jwt from 'jsonwebtoken';
-import { authenticateToken } from '../utils/auth.js';
+import { 
+  authenticateToken,
+  signToken,
+  signAccessToken,
+  signRefreshToken,
+  storeRefreshToken,
+  verifyRefreshToken,
+  revokeRefreshToken,
+  revokeAllUserTokens
+} from '../utils/auth.js';
 import { sendPasswordResetEmail } from '../utils/emailTemplates/passwordReset.js';
 import { sendParentalConsentEmail } from '../utils/emailTemplates/parentalConsent.js';
 import { sendConfirmationEmail } from '../utils/emailTemplates/confirmEmail.js';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
+import {
+  loginValidation,
+  signupValidation,
+  updateUsernameValidation,
+  updateEmailValidation,
+  changePasswordValidation,
+  passwordResetRequestValidation,
+  passwordResetValidation
+} from '../middleware/validators.js';
 
 const router = express.Router();
-
-// Sign Token method returns a signed token to the user after login
-const signToken = (user) => {
-  return jwt.sign(
-    { id: user._id, email: user.email, username: user.username },
-    process.env.JWT_SECRET_KEY,
-    { expiresIn: '12h' }
-  );
-};
 
 // GET Email confirmation (activate pending user)
 router.get('/confirm-email', async (req, res) => {
@@ -79,10 +88,10 @@ router.get('/confirm-email', async (req, res) => {
   }
 });
 
-// POST Login route - login existing user
-router.post('/login', async (req, res) => {
+// POST Login route - login existing user with refresh tokens
+router.post('/login', loginValidation, async (req, res) => {
   try {
-    const { emailOrUsername, password } = req.body;
+    const { emailOrUsername, password, useRefreshToken } = req.body;
     
     // Check if emailOrUsername is an email (contains @) or username
     const isEmail = emailOrUsername.includes('@');
@@ -90,20 +99,79 @@ router.post('/login', async (req, res) => {
       ? { email: emailOrUsername }
       : { username: emailOrUsername };
     
-      const user = await User.findOne(query);
+    const user = await User.findOne(query);
     if (!user) {
       return res.status(400).json({ 
         message: isEmail ? 'Email not found' : 'Username not found' 
       });
     }
     
+    // Check if account is locked
+    if (user.lockUntil && user.lockUntil > Date.now()) {
+      const minutesRemaining = Math.ceil((user.lockUntil - Date.now()) / (60 * 1000));
+      return res.status(423).json({ 
+        message: `Account temporarily locked due to multiple failed login attempts. Please try again in ${minutesRemaining} minute${minutesRemaining !== 1 ? 's' : ''}.`,
+        lockedUntil: user.lockUntil
+      });
+    }
+    
     const correctPw = await user.isCorrectPassword(password);
     if (!correctPw) {
-      return res.status(400).json({ message: 'Incorrect password' });
+      // Increment failed login attempts
+      user.failedLoginAttempts += 1;
+      
+      // Lock account after 5 failed attempts (15 minutes)
+      if (user.failedLoginAttempts >= 5) {
+        user.lockUntil = new Date(Date.now() + 15 * 60 * 1000);
+        await user.save();
+        return res.status(423).json({ 
+          message: 'Account locked due to multiple failed login attempts. Please try again in 15 minutes.',
+          lockedUntil: user.lockUntil
+        });
+      }
+      
+      await user.save();
+      const attemptsRemaining = 5 - user.failedLoginAttempts;
+      return res.status(400).json({ 
+        message: `Incorrect password. ${attemptsRemaining} attempt${attemptsRemaining !== 1 ? 's' : ''} remaining before account lockout.`,
+        attemptsRemaining
+      });
     }
 
-    const token = signToken(user);
-    res.json({ token, user });
+    // Reset failed login attempts on successful login
+    if (user.failedLoginAttempts > 0 || user.lockUntil) {
+      user.failedLoginAttempts = 0;
+      user.lockUntil = undefined;
+      await user.save();
+    }
+
+    // Support both legacy (12h) and new refresh token system
+    if (useRefreshToken) {
+      // New system: 15-minute access token + 7-day refresh token
+      const accessToken = signAccessToken(user);
+      const refreshToken = signRefreshToken(user);
+      
+      // Store refresh token in database
+      await storeRefreshToken(refreshToken, user._id);
+      
+      // Set refresh token as httpOnly cookie
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+      
+      res.json({ 
+        token: accessToken, 
+        user,
+        expiresIn: 900 // 15 minutes in seconds
+      });
+    } else {
+      // Legacy system: 12-hour token
+      const token = signToken(user);
+      res.json({ token, user });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while processing your request.' });
@@ -111,7 +179,7 @@ router.post('/login', async (req, res) => {
 });
 
 // POST Signup route - creates a new user
-router.post('/signup', async (req, res) => {
+router.post('/signup', signupValidation, async (req, res) => {
   console.log('Received signup request:', req.body);
   try {
     const { email, username, password, consent } = req.body;
@@ -194,7 +262,7 @@ router.post('/signup', async (req, res) => {
 });
 
 // PUT Update username route
-router.put('/update-username', authenticateToken, async (req, res) => {
+router.put('/update-username', authenticateToken, updateUsernameValidation, async (req, res) => {
   try {
     const { currentPassword, username } = req.body;
     
@@ -238,7 +306,7 @@ router.put('/update-username', authenticateToken, async (req, res) => {
 });
 
 // PUT Update email route
-router.put('/update-email', authenticateToken, async (req, res) => {
+router.put('/update-email', authenticateToken, updateEmailValidation, async (req, res) => {
   try {
     const { currentPassword, email } = req.body;
     
@@ -282,7 +350,7 @@ router.put('/update-email', authenticateToken, async (req, res) => {
 });
 
 // PUT Change password route
-router.put('/change-password', authenticateToken, async (req, res) => {
+router.put('/change-password', authenticateToken, changePasswordValidation, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     
@@ -305,7 +373,10 @@ router.put('/change-password', authenticateToken, async (req, res) => {
     user.password = newPassword;
     await user.save();
     
-    res.json({ message: 'Password changed successfully' });
+    // Revoke all existing refresh tokens for security
+    await revokeAllUserTokens(user._id);
+    
+    res.json({ message: 'Password changed successfully. Please log in again with your new password.' });
   } catch (error) {
     console.error(error);
     if (error.name === 'ValidationError') {
@@ -317,7 +388,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
 });
 
 // POST Request password reset route
-router.post('/request-password-reset', async (req, res) => {
+router.post('/request-password-reset', passwordResetRequestValidation, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) {
@@ -389,7 +460,7 @@ router.put('/update-privacy', authenticateToken, async (req, res) => {
 });
 
 // POST Reset password using token
-router.post('/reset-password', async (req, res) => {
+router.post('/reset-password', passwordResetValidation, async (req, res) => {
   try {
     const { token, newPassword } = req.body;
     if (!token || !newPassword) {
@@ -814,6 +885,61 @@ router.get('/consent/declined', async (req, res) => {
   } catch (error) {
     console.error('Error processing declined consent:', error);
     return res.status(500).send('An error occurred while processing declined consent.');
+  }
+});
+
+// POST Refresh token - get new access token using refresh token
+router.post('/refresh-token', async (req, res) => {
+  try {
+    // Get refresh token from cookie or body
+    const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
+    
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'No refresh token provided' });
+    }
+    
+    // Verify refresh token
+    const verification = await verifyRefreshToken(refreshToken);
+    
+    if (!verification.valid) {
+      return res.status(401).json({ message: 'Invalid or expired refresh token' });
+    }
+    
+    // Get user data
+    const user = await User.findById(verification.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Issue new access token
+    const newAccessToken = signAccessToken(user);
+    
+    res.json({ 
+      token: newAccessToken,
+      expiresIn: 900 // 15 minutes in seconds
+    });
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    res.status(500).json({ message: 'Failed to refresh token' });
+  }
+});
+
+// POST Logout - revoke refresh token
+router.post('/logout', async (req, res) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
+    
+    if (refreshToken) {
+      await revokeRefreshToken(refreshToken);
+    }
+    
+    // Clear cookie
+    res.clearCookie('refreshToken');
+    
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Logout failed' });
   }
 });
 

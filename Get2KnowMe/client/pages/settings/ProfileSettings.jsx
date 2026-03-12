@@ -89,12 +89,8 @@ const ProfileSettings = () => {
         [modalAction]: formData[modalAction]
       };
 
-      const response = await fetch(endpoint, {
+      const response = await auth.authenticatedFetch(endpoint, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify(body)
       });
 
@@ -124,12 +120,8 @@ const ProfileSettings = () => {
   const savePrivacySettings = async () => {
     setPrivacyLoading(true);
     try {
-      const response = await fetch('/api/users/update-privacy', {
+      const response = await auth.authenticatedFetch('/api/users/update-privacy', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({ privacySettings })
       });
 
@@ -173,12 +165,8 @@ const ProfileSettings = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch('/api/users/export-data', {
+      const response = await auth.authenticatedFetch('/api/users/export-data', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({ password: formData.currentPassword })
       });
       if (!response.ok) {

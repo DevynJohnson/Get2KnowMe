@@ -179,6 +179,9 @@ const userSchema = new Schema({
   }],
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
+  // Account lockout for failed login attempts
+  failedLoginAttempts: { type: Number, default: 0 },
+  lockUntil: { type: Date },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
