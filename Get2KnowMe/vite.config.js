@@ -7,6 +7,7 @@ export default defineConfig({
   root: './client',
   build: {
     outDir: '../dist',
+    emptyOutDir: true, // Ensure dist folder is cleaned before each build
     rollupOptions: {
       output: {
         manualChunks: {
