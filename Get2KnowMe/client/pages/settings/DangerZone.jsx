@@ -43,12 +43,8 @@ const DangerZone = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/users/delete-account', {
+      const response = await auth.authenticatedFetch('/api/users/delete-account', {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({
           password: deleteForm.password,
           confirmText: deleteForm.confirmText

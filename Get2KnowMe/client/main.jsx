@@ -37,6 +37,9 @@ const ResetPassword = React.lazy(() => import("./pages/ResetPassword.jsx"));
 const TermsOfService = React.lazy(
   () => import("./pages/legal/TermsOfService.jsx")
 );
+const CookiePolicy = React.lazy(
+  () => import("./pages/legal/CookiePolicy.jsx")
+);
 const ConsentThankYou = React.lazy(() => import("./pages/ConsentThankYou.jsx"));
 const ConsentDeclined = React.lazy(() => import("./pages/ConsentDeclined.jsx"));
 const Stories = React.lazy(() => import("./pages/Stories.jsx"));
@@ -139,6 +142,20 @@ const router = createBrowserRouter([
             }
           >
             <TermsOfService />
+          </Suspense>
+        ),
+      },
+      {
+        path: "policy/cookie-policy",
+        element: (
+          <Suspense
+            fallback={
+              <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border" role="status"></div>
+              </div>
+            }
+          >
+            <CookiePolicy />
           </Suspense>
         ),
       },

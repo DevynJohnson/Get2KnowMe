@@ -26,6 +26,9 @@ export const AuthProvider = ({ children }) => {
           const userToken = AuthService.getToken();
           setUser(userData);
           setToken(userToken);
+          
+          // Setup auto-refresh for existing token
+          AuthService.setupTokenRefresh();
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
@@ -37,6 +40,11 @@ export const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
+
+    // Cleanup refresh timer on unmount
+    return () => {
+      AuthService.clearRefreshTimer();
+    };
   }, []);
 
   const login = async (idToken, userData) => {

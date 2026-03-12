@@ -6,6 +6,46 @@
   padding: 0.75rem 0;
 }
 
+/* Force navbar collapse on iPad and smaller screens */
+@media (max-width: 1366px) {
+  .navbar-expand-md .navbar-nav {
+    flex-direction: column;
+  }
+  
+  .navbar-expand-md .navbar-collapse {
+    display: none !important;
+  }
+  
+  .navbar-expand-md .navbar-collapse.show {
+    display: block !important;
+  }
+  
+  .navbar-expand-md .navbar-toggler {
+    display: block !important;
+  }
+  
+  /* Hide FontAwesome icons in collapsed navbar */
+  .navbar-collapse .nav-icon,
+  .navbar-collapse .dropdown-item-icon,
+  .navbar-collapse .dropdown-header-icon {
+    display: none !important;
+  }
+  
+  /* Specifically target the settings dropdown and login/logout icons */
+  .navbar-collapse .settings-dropdown-btn .nav-icon,
+  .navbar-collapse .nav-item-custom .nav-icon,
+  .navbar-collapse .nav-item-custom.logout-btn .nav-icon {
+    display: none !important;
+  }
+  
+  /* Adjust spacing when icons are hidden */
+  .navbar-collapse .settings-dropdown-btn,
+  .navbar-collapse .nav-item-custom.logout-btn,
+  .navbar-collapse .nav-item-custom {
+    padding-left: 1rem !important;
+  }
+}
+
 /* Brand styling */
 .navbar-brand,
 .brand-link {

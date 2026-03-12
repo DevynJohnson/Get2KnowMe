@@ -145,6 +145,7 @@ To run Get2KnowMe locally for development or contribution:
 
 ### Security & Infrastructure
 - **helmet 8.1.0** - Security headers and Content Security Policy (CSP)
+- **csurf 1.11.0** - CSRF (Cross-Site Request Forgery) protection middleware
 - **express-rate-limit 8.0.1** - Rate limiting middleware for DDoS protection
 - **express-validator 7.2.1** - Input validation and sanitization
 - **compression 1.8.1** - Response compression for improved performance
@@ -152,6 +153,7 @@ To run Get2KnowMe locally for development or contribution:
 - **winston 3.17.0** - Advanced logging framework with multiple transports
 - **cookie-parser 1.4.7** - Cookie parsing middleware
 - **connect-mongo 5.1.0** - MongoDB session store for secure session management
+- **Custom IP Blacklist Middleware** - WAF-like IP blocking system for threat protection
 
 ### Authentication & Security
 - **Email Confirmation Required**: All new users must confirm their email address via a secure, expiring link before their account is activated. Confirmation links are single-use and expire after 24 hours for security.
@@ -178,7 +180,6 @@ To run Get2KnowMe locally for development or contribution:
 - **globals 16.2.0**
 
 ### Testing
-### Testing
 - **Jest 30.0.4** - JavaScript testing framework for unit and integration tests
 - **Supertest 7.1.1** - HTTP endpoint testing for API validation
 - **MongoDB Memory Server 10.1.4** - In-memory database for isolated testing
@@ -192,10 +193,18 @@ Get2KnowMe implements comprehensive security measures to protect user data and e
 ### Application Security
 - **Content Security Policy (CSP)**: Strict CSP headers prevent XSS attacks and unauthorized resource loading
 - **Security Headers**: Helmet.js implements security best practices including HSTS, X-Frame-Options, and more
+- **CSRF Protection**: csurf middleware prevents Cross-Site Request Forgery attacks on state-changing operations
 - **Rate Limiting**: Intelligent rate limiting protects against brute force attacks and API abuse
+  - General rate limit: 100 requests per 15 minutes
+  - Authentication endpoints: 5 attempts per 15 minutes
+- **IP Blacklist / WAF**: Two-tier IP blocking system for threat protection
+  - Environment variable-based blacklist for immediate blocking
+  - File-based blacklist management with automatic reloading
+  - Blocks known malicious IPs and suspicious activity patterns
 - **Input Validation**: All user inputs are validated and sanitized using express-validator
 - **Session Security**: Secure session management with MongoDB-backed session storage
 - **HTTPS Enforcement**: All data transmission is encrypted in transit
+- **Request Size Limits**: 10MB payload limits prevent denial of service attacks
 
 ### Data Protection
 - **Field-Level Encryption**: Sensitive user data is encrypted at the database level using mongoose-field-encryption
@@ -205,9 +214,16 @@ Get2KnowMe implements comprehensive security measures to protect user data and e
 
 ### Infrastructure Security
 - **Comprehensive Logging**: Winston-based logging system tracks security events and system activities
+  - Separate error and combined log files
+  - Structured JSON logging with timestamps
+  - IP address, user agent, and operation tracking
+- **GDPR Audit Trail**: Automatic logging of all data-modifying operations (POST, PUT, PATCH, DELETE)
+  - Tracks method, path, IP address, user agent, timestamp, and user ID
+  - Essential for compliance and security investigations
 - **Request Logging**: Morgan middleware logs all HTTP requests for monitoring and security analysis
 - **Compression Security**: Response compression is implemented safely to prevent BREACH attacks
-- **Cookie Security**: Secure cookie handling with proper SameSite and HttpOnly flags
+- **Cookie Security**: Secure cookie handling with proper SameSite, HttpOnly, and Secure flags
+- **Proxy Trust Configuration**: Proper handling of forwarded headers in production environments
 
 ### Privacy by Design
 - **User Search Privacy**: Full username or valid passcode required for user discovery
@@ -216,6 +232,9 @@ Get2KnowMe implements comprehensive security measures to protect user data and e
 - **Granular Privacy Settings**: Users have full control over their data visibility
 
 ## API Documentation
+
+### Security Endpoints
+- `GET /api/csrf-token` — Retrieve CSRF token for protected operations
 
 ### User & Authentication Endpoints (`/api/users`)
 - `POST /signup` — Register a new user (sends confirmation email)

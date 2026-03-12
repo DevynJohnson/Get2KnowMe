@@ -15,6 +15,8 @@ import compression from "compression";
 import morgan from "morgan";
 import winston from "winston";
 import { wafMiddleware } from "./src/middleware/wafMiddleware.js";
+import cookieParser from "cookie-parser";
+import csrf from "csurf";
 
 // Define __filename and __dirname variables for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -47,6 +49,40 @@ const logger = winston.createLogger({
 
 // Trust proxy to handle forwarded headers correctly in production, this helps with correct IP logging and security headers.
 app.set("trust proxy", 1);
+
+// WAF IP Blacklist Middleware - blocks requests from known malicious IPs
+// Configure blacklisted IPs via WAF_BLACKLIST environment variable (comma-separated)
+const blacklistedIPs = process.env.WAF_BLACKLIST 
+  ? process.env.WAF_BLACKLIST.split(',').map(ip => ip.trim()).filter(Boolean)
+  : [];
+
+if (blacklistedIPs.length > 0) {
+  logger.info(`WAF Blacklist enabled with ${blacklistedIPs.length} IP(s): ${blacklistedIPs.join(', ')}`);
+  
+  app.use((req, res, next) => {
+    const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    
+    // Normalize IPv6 localhost and IPv4-mapped IPv6 addresses
+    const normalizedIP = clientIP.replace(/^::ffff:/, '');
+    
+    if (blacklistedIPs.includes(clientIP) || blacklistedIPs.includes(normalizedIP)) {
+      logger.warn('Blocked request from blacklisted IP', {
+        ip: clientIP,
+        path: req.path,
+        method: req.method,
+        userAgent: req.get('User-Agent'),
+        timestamp: new Date().toISOString(),
+      });
+      
+      return res.status(403).json({ 
+        error: 'Access denied',
+        message: 'Your IP address has been blocked due to suspicious activity.'
+      });
+    }
+    
+    next();
+  });
+}
 
 // Security middleware with helmet to set security headers
 app.use(
@@ -98,12 +134,11 @@ const authLimiter = rateLimit({
 });
 
 app.use(limiter);
-
 // WAF (Web Application Firewall) middleware - blocks requests to PHP files, scanners, and other malicious patterns
 app.use(wafMiddleware);
 
-app.use("/api/users", authLimiter); // Applied to your user routes to protect login and signup endpoints
-app.use("/api/passport", authLimiter); // Applied to your passport routes to protect communication passport endpoints
+app.use("/api/users/login", authLimiter); // Protect login endpoint from brute force
+app.use("/api/users/signup", authLimiter); // Protect signup endpoint from abuse
 
 app.use(compression());
 app.use(
@@ -132,6 +167,18 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Cookie parser for CSRF tokens
+app.use(cookieParser());
+
+// CSRF Protection for state-changing routes
+const csrfProtection = csrf({ 
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  }
+});
+
 // CORS configuration for both production and development environments
 // This allows requests from specific origins in production and all origins in development
 const corsOptions = {
@@ -147,9 +194,27 @@ const corsOptions = {
           "http://localhost:5173",
         ],
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "csrf-token"],
 };
 app.use(cors(corsOptions));
+
+// CSRF token endpoint - do not protect this route, it generates tokens
+app.get('/api/csrf-token', csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+// Apply CSRF protection to authenticated routes that modify data
+app.use('/api/users/update-username', csrfProtection);
+app.use('/api/users/update-email', csrfProtection);
+app.use('/api/users/change-password', csrfProtection);
+app.use('/api/users/delete-account', csrfProtection);
+app.use('/api/users/export-data', csrfProtection);
+app.use('/api/users/update-privacy', csrfProtection);
+app.use('/api/passport/create', csrfProtection);
+app.use('/api/passport/delete', csrfProtection);
+app.use('/api/stories/', csrfProtection);
+app.use('/api/follow/', csrfProtection);
+app.use('/api/notifications/', csrfProtection);
 
 // API Routes for user data
 app.use("/api/users", userRoutes);

@@ -1,0 +1,39 @@
+{
+  "blacklist": [
+    {
+      "ip": "45.148.10.174",
+      "reason": "Previously blacklisted on Render - suspected malicious activity",
+      "dateAdded": "2026-03-11",
+      "severity": "high"
+    },
+    {
+      "ip": "34.41.170.218",
+      "reason": "Previously blacklisted on Render - suspected malicious activity",
+      "dateAdded": "2026-03-11",
+      "severity": "high"
+    },
+    {
+      "ip": "158.158.32.105",
+      "reason": "Automated bot attack - 224 requests in 43 seconds with no user agent",
+      "dateAdded": "2026-03-11",
+      "severity": "high"
+    },
+    {
+      "ip": "208.84.101.154",
+      "reason": "Burst attack - 20 requests in 1 second using outdated Chrome 78 browser",
+      "dateAdded": "2026-03-11",
+      "severity": "high"
+    },
+    {
+      "ip": "3.93.0.235",
+      "reason": "Automated scraper - 5 simultaneous requests downloading 2MB data using okhttp/5.3.0",
+      "dateAdded": "2026-03-11",
+      "severity": "medium"
+    }
+  ],
+  "rateLimits": {
+    "requestsPerMinute": 60,
+    "burstLimit": 10,
+    "windowSeconds": 60
+  }
+}

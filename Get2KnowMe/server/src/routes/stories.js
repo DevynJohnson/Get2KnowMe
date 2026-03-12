@@ -1,10 +1,16 @@
 import express from 'express';
 import Story from '../models/Story.js';
 import authenticateTokenMiddleware from '../middleware/authenticateTokenMiddleware.js';
+import {
+  createStoryValidation,
+  updateStoryValidation,
+  deleteStoryValidation
+} from '../middleware/validators.js';
+
 const router = express.Router();
 
 // Create a new story (authenticated)
-router.post('/', authenticateTokenMiddleware, async (req, res) => {
+router.post('/', authenticateTokenMiddleware, createStoryValidation, async (req, res) => {
   try {
     const { name, story } = req.body;
     if (!name || !story) {
@@ -19,7 +25,7 @@ router.post('/', authenticateTokenMiddleware, async (req, res) => {
 });
 
 // Update a story by ID (authenticated, only owner)
-router.put('/:id', authenticateTokenMiddleware, async (req, res) => {
+router.put('/:id', authenticateTokenMiddleware, updateStoryValidation, async (req, res) => {
   try {
     const { name, story } = req.body;
     if (!name || !story) {
@@ -40,7 +46,7 @@ router.put('/:id', authenticateTokenMiddleware, async (req, res) => {
 });
 
 // Delete a story by ID (authenticated, only owner)
-router.delete('/:id', authenticateTokenMiddleware, async (req, res) => {
+router.delete('/:id', authenticateTokenMiddleware, deleteStoryValidation, async (req, res) => {
   try {
     const existing = await Story.findById(req.params.id);
     if (!existing) return res.status(404).json({ error: 'Story not found.' });

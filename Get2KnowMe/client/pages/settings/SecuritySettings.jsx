@@ -52,12 +52,8 @@ const SecuritySettings = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch('/api/users/change-password', {
+      const response = await auth.authenticatedFetch('/api/users/change-password', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword

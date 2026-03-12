@@ -1,7 +1,8 @@
 import express from 'express';
 import Notification from '../models/Notification.js';
 import User from '../models/User.js';
-import { authenticateToken } from '../utils/auth.js'; // Assuming you have auth middleware
+import { authenticateToken } from '../utils/auth.js';
+import { notificationIdValidation } from '../middleware/validators.js';
 
 const router = express.Router();
 
@@ -123,7 +124,7 @@ router.post('/unhide/:userId', authenticateToken, async (req, res) => {
 });
 
 // Mark notification as read
-router.patch('/:notificationId/read', authenticateToken, async (req, res) => {
+router.patch('/:notificationId/read', authenticateToken, notificationIdValidation, async (req, res) => {
   try {
     const notification = await Notification.findOne({
       _id: req.params.notificationId,
@@ -170,7 +171,7 @@ router.patch('/mark-all-read', authenticateToken, async (req, res) => {
 });
 
 // Delete notification
-router.delete('/:notificationId', authenticateToken, async (req, res) => {
+router.delete('/:notificationId', authenticateToken, notificationIdValidation, async (req, res) => {
   try {
     const notification = await Notification.findOneAndDelete({
       _id: req.params.notificationId,

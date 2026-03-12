@@ -34,6 +34,9 @@ const Footer = () => (
                 <a href="/policy/terms-of-service" className="footer-link text-decoration-none">
                   Terms of Service
                 </a>
+                <a href="/policy/cookie-policy" className="footer-link text-decoration-none">
+                  Cookie Policy
+                </a>
               </div>
             </div>
 

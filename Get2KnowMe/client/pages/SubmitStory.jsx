@@ -28,14 +28,16 @@ export default function SubmitStory() {
     setError('');
     try {
       const token = auth.getToken();
-      const res = await fetch('/api/stories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({ name: form.name.trim() || 'Anonymous', story: form.story })
-      });
+      const res = token 
+        ? await auth.authenticatedFetch('/api/stories', {
+            method: 'POST',
+            body: JSON.stringify({ name: form.name.trim() || 'Anonymous', story: form.story })
+          })
+        : await fetch('/api/stories', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: form.name.trim() || 'Anonymous', story: form.story })
+          });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Failed to submit story.');

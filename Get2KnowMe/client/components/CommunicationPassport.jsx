@@ -65,6 +65,12 @@ const CommunicationPassport = ({
     return "secondary";
   };
 
+  const getDisplayCommunicationPreferences = () => {
+    if (!passport.communicationPreferences || !Array.isArray(passport.communicationPreferences)) return [];
+    // Filter out "Other" since custom text is shown in Additional Preferences section
+    return passport.communicationPreferences.filter(pref => pref !== "Other");
+  };
+
   // Local state for trusted contact (if not controlled by parent)
   const [internalShowTrustedContact, setInternalShowTrustedContact] = useState(false);
   const trustedContactVisible = showTrustedContact !== undefined ? showTrustedContact : internalShowTrustedContact;
@@ -145,7 +151,8 @@ const CommunicationPassport = ({
 
             {/* Communication Preferences Section */}
             {passport.communicationPreferences &&
-              passport.communicationPreferences.length > 0 && (
+              passport.communicationPreferences.length > 0 &&
+              getDisplayCommunicationPreferences().length > 0 && (
                 <div className="passport-section mb-4">
                   <div className="section-header">
                     <FontAwesomeIcon icon="comments" className="section-icon" />
@@ -155,7 +162,7 @@ const CommunicationPassport = ({
                   </div>
                   <div className="section-content">
                     <ul className="preferences-list">
-                      {passport.communicationPreferences.map(
+                      {getDisplayCommunicationPreferences().map(
                         (preference, index) => (
                           <li key={index} className="preference-item">
                             <FontAwesomeIcon icon="check-circle" className="preference-icon" />

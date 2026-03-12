@@ -2,11 +2,16 @@ import express from 'express';
 import User from '../models/User.js';
 import Notification from '../models/Notification.js';
 import { authenticateToken } from '../utils/auth.js';
+import {
+  userIdParamValidation,
+  fromUserIdParamValidation,
+  searchValidation
+} from '../middleware/validators.js';
 
 const router = express.Router();
 
 // Search for users to follow
-router.get('/search', authenticateToken, async (req, res) => {
+router.get('/search', authenticateToken, searchValidation, async (req, res) => {
   try {
     const { q, limit = 10 } = req.query;
     const currentUserId = req.user._id;
@@ -68,7 +73,7 @@ router.get('/search', authenticateToken, async (req, res) => {
 });
 
 // Send follow request
-router.post('/request/:userId', authenticateToken, async (req, res) => {
+router.post('/request/:userId', authenticateToken, userIdParamValidation, async (req, res) => {
   try {
     const targetUserId = req.params.userId;
     const currentUser = await User.findById(req.user._id);
@@ -84,7 +89,7 @@ router.post('/request/:userId', authenticateToken, async (req, res) => {
 });
 
 // Accept follow request
-router.post('/accept/:fromUserId', authenticateToken, async (req, res) => {
+router.post('/accept/:fromUserId', authenticateToken, fromUserIdParamValidation, async (req, res) => {
   try {
     const fromUserId = req.params.fromUserId;
     const currentUser = await User.findById(req.user._id);
@@ -114,7 +119,7 @@ router.post('/accept/:fromUserId', authenticateToken, async (req, res) => {
 });
 
 // Reject follow request
-router.post('/reject/:fromUserId', authenticateToken, async (req, res) => {
+router.post('/reject/:fromUserId', authenticateToken, fromUserIdParamValidation, async (req, res) => {
   try {
     const fromUserId = req.params.fromUserId;
     const currentUser = await User.findById(req.user._id);
@@ -143,7 +148,7 @@ router.post('/reject/:fromUserId', authenticateToken, async (req, res) => {
 });
 
 // Unfollow user - FIXED: Changed from DELETE to POST to match frontend
-router.post('/unfollow/:userId', authenticateToken, async (req, res) => {
+router.post('/unfollow/:userId', authenticateToken, userIdParamValidation, async (req, res) => {
   try {
     const targetUserId = req.params.userId;
     const currentUser = await User.findById(req.user._id);
@@ -254,7 +259,7 @@ router.get('/requests/sent', authenticateToken, async (req, res) => {
 });
 
 // Cancel sent follow request
-router.delete('/request/cancel/:userId', authenticateToken, async (req, res) => {
+router.delete('/request/cancel/:userId', authenticateToken, userIdParamValidation, async (req, res) => {
   try {
     const targetUserId = req.params.userId;
     const currentUser = await User.findById(req.user._id);
@@ -289,7 +294,7 @@ router.delete('/request/cancel/:userId', authenticateToken, async (req, res) => 
 });
 
 // Block user
-router.post('/block/:userId', authenticateToken, async (req, res) => {
+router.post('/block/:userId', authenticateToken, userIdParamValidation, async (req, res) => {
   try {
     const currentUser = await User.findById(req.user._id);
     const userIdToBlock = req.params.userId;
@@ -318,7 +323,7 @@ router.post('/block/:userId', authenticateToken, async (req, res) => {
 });
 
 // Remove follower - just removes them from your followers list
-router.post('/remove-follower/:userId', authenticateToken, async (req, res) => {
+router.post('/remove-follower/:userId', authenticateToken, userIdParamValidation, async (req, res) => {
   try {
     const currentUser = await User.findById(req.user._id);
     const followerIdToRemove = req.params.userId;
@@ -382,7 +387,7 @@ router.get('/blocked', authenticateToken, async (req, res) => {
 });
 
 // Unblock user
-router.post('/unblock/:userId', authenticateToken, async (req, res) => {
+router.post('/unblock/:userId', authenticateToken, userIdParamValidation, async (req, res) => {
   try {
     const currentUser = await User.findById(req.user._id);
     const userIdToUnblock = req.params.userId;
