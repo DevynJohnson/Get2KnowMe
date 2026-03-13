@@ -8,8 +8,20 @@ import winston from "winston";
 const WAF_WINDOW_MS = 5 * 60 * 1000;
 const WAF_BAN_THRESHOLD = 10;
 const WAF_BAN_DURATION_MS = 60 * 60 * 1000;
+const BURST_WINDOW_MS = 10 * 1000;
+const BURST_THRESHOLD = 35;
+const EMPTY_UA_BURST_THRESHOLD = 8;
+const BURST_BAN_DURATION_MS = 30 * 60 * 1000;
 
 const wafIpState = new Map();
+
+const trustedCrawlerUserAgents = [
+  "googlebot",
+  "bingbot",
+  "oai-searchbot",
+  "gptbot",
+  "meta-externalagent",
+];
 
 // Logger for security events
 const securityLogger = winston.createLogger({
@@ -48,16 +60,24 @@ const cleanupIpState = (now) => {
 };
 
 const getIpState = (ip, now) => {
-  const state = wafIpState.get(ip) || { hits: [], blockedUntil: 0 };
+  const state = wafIpState.get(ip) || { hits: [], requestHits: [], blockedUntil: 0 };
   state.hits = state.hits.filter((timestamp) => now - timestamp < WAF_WINDOW_MS);
+  state.requestHits = state.requestHits.filter(
+    (timestamp) => now - timestamp < BURST_WINDOW_MS
+  );
 
   if (state.blockedUntil <= now && state.hits.length === 0) {
     wafIpState.delete(ip);
-    return { hits: [], blockedUntil: 0 };
+    return { hits: [], requestHits: [], blockedUntil: 0 };
   }
 
   wafIpState.set(ip, state);
   return state;
+};
+
+const isTrustedCrawler = (userAgent = "") => {
+  const normalizedUa = userAgent.toLowerCase();
+  return trustedCrawlerUserAgents.some((crawler) => normalizedUa.includes(crawler));
 };
 
 const logBlockedRequest = (reason, req, now) => {
@@ -100,6 +120,28 @@ export const wafMiddleware = (req, res, next) => {
   cleanupIpState(now);
 
   const state = getIpState(req.ip, now);
+  const userAgent = req.get("User-Agent") || "";
+
+  state.requestHits.push(now);
+  const burstThreshold = userAgent.trim()
+    ? BURST_THRESHOLD
+    : EMPTY_UA_BURST_THRESHOLD;
+
+  if (!isTrustedCrawler(userAgent) && state.requestHits.length >= burstThreshold) {
+    state.blockedUntil = now + BURST_BAN_DURATION_MS;
+    state.hits = [];
+    state.requestHits = [];
+    wafIpState.set(req.ip, state);
+    logBlockedRequest("abuse-burst", req, now);
+    return blockRequest(
+      res,
+      429,
+      "Too many requests from this IP. Please try again later."
+    );
+  }
+
+  wafIpState.set(req.ip, state);
+
   if (state.blockedUntil > now) {
     logBlockedRequest("temporary-ban", req, now);
     return blockRequest(

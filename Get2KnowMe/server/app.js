@@ -15,6 +15,7 @@ import compression from "compression";
 import morgan from "morgan";
 import winston from "winston";
 import { wafMiddleware } from "./src/middleware/wafMiddleware.js";
+import { ipBlacklistMiddleware } from "./ip-blacklist-middleware.js";
 import cookieParser from "cookie-parser";
 import csrf from "csurf";
 
@@ -49,6 +50,9 @@ const logger = winston.createLogger({
 
 // Trust proxy to handle forwarded headers correctly in production, this helps with correct IP logging and security headers.
 app.set("trust proxy", 1);
+
+// File-based IP blacklist middleware (server/ip-blacklist.json)
+app.use(ipBlacklistMiddleware(logger));
 
 // WAF IP Blacklist Middleware - blocks requests from known malicious IPs
 // Configure blacklisted IPs via WAF_BLACKLIST environment variable (comma-separated)
